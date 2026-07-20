@@ -22,20 +22,16 @@ import authService from './src/services/authService';
 import signup from './src/screens/signup/index';
 import home from './src/screens/home/index';
 import PlaceDetail from './src/screens/place-detail';
-//import ProductDisplayPage from './src/screens/placedetail';
+import SettingsScreen from './src/screens/profile/index';
+import Dashboard from './src/screens/dashboard'
 import login from './src/screens/login/index';
-//import LoginScreen from './src/screens/login/index';
-import explore from "./src/screens/explore/index"
-import feed from './src/screens/feed/index'
-import profile from './src/screens/profile/index'
-
+import ImageUpload from './src/screens/ImageUploadPage/index'
 import HomeIcon from './src/components/svg/homeIcon';
 import exploreIcon from './src/components/svg/exploreIcon';
 import CommunityIcon from './src/components/svg/communityIcon';
 import CartIcon from './src/components/svg/cartIcon';
 import MoreIcon from './src/components/svg/moreIcon';
 import ShoppingCartIcon from './src/components/svg/shoppingCartIcon';
-import { getTokens } from './src/utils/storage';
 
 const Stack = createNativeStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -50,11 +46,16 @@ const PlaceholderScreen = ({ title }) => (
   </SafeAreaView>
 );
 
-//const ExploreScreen = () => <PlaceholderScreen title="Explore" />;
 
 const SafeHome = (props) => (
   <SafeAreaView style={styles.safeAreaWrapper} edges={['top', 'left', 'right']}>
     <home {...props} />
+  </SafeAreaView>
+);
+
+const ImageUploadPage = (props) => (
+  <SafeAreaView style={styles.safeAreaWrapper} edges={['top', 'left', 'right']}>
+    <ImageUpload  />
   </SafeAreaView>
 );
 
@@ -76,6 +77,8 @@ const SafeExplore = (props) => (
   </SafeAreaView>
 );
 
+
+
 const SafePlaceDetail = (props) => (
   <SafeAreaView style={{ flex: 1 }} edges={['top']}>
     <PlaceDetail {...props} />
@@ -93,6 +96,12 @@ const SafeSignup = () => (
   </SafeAreaView>
 );
 
+const Setting = () => (
+  <SafeAreaView style={styles.safeAreaWrapper}>
+    <SettingsScreen />
+  </SafeAreaView>
+);
+
 const CustomTabBar = ({ state, descriptors, navigation }) => {
   return (
     <View style={styles.bottomNavigation}>
@@ -102,12 +111,12 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
         const isActive = state.index === index;
 
         let IconComp;
-        if (route.name === 'Home') IconComp = HomeIcon;
+        if (route.name === 'HomeTab') IconComp = HomeIcon;
         else if (route.name === 'Explore') IconComp = exploreIcon;
-        else if (route.name === 'Community') IconComp = CommunityIcon;
-        else if (route.name === 'Cart') IconComp = CartIcon;
+        else if (route.name === 'ImageUpload') IconComp = CommunityIcon;
+        else if (route.name === 'Dashboard') IconComp = CartIcon;
         else if (route.name === 'CartScreen') IconComp = ShoppingCartIcon;
-        else if (route.name === 'More') IconComp = MoreIcon;
+        else if (route.name === 'setting') IconComp = MoreIcon;
 
         const onPress = () => {
           const event = navigation.emit({
@@ -135,10 +144,10 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                 <Svg height="2" width="60%">
                   <Defs>
                     <LinearGradient id="lineGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-                      <Stop offset="1.05%" stopColor="#FBB59E" />
-                      <Stop offset="32.02%" stopColor="#F8876C" />
-                      <Stop offset="56.43%" stopColor="#F16646" />
-                      <Stop offset="98.66%" stopColor="#F98F7A" />
+                      <Stop offset="1.05%" stopColor="#08b8f3" />
+                      <Stop offset="32.02%" stopColor="#3ae3f6" />
+                      <Stop offset="56.43%" stopColor="#06a8a6" />
+                      <Stop offset="98.66%" stopColor="#31c8f1" />
                     </LinearGradient>
                   </Defs>
                   <Rect width="100%" height="3" fill="url(#lineGrad)" />
@@ -151,7 +160,7 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                 size={22}
                 strokeWidth={1.8}
                 focused={isActive}
-                color={isActive ? '#ffffff' : '#b8b8b8'}
+                color={isActive ? '#0f05d3' : '#020202'}
               />
             )}
 
@@ -180,6 +189,11 @@ function TabNavigator() {
       screenOptions={{ headerShown: false }}
     >
       <Tab.Screen name="HomeTab" component={home} options={{ tabBarLabel: 'Home' }} />
+       <Tab.Screen name="Dashboard" component={Dashboard} options={{ tabBarLabel: 'Dashboard' }} />
+        <Tab.Screen name="ImageUpload" component={ImageUploadPage} options={{ tabBarLabel: 'Memory' }} />
+       <Tab.Screen name="setting" component={Setting} options={{ tabBarLabel: 'Setting' }} />
+      
+       
 
 
 
@@ -266,12 +280,12 @@ const styles = StyleSheet.create({
     paddingTop: 8,
     paddingBottom: 16,
     paddingHorizontal: 5,
-    backgroundColor: '#151515',
+    backgroundColor: '#ffffff',
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around',
     borderTopWidth: 1,
-    borderTopColor: '#242424',
+    borderTopColor: '#ffffff',
     position: 'relative',
   },
   bottomItem: {
@@ -302,14 +316,14 @@ const styles = StyleSheet.create({
     fontWeight: '900',
   },
   bottomItemLabel: {
-    color: '#b8b8b8',
-    fontSize: 11.5,
-    fontFamily: Tokens.typography.families.light,
+    color: '#040404',
+    fontSize: 12,
+    fontFamily: Tokens.typography.families.regular,
     textAlign: 'center',
   },
   activeBottomItemLabel: {
-    fontSize: Tokens.typography.sizes.body,
-    fontFamily: Tokens.typography.families.light,
+    fontSize: 12,
+    fontFamily: Tokens.typography.families.regular,
   }
 });
 

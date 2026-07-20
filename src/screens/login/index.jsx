@@ -57,7 +57,7 @@ export default function LoginScreen() {
             <View style={styles.inputFieldsContainer}>
               <View style={styles.inputOuterView}>
                 <LinearGradient
-                  colors={['#ace9fd', '#bdedfd']}
+                  colors={['#ffffff', '#ffffff']}
                   start={{ x: 0.01, y: 0.5 }}
                   end={{ x: 0.99, y: 0.5 }}
                   style={styles.inputGradientBackground}
@@ -78,7 +78,7 @@ export default function LoginScreen() {
               <View style={styles.passwordView}>
                 <View style={styles.inputOuterView}>
                   <LinearGradient
-                    colors={['#ace9fd', '#bdedfd']}
+                    colors={['#ffffff', '#ffffff']}
                     start={{ x: 0.01, y: 0.5 }}
                     end={{ x: 0.99, y: 0.5 }}
                     style={styles.inputGradientBackground}
@@ -126,7 +126,7 @@ export default function LoginScreen() {
                 <ActivityIndicator size="large" color="#3bc7f6" />
               ) : (
                 <CustomButton
-                  colors={['#98e1f9', '#98e1f9', '#98e1f9', '#98e1f9']}
+                  colors={['#ffffff', '#ffffff', '#ffffff', '#ffffff']}
                   onPress={handleLogin}
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
@@ -144,7 +144,7 @@ export default function LoginScreen() {
                   title={strings.buttons.google}
                   Icon={googleIcon}
                   iconColor="#000000"
-                  colors={['#ace9fd', '#bdedfd']}
+                  colors={['#ffffff', '#ffffff']}
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
                   buttonStyle={{ borderRadius: Tokens.components.radiusButton }}
@@ -155,7 +155,7 @@ export default function LoginScreen() {
                   title={strings.buttons.apple}
                   Icon={appleIcon}
                   iconColor="#000000"
-                  colors={['#ace9fd', '#bdedfd']}
+                  colors={['#ffffff', '#ffffff']}
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
                   buttonStyle={{ borderRadius: Tokens.components.radiusButton }}

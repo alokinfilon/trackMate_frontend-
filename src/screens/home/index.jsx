@@ -13,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { useHome } from './home.hooks';
 import { styles, CAROUSEL_WIDTH } from './home.styles';
 import { strings } from './home.strings';
-
+import {BlurView} from '@react-native-community/blur'
 const Home = ({ navigation }) => {
   const {
     posts,
@@ -31,9 +31,9 @@ const Home = ({ navigation }) => {
         onPress={() => navigation.navigate('PlaceDetail', { id: postItem.id })}
       >
         <LinearGradient
-          colors={['#242525', '#1A1C1D']}
-          start={{ x: 0.02, y: 0.5 }}
-          end={{ x: 0.98, y: 0.5 }}
+          colors={['#ffffff', '#ffffff']}
+          start={{ x: 1, y: 0 }}
+          end={{ x: 0, y: 1 }}
           style={styles.postCardOuterFrame}
         >
           <View style={styles.imageDisplayContainer}>
@@ -107,9 +107,9 @@ const Home = ({ navigation }) => {
   return (
     <SafeAreaProvider>
       <LinearGradient
-        colors={['#0F0F0F', '#0D0D0D']}
-        start={{ x: 0.44, y: 0 }}
-        end={{ x: 0.54, y: 0.98 }}
+     colors={['#ace9fd', '#ffffff']}
+        start={{ x: 1, y: 0 }}
+        end={{ x: 0, y: 0.98 }}
         style={styles.screenContainer}
       >
         <StatusBar barStyle="light-content" backgroundColor="#0F0F0F" />

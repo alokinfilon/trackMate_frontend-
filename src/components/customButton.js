@@ -6,7 +6,7 @@ import { Tokens } from '../theme/theme';
 const CustomButton = ({
   title,
   onPress,
-  colors=['#ace9fd', '#bdedfd'],
+  colors=['#ffffff', '#ffffff'],
   activeOpacity = 0.75,
   textColor = '#000000',
   fontSize = Tokens?.typography?.sizes?.body || 14,

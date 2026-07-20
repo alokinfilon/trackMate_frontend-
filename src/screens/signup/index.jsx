@@ -82,7 +82,7 @@ export default function SignUpScreen() {
             <View style={styles.inputFieldsContainer}>
               <View style={styles.inputOuterView}>
                 <LinearGradient
-                  colors={['#ace9fd', '#bdedfd']}
+                  colors={['#ffffff', '#ffffff']}
                   start={{ x: 0.01, y: 0.5 }}
                   end={{ x: 0.99, y: 0.5 }}
                   style={styles.inputGradientBackground}
@@ -102,7 +102,7 @@ export default function SignUpScreen() {
               <View style={styles.passwordView}>
                 <View style={styles.inputOuterView}>
                   <LinearGradient
-                   colors={['#ace9fd', '#bdedfd']}
+                   colors={['#ffffff', '#ffffff']}
                     start={{ x: 0.01, y: 0.5 }}
                     end={{ x: 0.99, y: 0.5 }}
                     style={styles.inputGradientBackground}
@@ -350,7 +350,7 @@ export default function SignUpScreen() {
                 )}
                 <View style={styles.infoBarView}>
                   <LinearGradient
-                    colors={['#ffffff', '#ffffff']}
+                    colors={['#ace9fd', '#bdedfd']}
                     start={{ x: 0.02, y: 0.5 }}
                     end={{ x: 0.98, y: 0.5 }}
                     style={styles.infoBarInnerView}
@@ -370,7 +370,7 @@ export default function SignUpScreen() {
               <View style={styles.inputView}>
                 <View style={styles.inputOuterView}>
                   <LinearGradient
-                    colors={['#ace9fd', '#bdedfd']}
+                    colors={['#ffffff', '#ffffff']}
                     start={{ x: 0.01, y: 0.5 }}
                     end={{ x: 0.99, y: 0.5 }}
                     style={styles.inputGradientBackground}
@@ -481,7 +481,7 @@ export default function SignUpScreen() {
                 <ActivityIndicator size="large" color="#50c9f1" />
               ) : (
                 <CustomButton
-                  colors={['#ace9fd', '#bdedfd', '#ace9fd', '#bdedfd']}
+                  colors={['#ffffff', '#ffffff', '#ffffff', '#ffffff']}
                   onPress={handleSignUp}
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
@@ -497,7 +497,7 @@ export default function SignUpScreen() {
                   title={strings.buttons.google}
                   Icon={googleIcon}
                   iconColor="#1c1c1c"
-                  colors={['#ace9fd', '#bdedfd']}
+                  colors={['#ffffff', '#ffffff']}
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
                   buttonStyle={{ borderRadius: Tokens.components.radiusButton }}
@@ -508,7 +508,7 @@ export default function SignUpScreen() {
                    title={strings.buttons.apple}
                   Icon={appleIcon}
                   iconColor="#141313"
-                  colors={['#ace9fd', '#bdedfd']}
+                  colors={['#ffffff', '#ffffff']}
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
                   buttonStyle={{ borderRadius: Tokens.components.radiusButton }}

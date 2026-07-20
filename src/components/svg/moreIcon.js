@@ -8,10 +8,10 @@ const MoreIcon = ({ focused, color, ...props }) => {
     <Svg width={24} height={24} viewBox="0 0 24 24" fill="none" {...props}>
       <Defs>
         <LinearGradient id="iconGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-          <Stop offset="1.05%" stopColor="#FBB59E" />
-          <Stop offset="32.02%" stopColor="#F8876C" />
-          <Stop offset="56.43%" stopColor="#F16646" />
-          <Stop offset="98.66%" stopColor="#F98F7A" />
+         <Stop offset="1.05%" stopColor="#08d6ff" />
+                   <Stop offset="32.02%" stopColor="#0977de" />
+                   <Stop offset="56.43%" stopColor="#25d7ee" />
+                   <Stop offset="98.66%" stopColor="#048db6" />
         </LinearGradient>
       </Defs>
       <Circle cx="5" cy="12" r="2" fill={fillValue} />

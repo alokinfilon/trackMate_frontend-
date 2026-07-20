@@ -7,7 +7,7 @@ export const CAROUSEL_WIDTH = SCREEN_WIDTH - Tokens.layout.paddingHorizontal * 2
 export const styles = StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: '#000000',
+    backgroundColor: '#ffffff',
   },
   mainContainer: {
     flex: 1,
@@ -28,15 +28,20 @@ export const styles = StyleSheet.create({
   topNavigationHeaderModuleOuterContainer: {
     width: '100%',
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Tokens.gaps.large,
+    borderWidth:2,
+    borderColor:"#000000",
+    height:60,
+    borderRadius: 12,
+    backgroundColor:"#ffff"
   },
   screenHeaderTitleMainText: {
     fontFamily: Tokens.typography.families.semiBold,
-    fontSize: 20,
+    fontSize: 24,
     lineHeight: 24,
-    color: '#FFFFFF',
+    color: '#1d1d1d',
   },
   headerSquareActionButtonsGridWrapperRow: {
     flexDirection: 'row',
@@ -55,15 +60,16 @@ export const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 20,
     borderWidth: 0.5,
-    borderColor: '#323537',
+    borderColor: '#000000',
     padding: 16,
     marginBottom: Tokens.gaps.xlarge,
+    borderWidth:2
   },
   imageDisplayContainer: {
     width: '100%',
     height: 389,
     borderRadius: 16,
-    backgroundColor: '#1A1C1D',
+    backgroundColor: '#ffffff',
     overflow: 'hidden',
     position: 'relative',
     marginBottom: Tokens.gaps.large,
@@ -71,6 +77,8 @@ export const styles = StyleSheet.create({
   mainPostMediaImage: {
     width: CAROUSEL_WIDTH,
     height: '100%',
+    borderColor: '#000000',
+    borderWidth:1
   },
   mediaCarouselIndicatorTrack: {
     position: 'absolute',
@@ -113,7 +121,7 @@ export const styles = StyleSheet.create({
     fontFamily: Tokens.typography.families.semiBold,
     fontSize: 18,
     lineHeight: 28,
-    color: '#E5E5E5',
+    color: '#000000',
     flex: 1,
   },
   individualMetricTabItem: {
@@ -125,6 +133,6 @@ export const styles = StyleSheet.create({
   metricLabelValueStringText: {
     fontFamily: Tokens.typography.families.regular,
     fontSize: 14,
-    color: '#CCCCCC',
+    color: '#000000',
   },
 });

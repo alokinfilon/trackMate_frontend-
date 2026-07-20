@@ -64,7 +64,6 @@ const authService = {
     });
     
     if (!response.ok) {
-      // ✅ FIXED: Robust error message parsing to match backend design
       try {
         const data = await response.json();
         throw new Error(data.error || 'Login failed');
@@ -108,7 +107,7 @@ const authService = {
       
       const currentTime = Math.floor(Date.now() / 1000);
       
-      return payload.exp < (currentTime + 15);
+      return payload.exp < (currentTime + 30);
     } catch (error) {
       console.error("Failed to accurately read token lifespan metrics:", error);
       return true; 
@@ -122,7 +121,6 @@ const authService = {
 
       console.log("Attempting to renew expired access token session...");
 
-      // ✅ FIXED: Aligned target routing to match backend token rotation setup (/auth/refresh-token)
       const response = await fetch(`${BASE_URL}/auth/refresh-token`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
