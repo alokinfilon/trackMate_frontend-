@@ -1,27 +1,41 @@
-import { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../../App';
+import { useState, useEffect, useContext, useCallback } from 'react';
+import { AuthContext } from '../../context/AuthContext'; 
+
 import { useAlertModal } from '../../components/index';
 import authService from '../../services/authService';
+import apiClient from '../../services/apiClient';
 
 export const useHome = (navigation) => {
   const { showModal } = useAlertModal();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [loadingMore, setLoadingMore] = useState(false);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+
   const { setUserIsAuthenticated } = useContext(AuthContext);
   const [activeImageIndices, setActiveImageIndices] = useState({});
 
+  const LIMIT = 30;
+
   useEffect(() => {
-    fetchHistoricalSites();
+    fetchHistoricalSites(1, false);
   }, []);
 
-  const fetchHistoricalSites = () => {
-    setLoading(true);
+  const fetchHistoricalSites = useCallback((targetPage = 1, append = false) => {
+    if (append) {
+      setLoadingMore(true);
+    } else {
+      setLoading(true);
+    }
 
-    fetch(`https://trackmate-x7ue.onrender.com/locations`)
+    apiClient(`/locations?page=${targetPage}&limit=${LIMIT}`)
       .then(response => response.json())
       .then(json => {
-        if (json && json.historicalSites) {
-          const formattedLocations = json.historicalSites.map(site => {
+        const rawList = json && (json.historicalSites || json.data || (Array.isArray(json) ? json : []));
+
+        if (rawList && rawList.length > 0) {
+          const formattedLocations = rawList.map(site => {
             const rawGallery = site.media && site.media.gallery ? site.media.gallery : [];
             const heroImg = site.media && site.media.hero_image_url ? site.media.hero_image_url : null;
             let allImages = heroImg ? [heroImg, ...rawGallery] : [...rawGallery];
@@ -56,7 +70,14 @@ export const useHome = (navigation) => {
             };
           });
 
-          setPosts(formattedLocations);
+          setPosts(prev => append ? [...prev, ...formattedLocations] : formattedLocations);
+
+          // If fewer items are returned than the limit, assume it's the end of the list
+          if (rawList.length < LIMIT) {
+            setHasMore(false);
+          }
+        } else {
+          setHasMore(false);
         }
       })
       .catch(error => {
@@ -64,7 +85,15 @@ export const useHome = (navigation) => {
       })
       .finally(() => {
         setLoading(false);
+        setLoadingMore(false);
       });
+  }, []);
+
+  const loadMoreSites = () => {
+    if (loadingMore || !hasMore) return;
+    const nextPage = page + 1;
+    setPage(nextPage);
+    fetchHistoricalSites(nextPage, true);
   };
 
   const handleLogoutPress = () => {
@@ -110,7 +139,10 @@ export const useHome = (navigation) => {
   return {
     posts,
     loading,
+    loadingMore,
+    hasMore,
     activeImageIndices,
+    loadMoreSites,
     handleLogoutPress,
     handleCarouselScroll
   };

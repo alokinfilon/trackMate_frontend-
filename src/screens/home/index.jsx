@@ -11,7 +11,8 @@ import {
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import { useHome } from './home.hooks';
-import { styles, CAROUSEL_WIDTH } from './home.styles';
+import { createStyles, CAROUSEL_WIDTH } from './home.styles';
+import { useTheme } from '../../context/ThemeContext';
 import { strings } from './home.strings';
 import {BlurView} from '@react-native-community/blur'
 const Home = ({ navigation }) => {
@@ -22,6 +23,9 @@ const Home = ({ navigation }) => {
     handleCarouselScroll
   } = useHome(navigation);
 
+  const { isDarkMode, colors, gradients } = useTheme();
+  const styles = React.useMemo(() => createStyles(colors), [colors]);
+
   const renderPostCard = ({ item: postItem }) => {
     const currentActiveIndex = activeImageIndices[postItem.id] || 0;
 
@@ -31,7 +35,7 @@ const Home = ({ navigation }) => {
         onPress={() => navigation.navigate('PlaceDetail', { id: postItem.id })}
       >
         <LinearGradient
-          colors={['#ffffff', '#ffffff']}
+          colors={[colors.card, colors.card]}
           start={{ x: 1, y: 0 }}
           end={{ x: 0, y: 1 }}
           style={styles.postCardOuterFrame}
@@ -107,12 +111,12 @@ const Home = ({ navigation }) => {
   return (
     <SafeAreaProvider>
       <LinearGradient
-     colors={['#ace9fd', '#ffffff']}
+        colors={[isDarkMode ? '#1E293B' : '#ace9fd', colors.bg]}
         start={{ x: 1, y: 0 }}
         end={{ x: 0, y: 0.98 }}
         style={styles.screenContainer}
       >
-        <StatusBar barStyle="light-content" backgroundColor="#0F0F0F" />
+        <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} backgroundColor="transparent" translucent />
         <SafeAreaView
           style={styles.mainContainer}
           edges={['top', 'left', 'right']}

@@ -1,5 +1,4 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform } from 'react-native';
+
 import { Buffer } from 'buffer';
 
 import { saveTokens, getTokens, clearTokens } from '../utils/storage';
@@ -39,7 +38,12 @@ const safeStorage = {
 
 const BASE_URL = 'https://trackmate-x7ue.onrender.com'; 
 
+let _logoutCallback = null;
+
 const authService = {
+  setLogoutCallback: (cb) => {
+    _logoutCallback = cb;
+  },
   
   async signup(identifier, password, confirmPassword) {
     let fcmToken = null;
@@ -89,6 +93,9 @@ const authService = {
   async logout() {
     await clearTokens();
     console.log("User session cleared completely.");
+    if (_logoutCallback) {
+      _logoutCallback();
+    }
   },
 
   async isAuthenticated() {

@@ -1,11 +1,11 @@
 
 import { useState, useEffect, useContext } from 'react';
 import { CAROUSEL_WIDTH } from './place-detail.styles';
-import { AuthContext } from '../../../App';
+import { AuthContext } from '../../context/AuthContext'; 
+
 import { useAlertModal } from '../../components/index';
 
 export function useProductDetails(route, navigation) {
-  // Extract id (or locationId for backward compatibility) from navigation params
   const { locationId, id } = route.params || {};
   const targetId = id || locationId;
 
@@ -27,11 +27,9 @@ export function useProductDetails(route, navigation) {
   const fetchLocationDetails = async (id) => {
     try {
       setLoading(true);
-      // Fetching the list of locations
       const response = await fetch(`https://trackmate-x7ue.onrender.com/locations?page=1&limit=30`);
       const json = await response.json();
 
-      // The API returns an array under json.historicalSites
       const sites = json.historicalSites || [];
       const foundPlace = sites.find(site => site.location_id === String(id) || site._id === String(id));
 
@@ -45,7 +43,6 @@ export function useProductDetails(route, navigation) {
           location: `${foundPlace.geography?.city}, ${foundPlace.geography?.state}`,
           rating: foundPlace.overall_rating || null,
           
-          // Full data mapping
           amenities: foundPlace.amenities || {},
           historicalContext: foundPlace.historical_context || {},
           trivia: foundPlace.trivia_and_culture || {},

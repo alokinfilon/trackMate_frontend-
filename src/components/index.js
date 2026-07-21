@@ -1,63 +1,76 @@
-import bellIcon from './svg/bellIcon';
-import cart from './svg/cart';
-
-import commentIcon from './svg/commentIcon';
-
-import communityIcon from './svg/communityIcon';
-
-import exploreIcon from './svg/exploreIcon';
-
-import eyeIcon from './svg/eyeIcon';
-
-import googleIcon from './svg/googleIcon';
-
-import heartIcon from './svg/heartIcon';
-import homeIcon from './svg/homeIcon';
-import moreIcon from './svg/moreIcon';
-import myPostIcon from './svg/myPostIcon';
-import plusIcon from './svg/plusIcon';
-import saveIcon from './svg/saveIcon';
-import shareIcon from './svg/shareIcon';
-import shoppingCartIcon from './svg/shoppingCartIcon';
-import smileIcon from './svg/smileIcon';
-import uploadIcon from './svg/uploadIcon';
-import appleIcon from './svg/appleIcon';
-import arrow from './svg/arrow';
-import cartIcon from './svg/cartIcon';
-import checkMarklIcon from './svg/checkMarklIcon';
+// 1. Independent Leaf Nodes First (No internal imports)
+import BellIcon from './svg/bellIcon';
+import Cart from './svg/cart';
+import CommentIcon from './svg/commentIcon';
+import CommunityIcon from './svg/communityIcon';
+import ExploreIcon from './svg/exploreIcon';
+import EyeIcon from './svg/eyeIcon';
+import AppleIcon from './svg/appleIcon';
+import GoogleIcon from './svg/googleIcon';
+import HeartIcon from './svg/heartIcon';
+import HomeIcon from './svg/homeIcon';
+import MoreIcon from './svg/moreIcon';
+import MyPostIcon from './svg/myPostIcon';
+import PlusIcon from './svg/plusIcon';
+import SaveIcon from './svg/saveIcon';
+import ShareIcon from './svg/shareIcon';
+import ShoppingCartIcon from './svg/shoppingCartIcon';
+import SmileIcon from './svg/smileIcon';
+import UploadIcon from './svg/uploadIcon';
+import Arrow from './svg/arrow';
+import CartIcon from './svg/cartIcon';
+import CheckMarklIcon from './svg/checkMarklIcon';
 import CheckMarkl from './svg/checkmarkl';
-import plusGradientIcon from './svg/plusGradientIcon';
-import scaleInfoIcon from './svg/scaleInfoIcon';
-import shoppingBagIcon from './svg/shoppingBagIcon';
+import PlusGradientIcon from './svg/plusGradientIcon';
+import ScaleInfoIcon from './svg/scaleInfoIcon';
+import GradientText from './gradientText'
 import CustomButton from './customButton';
-import { useAlertModal } from './modal';
+import { useAlertModal, ModalProvider } from './modal'; 
+import CircleUserRoundIcon from './svg/account';
+import PaletteIcon from './svg/palette';
+import GlobeLockIcon from './svg/globeLock';
+import ContactIcon from './svg/contact';  
+import StarIcon from './svg/star';
+import MessageCircleQuestionIcon from './svg/messageCircleQuestion';
+import InfoIcon from './svg/info';
+import UserRoundPenIcon from './svg/userRoundPen';
 
 export {
-  cart,
-  commentIcon,
-  communityIcon,
-  exploreIcon,
-  eyeIcon,
-  googleIcon,
-  heartIcon,
-  homeIcon,
-  moreIcon,
-  myPostIcon,
-  plusIcon,
-  saveIcon,
-  shareIcon,
-  shoppingCartIcon,
-  smileIcon,
-  uploadIcon,
-  appleIcon,
-  bellIcon,
-  shoppingBagIcon,
-  scaleInfoIcon,
-  plusGradientIcon,
+  CircleUserRoundIcon,
+  ContactIcon,
+  GlobeLockIcon,
+  Cart,
+  StarIcon,
+  MessageCircleQuestionIcon,
+  InfoIcon,
+  PaletteIcon,
+  CommentIcon,
+  CommunityIcon,
+  UserRoundPenIcon,
+  ExploreIcon,
+  EyeIcon,
+  GoogleIcon,
+  AppleIcon,  
+  HeartIcon,
+  HomeIcon,
+  MoreIcon,
+  MyPostIcon,
+  PlusIcon,
+  SaveIcon,
+  ShareIcon,
+  ShoppingCartIcon,
+  SmileIcon,
+  UploadIcon,
+  BellIcon,
+  ShoppingCartIcon as ShoppingBagIcon, 
+  ScaleInfoIcon,
+  PlusGradientIcon,
   CheckMarkl,
-  checkMarklIcon,
-  cartIcon,
-  arrow,
+  CheckMarklIcon,
+  CartIcon,
+  Arrow,
   CustomButton,
-  useAlertModal
+  useAlertModal,
+  ModalProvider,
+  GradientText
 };

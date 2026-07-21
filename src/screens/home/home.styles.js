@@ -4,10 +4,10 @@ import { Tokens } from '../../theme/theme';
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 export const CAROUSEL_WIDTH = SCREEN_WIDTH - Tokens.layout.paddingHorizontal * 2 - 32;
 
-export const styles = StyleSheet.create({
+export const createStyles = (colors) => StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.bg,
   },
   mainContainer: {
     flex: 1,
@@ -31,17 +31,17 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Tokens.gaps.large,
-    borderWidth:2,
-    borderColor:"#000000",
-    height:60,
+    borderWidth: 2,
+    borderColor: colors.border,
+    height: 60,
     borderRadius: 12,
-    backgroundColor:"#ffff"
+    backgroundColor: colors.card
   },
   screenHeaderTitleMainText: {
     fontFamily: Tokens.typography.families.semiBold,
     fontSize: 24,
     lineHeight: 24,
-    color: '#1d1d1d',
+    color: colors.textPrimary,
   },
   headerSquareActionButtonsGridWrapperRow: {
     flexDirection: 'row',
@@ -52,7 +52,7 @@ export const styles = StyleSheet.create({
     height: 40,
     borderRadius: 8,
     borderWidth: 1,
-    borderColor: '#323537',
+    borderColor: colors.border,
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -60,16 +60,16 @@ export const styles = StyleSheet.create({
     width: '100%',
     borderRadius: 20,
     borderWidth: 0.5,
-    borderColor: '#000000',
+    borderColor: colors.border,
     padding: 16,
     marginBottom: Tokens.gaps.xlarge,
-    borderWidth:2
+    borderWidth: 2
   },
   imageDisplayContainer: {
     width: '100%',
     height: 389,
     borderRadius: 16,
-    backgroundColor: '#ffffff',
+    backgroundColor: colors.surface,
     overflow: 'hidden',
     position: 'relative',
     marginBottom: Tokens.gaps.large,
@@ -77,8 +77,8 @@ export const styles = StyleSheet.create({
   mainPostMediaImage: {
     width: CAROUSEL_WIDTH,
     height: '100%',
-    borderColor: '#000000',
-    borderWidth:1
+    borderColor: colors.border,
+    borderWidth: 1
   },
   mediaCarouselIndicatorTrack: {
     position: 'absolute',
@@ -121,7 +121,7 @@ export const styles = StyleSheet.create({
     fontFamily: Tokens.typography.families.semiBold,
     fontSize: 18,
     lineHeight: 28,
-    color: '#000000',
+    color: colors.textPrimary,
     flex: 1,
   },
   individualMetricTabItem: {
@@ -133,6 +133,6 @@ export const styles = StyleSheet.create({
   metricLabelValueStringText: {
     fontFamily: Tokens.typography.families.regular,
     fontSize: 14,
-    color: '#000000',
+    color: colors.textSecondary,
   },
 });

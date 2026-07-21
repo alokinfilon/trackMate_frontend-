@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Dimensions, Text, ActivityIndicator } from 'react-native';
+import { View, Dimensions, Text, ActivityIndicator } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
-import authService from '../../services/authService'; // Make sure your path matches
+import authService from '../../services/authService'; 
+import { useTheme } from '../../context/ThemeContext';
+import { createStyles } from './KitPieChart.styles';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -9,6 +11,9 @@ export default function KitPieChart() {
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  const { colors, isDarkMode } = useTheme();
+  const styles = React.useMemo(() => createStyles(colors, isDarkMode), [colors, isDarkMode]);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
@@ -54,8 +59,8 @@ export default function KitPieChart() {
             .map((key) => ({
               name: key.charAt(0).toUpperCase() + key.slice(1),
               population: rawData[key],
-              color: statusColors[key] || '#999999',
-              legendFontColor: '#333333',
+              color: statusColors[key] || colors.textTertiary,
+              legendFontColor: colors.textSecondary,
               legendFontSize: 13,
             }));
 
@@ -77,7 +82,7 @@ export default function KitPieChart() {
   if (loading) {
     return (
       <View style={[styles.container, styles.center]}>
-        <ActivityIndicator size="large" color="#4D96FF" />
+        <ActivityIndicator size="large" color={colors.primary} />
         <Text style={styles.loadingText}>Compiling Trip Metrics...</Text>
       </View>
     );
@@ -91,7 +96,6 @@ export default function KitPieChart() {
     );
   }
 
-  // Handle rare edge case where all fields return 0 from the backend
   if (chartData.length === 0) {
     return (
       <View style={[styles.container, styles.center]}>
@@ -114,51 +118,8 @@ export default function KitPieChart() {
         accessor={"population"}
         backgroundColor={"transparent"}
         paddingLeft={"15"}
-        absolute // Displays exact numeric counts (e.g. 1) instead of percentages
+        absolute
       />
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 20,
-    margin: 10,
-    borderRadius: 12,
-    minHeight: 260,
-    // Soft shadow block
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.05,
-    shadowRadius: 8,
-    elevation: 3,
-  },
-  center: {
-    justifyContent: 'center',
-  },
-  title: {
-    fontSize: 16,
-    fontWeight: '700',
-    marginBottom: 10,
-    color: '#222',
-  },
-  loadingText: {
-    marginTop: 10,
-    fontSize: 14,
-    color: '#666',
-  },
-  errorText: {
-    color: '#FF6B6B',
-    fontWeight: '500',
-    textAlign: 'center',
-    paddingHorizontal: 15,
-  },
-  noDataText: {
-    color: '#888',
-    fontSize: 14,
-    marginTop: 20,
-  }
-});

@@ -1,25 +1,27 @@
-import * as Keychain from 'react-native-keychain';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export const saveTokens = async (accessToken, refreshToken, userId) => {
   try {
     const sessionData = JSON.stringify({ accessToken, refreshToken, userId });
-    await Keychain.setGenericPassword('user_session', sessionData, {
-      service: 'com.trackmate',
-    });
+    await AsyncStorage.setItem('user_session', sessionData);
   } catch (error) {
-    console.error("Failed to secure credentials in hardware vault:", error);
+    console.error("Failed to secure credentials in storage:", error);
   }
 };
 
 export const getTokens = async () => {
   try {
-    const credentials = await Keychain.getGenericPassword({ service: 'com.trackmate' });
-    return credentials ? JSON.parse(credentials.password) : null;
+    const sessionData = await AsyncStorage.getItem('user_session');
+    return sessionData ? JSON.parse(sessionData) : null;
   } catch (error) {
     return null;
   }
 };
 
 export const clearTokens = async () => {
-  await Keychain.resetGenericPassword({ service: 'com.trackmate' });
+  try {
+    await AsyncStorage.removeItem('user_session');
+  } catch (error) {
+    console.error("Failed to clear credentials from storage:", error);
+  }
 };

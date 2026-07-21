@@ -64,20 +64,17 @@ export const Tokens = {
 
 
 
-export const COLORS = {
-  // ── Primary Brand ──
+export const LIGHT_COLORS = {
   primary:        '#0A84FF',
   primaryDark:    '#0055CC',
   primaryLight:   '#3AA0FF',
   primaryGhost:   'rgba(10, 132, 255, 0.08)',
   primaryBorder:  'rgba(10, 132, 255, 0.18)',
 
-  // ── Accent / Secondary ──
   accent:         '#5E5CE6',
   accentLight:    '#7D7AFF',
   accentGhost:    'rgba(94, 92, 230, 0.10)',
 
-  // ── Success / Danger / Warning ──
   success:        '#30D158',
   successGhost:   'rgba(48, 209, 88, 0.10)',
   danger:         '#FF453A',
@@ -85,7 +82,6 @@ export const COLORS = {
   warning:        '#FF9F0A',
   warningGhost:   'rgba(255, 159, 10, 0.10)',
 
-  // ── Neutrals (Slate-toned for luxury) ──
   bg:             '#F2F4F8',
   card:           '#FFFFFF',
   cardElevated:   '#FFFFFF',
@@ -93,17 +89,52 @@ export const COLORS = {
   border:         '#E8ECF2',
   divider:        '#F0F2F5',
 
-  // ── Text ──
   textPrimary:    '#0F172A',
   textSecondary:  '#64748B',
   textTertiary:   '#94A3B8',
   textOnPrimary:  '#FFFFFF',
 
-  // ── Dark Surfaces (for modals / overlays) ──
   darkBg:         '#0F172A',
   darkCard:       '#1E293B',
   darkSurface:    '#334155',
 };
+
+export const DARK_COLORS = {
+  primary:        '#0A84FF',
+  primaryDark:    '#0055CC',
+  primaryLight:   '#3AA0FF',
+  primaryGhost:   'rgba(10, 132, 255, 0.15)',
+  primaryBorder:  'rgba(10, 132, 255, 0.3)',
+
+  accent:         '#5E5CE6',
+  accentLight:    '#7D7AFF',
+  accentGhost:    'rgba(94, 92, 230, 0.15)',
+
+  success:        '#30D158',
+  successGhost:   'rgba(48, 209, 88, 0.15)',
+  danger:         '#FF453A',
+  dangerGhost:    'rgba(255, 69, 58, 0.15)',
+  warning:        '#FF9F0A',
+  warningGhost:   'rgba(255, 159, 10, 0.15)',
+
+  bg:             '#0F172A',
+  card:           '#1E293B',
+  cardElevated:   '#334155',
+  surface:        '#1E293B',
+  border:         '#334155',
+  divider:        '#334155',
+
+  textPrimary:    '#F8FAFC',
+  textSecondary:  '#CBD5E1',
+  textTertiary:   '#94A3B8',
+  textOnPrimary:  '#FFFFFF',
+
+  darkBg:         '#0F172A',
+  darkCard:       '#1E293B',
+  darkSurface:    '#334155',
+};
+
+export const COLORS = LIGHT_COLORS; 
 
 export const GRADIENTS = {
   primary:      ['#32b3ef', '#478df0'],

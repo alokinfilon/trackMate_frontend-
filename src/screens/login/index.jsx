@@ -5,17 +5,19 @@ import {
   TextInput,
   TouchableOpacity,
   ScrollView,
-  SafeAreaView,
   StatusBar,
   ActivityIndicator
 } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
 import { Eye, EyeOff } from 'lucide-react-native';
 import { Tokens } from '../../theme/theme';
-import { googleIcon, appleIcon, CustomButton } from '../../components/index';
 import { styles } from './login.styles';
 import { strings } from './login.strings';
 import { useLogin } from './login.hooks';
+import CustomButton from '../../components/customButton';
+import GoogleIcon from '../../components/svg/googleIcon';
+import AppleIcon from '../../components/svg/appleIcon';
 
 export default function LoginScreen() {
   const {
@@ -27,12 +29,12 @@ export default function LoginScreen() {
     setPasswordVisible,
     loading,
     openSignUpDisplay,
-    handleGoogleLogin,
     handleAuth0Login,
     handleLogin
   } = useLogin();
 
   const iconSize = Tokens.scaleAsset(24);
+
   return (
     <LinearGradient
       colors={['#ace9fd', '#ffffff']}
@@ -70,7 +72,6 @@ export default function LoginScreen() {
                     autoCapitalize="none"
                     value={emailOrPhone}
                     onChangeText={setEmailOrPhone}
-
                   />
                 </LinearGradient>
               </View>
@@ -96,7 +97,6 @@ export default function LoginScreen() {
                       onPress={() => setPasswordVisible(!passwordVisible)}
                       style={styles.eyeButton}
                       activeOpacity={0.7}
-                      keyboardShouldPersistTaps="handled"
                     >
                       {passwordVisible ? (
                         <EyeOff size={iconSize} color="#000000" />
@@ -135,6 +135,7 @@ export default function LoginScreen() {
                   buttonStyle={{ borderRadius: Tokens.components.radiusButton }}
                 />
               )}
+
               <View style={styles.socialsView}>
                 <Text style={styles.orSignUpWithText}>— or sign up with —</Text>
               </View>
@@ -142,7 +143,7 @@ export default function LoginScreen() {
               <View style={styles.socialsView1}>
                 <CustomButton
                   title={strings.buttons.google}
-                  Icon={googleIcon}
+                   Icon={GoogleIcon}
                   iconColor="#000000"
                   colors={['#ffffff', '#ffffff']}
                   fontFamily={Tokens.typography.families.semiBold}
@@ -153,7 +154,7 @@ export default function LoginScreen() {
 
                 <CustomButton
                   title={strings.buttons.apple}
-                  Icon={appleIcon}
+                 Icon={AppleIcon}
                   iconColor="#000000"
                   colors={['#ffffff', '#ffffff']}
                   fontFamily={Tokens.typography.families.semiBold}
@@ -164,22 +165,16 @@ export default function LoginScreen() {
               </View>
 
               <View style={styles.footerView}>
-
                 <Text style={styles.footerText}>
                   New here?{' '}
                   <View style={styles.signupText}>
-                    <TouchableOpacity
-                      onPress={openSignUpDisplay}>
-                      <Text
-                        style={styles.loginLink}
-
-                      >
+                    <TouchableOpacity onPress={openSignUpDisplay}>
+                      <Text style={styles.loginLink}>
                         {strings.buttons.signup}
                       </Text>
                     </TouchableOpacity>
                   </View>
                 </Text>
-
               </View>
             </View>
           </View>
@@ -188,5 +183,3 @@ export default function LoginScreen() {
     </LinearGradient>
   );
 }
-
-

@@ -4,7 +4,8 @@ import { useAuth0 } from 'react-native-auth0';
 import { useAlertModal } from '../../components/index';
 import authService from '../../services/authService';
 import { saveTokens } from '../../utils/storage';
-import { AuthContext } from '../../../App';
+import { AuthContext } from '../../context/AuthContext'; 
+
 
 export const useSignup = () => {
   const [identifier, setIdentifier] = useState('');

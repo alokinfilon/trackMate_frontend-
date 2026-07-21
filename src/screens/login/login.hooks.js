@@ -1,8 +1,8 @@
 import { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth0 } from 'react-native-auth0';
-import { AuthContext } from '../../../App';
-import { useAlertModal } from '../../components/index';
+import { AuthContext } from '../../context/AuthContext'; 
+import { useAlertModal } from '../../components/modal';
 import authService from '../../services/authService';
 import { saveTokens } from '../../utils/storage';
 
@@ -25,13 +25,7 @@ export const useLogin = () => {
     }
   };
 
-  const handleGoogleLogin = () => {
-    showModal({
-      title: 'Google Auth',
-      message: 'Google OAuth integration coming soon.',
-      variant: 'info'
-    });
-  };
+  
 
   const handleAuth0Login = async (connection = null) => {
     setLoading(true);
@@ -148,7 +142,6 @@ export const useLogin = () => {
     setPasswordVisible,
     loading,
     openSignUpDisplay,
-    handleGoogleLogin,
     handleAuth0Login,
     handleLogin
   };
