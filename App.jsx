@@ -3,7 +3,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { Auth0Provider } from 'react-native-auth0';
 
-// 👇 FIX: Direct file path call instead of calling from components/index
 import { ModalProvider } from './src/components/modal'; 
 
 import { ThemeProvider } from './src/context/ThemeContext';

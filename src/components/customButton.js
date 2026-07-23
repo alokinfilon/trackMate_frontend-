@@ -16,8 +16,6 @@ const CustomButton = ({
   disabled = false,
   Icon,
   iconColor,
-  borderWidth= 1,
-  borderColor= '#000000',
   iconPosition = 'left',
 }) => {
   const finalIconColor = iconColor || '#ffffff';

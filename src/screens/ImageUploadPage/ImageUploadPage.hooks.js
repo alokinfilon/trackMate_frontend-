@@ -26,20 +26,19 @@ export const useImageUpload = (passedTripId) => {
   const [caption, setCaption] = useState('Testing my cloud gallery upload!');
   const [accessibility, setAccessibility] = useState('shared');
 
-  // Compute the true trip ID to use across functions safely
   const activeTripId = passedTripId || internalTripId;
+   const [selectedCollectionId, setSelectedCollectionId] = useState(null);
 
-  // 1. Fetch active trip from registry if no ID was provided to the hook
   useEffect(() => {
     if (!passedTripId) {
       fetchFallbackTripId();
     }
   }, [passedTripId]);
 
-  // 2. Fetch gallery data reactively when viewMode or activeTripId updates
   useEffect(() => {
     if (viewMode === 'gallery' && activeTripId) {
       fetchGalleryData();
+      fetchCollectionsData(); 
     }
   }, [viewMode, activeTripId]);
 
@@ -67,7 +66,6 @@ export const useImageUpload = (passedTripId) => {
       }
 
       if (response.ok && json.success && Array.isArray(json.data) && json.data.length > 0) {
-        // Find the first trip that isn't 'cancelled', or fallback to the first trip object
         const validTrip = json.data.find(trip => trip.status !== 'cancelled') || json.data[0];
         
         if (validTrip && validTrip._id) {
@@ -80,6 +78,35 @@ export const useImageUpload = (passedTripId) => {
       setLoadingTrip(false);
     }
   };
+
+  const fetchCollectionsData = async () => {
+    if (!activeTripId) return;
+    try {
+      const token = await authService.getAccessToken();
+      if (!token) return;
+
+      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections?tripId=${activeTripId}`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      const json = await response.json();
+
+if (response.ok && json.success) {
+  if (Array.isArray(json.data)) {
+    setCollections(json.data); 
+  } else {
+    setCollections(json.collections || json.data?.collections || []);
+  }
+}
+  } catch (err) {
+    console.error("Failed to fetch collections:", err);
+  }
+  };
+
 
   const fetchGalleryData = async () => {
     if (!activeTripId) return; 
@@ -112,12 +139,10 @@ export const useImageUpload = (passedTripId) => {
       }
 
       if (response.ok && json.success) {
-        // Your endpoint returns the image array directly inside json.data
         if (Array.isArray(json.data)) {
           setAllImages(json.data);
-          setCollections([]); // Clear or handle collections if not present in this endpoint
+          setCollections([]); 
         } else {
-          // Fallback logic for alternative endpoint formats
           setCollections(json.collections || json.data?.collections || []);
           setAllImages(json.images || json.data?.images || []);
         }
@@ -260,6 +285,11 @@ export const useImageUpload = (passedTripId) => {
       formData.append('caption', caption);
       formData.append('accessibility', accessibility);
 
+       if (selectedCollectionId) {
+        formData.append('collectionId', selectedCollectionId);
+      }
+
+
       const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/${activeTripId}`, {
         method: 'POST',
         body: formData,
@@ -318,6 +348,8 @@ export const useImageUpload = (passedTripId) => {
     takePhoto,
     uploadImage,
     uploading,
+    selectedCollectionId,
+    setSelectedCollectionId,
     caption,
     setCaption,
     accessibility,

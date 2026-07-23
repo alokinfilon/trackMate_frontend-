@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Dimensions, Text, ActivityIndicator } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
-import authService from '../../services/authService'; 
+import authService from '../../services/authService';
 import { useTheme } from '../../context/ThemeContext';
 import { createStyles } from './KitPieChart.styles';
 
@@ -11,14 +11,14 @@ export default function KitPieChart() {
   const [chartData, setChartData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  
+
   const { colors, isDarkMode } = useTheme();
   const styles = React.useMemo(() => createStyles(colors, isDarkMode), [colors, isDarkMode]);
 
   useEffect(() => {
     const fetchAnalytics = async () => {
       try {
-        const token = await authService.getAccessToken(); 
+        const token = await authService.getAccessToken();
 
         if (!token) {
           setError("Session expired. Please log in again.");
@@ -46,7 +46,7 @@ export default function KitPieChart() {
 
         if (json.success && json.chartData) {
           const rawData = json.chartData;
-          
+
           const statusColors = {
             'upcoming': '#4D96FF',
             'partially completed': '#FFD93D',
@@ -77,7 +77,7 @@ export default function KitPieChart() {
     };
 
     fetchAnalytics();
-  },[]);
+  }, []);
 
   if (loading) {
     return (

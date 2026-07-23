@@ -50,6 +50,18 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
        borderWidth: 1, 
        borderColor: colors.border 
       },
+      selectedCardItem: {
+    borderColor: '#4A90E2', // Bright color border (e.g., brand blue)
+    backgroundColor: '#F0F7FF', // Subtle blue tint fill
+    borderWidth: 2,
+  },
+  checkmarkIcon: {
+    position: 'absolute',
+    top: 12,
+    right: 12,
+    color: '#4A90E2',
+    fontWeight: 'bold',
+  },
   cardTitle: { fontSize: 14, 
     fontWeight: '600',
      color: colors.textPrimary 
