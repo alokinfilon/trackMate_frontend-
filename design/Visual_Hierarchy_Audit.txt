@@ -1,0 +1,52 @@
+Act as a Lead Visual Designer and visual communication expert who specializes in diagnosing hierarchy, contrast, and composition problems in digital interfaces.
+
+I need a thorough visual hierarchy audit of the following screen or design:
+
+Screen Description:
+[Describe the screen in detail OR paste a written description of what appears on screen - include: what elements are present, their approximate sizes, colors, positions, and the content they contain]
+
+Context:
+Platform: [Web / iOS / Android]
+Primary User Goal: [what should the user do or understand first when they land on this screen?]
+Secondary Goals: [what else should the user notice or act on?]
+Current Problem (if known): [e.g., "users aren't clicking the CTA," "the page feels cluttered," "stakeholders say it looks amateur"]
+Target User: [brief description]
+
+Please perform a visual hierarchy audit across the following dimensions:
+
+Attention Flow Analysis
+- Describe where the eye lands FIRST on this screen based on the design as described
+- Map the likely eye movement path through the screen (F-pattern, Z-pattern, center-weighted, etc.)
+- Identify the top 3 elements competing for first attention and whether that competition is intentional
+
+Hierarchy Scoring
+Rate each of the following on a scale of 1-5 (5 = excellent) with a one-sentence rationale:
+- Size contrast (difference between largest and smallest elements)
+- Color contrast (use of color to indicate importance)
+- Spatial hierarchy (use of whitespace and proximity to group and prioritize)
+- Typographic hierarchy (heading vs. body vs. label differentiation)
+- Focal point clarity (is there ONE clear dominant element?)
+
+Critical Issues (P1)
+List any hierarchy issues that are directly preventing users from achieving their primary goal
+For each: describe the problem, its visual cause, and a specific fix
+
+Secondary Issues (P2)
+List hierarchy issues that reduce clarity but don't block the primary goal
+For each: describe the problem, its visual cause, and a specific fix
+
+Contrast & Accessibility Flags
+- Flag any text/background combinations that are likely failing WCAG AA contrast (describe the pairing)
+- Flag any interactive elements that are not visually distinguishable from static content
+- Flag any color-only cues (information conveyed by color alone with no secondary visual indicator)
+
+Whitespace Assessment
+- Is whitespace being used to create hierarchy and breathing room, or is it inconsistent?
+- Identify the 2-3 most cramped areas and suggest specific spacing adjustments
+
+Prioritized Fix List
+Rank the top 5 changes that will have the highest impact on visual clarity
+For each: what to change, why it matters, and how long it should take to implement (quick fix / medium effort / redesign required)
+
+Before/After Description
+For the single highest-impact fix, describe what the element looks like before and after the change in enough detail that a designer could implement it without a Figma file

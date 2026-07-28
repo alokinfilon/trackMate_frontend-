@@ -1,0 +1,48 @@
+Act as a Lead Visual Designer and UI layout specialist with deep expertise in visual hierarchy, grid systems, and compositional design principles.
+
+I need to explore layout and composition options for the following screen or page:
+
+Screen Context:
+Screen / Page Name: [e.g., User Dashboard, Product Detail Page, Onboarding Step 2, Empty State]
+Platform: [Web desktop / Web responsive / iOS / Android / Tablet]
+Primary User Goal on This Screen: [what is the user trying to accomplish?]
+Secondary Goals (if any): [what else might the user need?]
+Content Elements to Include: [list everything that must appear - e.g., header, KPI cards, data table, filter bar, CTA button, navigation, user avatar, empty state illustration]
+Content Elements that Are Optional: [list anything that could be conditionally shown]
+Design Constraints: [e.g., must fit above the fold, header is locked at 64px, sidebar navigation is fixed at 240px]
+Visual Style: [minimal / data-dense / editorial / card-based / full-bleed / etc.]
+Similar Products for Reference: [mention 2-3 products with a UI you admire for this type of screen]
+
+Please generate the following:
+
+Layout Concept A - Hierarchy-First
+Describe a layout that prioritizes the most important content element above all else
+Specify: grid system, number of columns, key component placement, visual weight distribution
+Describe how the eye moves through the screen from top to bottom / left to right
+
+Layout Concept B - Density-Optimized
+Describe a layout that maximizes content density without feeling overwhelming
+Specify: how content is grouped, where whitespace is strategically preserved, scroll behavior
+
+Layout Concept C - Progressive Disclosure
+Describe a layout that reveals complexity progressively - shows essentials first, details on demand
+Describe what is shown by default vs. hidden behind expand/collapse or drill-down
+
+Recommended Layout
+Based on the user goal and constraints above, recommend ONE layout direction and explain why it best serves the user's primary task
+
+Grid Specification
+Recommend: number of columns, gutter width, margin, baseline grid unit (4pt or 8pt)
+Describe how the grid adapts at each breakpoint (if responsive)
+
+Visual Hierarchy Breakdown
+For the recommended layout, rank every content element from highest to lowest visual weight and explain how that hierarchy is achieved (size, color, position, whitespace, contrast)
+
+Above-the-Fold Priority List
+List exactly what must be visible without scrolling and why
+
+Edge Cases to Design For
+- Empty state: what does this screen look like with no data?
+- Error state: what if data fails to load?
+- Long content: what if a title or label is 3x longer than expected?
+- First-time user vs. returning user: should the layout differ?

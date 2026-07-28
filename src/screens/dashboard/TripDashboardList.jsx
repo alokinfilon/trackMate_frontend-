@@ -11,6 +11,13 @@ import { useTheme } from '../../context/ThemeContext';
 import { useTripDashboard } from './TripDashboardList.hooks';
 import { createStyles } from './TripDashboardList.styles';
 
+const STATUS_COLORS = {
+  'upcoming': '#6C63FF',
+  'partially completed': '#ED8936',
+  'completed': '#38B2AC',
+  'cancelled': '#E53E3E',
+};
+
 export default function TripDashboardList() {
   const {
     loading,
@@ -36,15 +43,19 @@ export default function TripDashboardList() {
 
   const renderTripCard = ({ item }) => {
     const isUpdating = actionLoadingId === item._id;
+    const statusColor = STATUS_COLORS[item.status?.toLowerCase()] || colors.textTertiary;
 
     return (
       <View style={styles.card}>
+        {/* Left accent stripe */}
+        <View style={[styles.cardAccentStripe, { backgroundColor: statusColor }]} />
+
         <View style={styles.cardHeader}>
           <Text style={styles.locationTitle}>{item.location_id.replace('loc_', '').toUpperCase()}</Text>
 
           <View style={styles.headerRightContainer}>
-            <View style={[styles.badge, { backgroundColor: item.status === 'partially completed' ? '#FFF3CD' : '#D1E7DD' }]}>
-              <Text style={[styles.badgeText, { color: item.status === 'partially completed' ? '#856404' : '#0F5132' }]}>
+            <View style={styles.badge}>
+              <Text style={[styles.badgeText, { color: statusColor }]}>
                 {item.status}
               </Text>
             </View>
@@ -65,18 +76,18 @@ export default function TripDashboardList() {
 
         <View style={styles.cardFooter}>
           <View>
-            <Text style={styles.label}>DURATION</Text>
+            <Text style={styles.label}>📅 DURATION</Text>
             <Text style={styles.dateText}>{formatDate(item.start_date)} - {formatDate(item.end_date)}</Text>
           </View>
           <View style={styles.rightAlign}>
-            <Text style={styles.label}>TOTAL PRICE ({item.number_of_people} Pax)</Text>
+            <Text style={styles.label}>💰 TOTAL ({item.number_of_people} Pax)</Text>
             <Text style={styles.priceText}>₹{item.total_price}</Text>
           </View>
         </View>
 
         {isUpdating && (
           <View style={styles.loadingOverlay}>
-            <ActivityIndicator size="small" color={colors.primary} />
+            <ActivityIndicator size="small" color="#6C63FF" />
           </View>
         )}
       </View>
@@ -86,7 +97,7 @@ export default function TripDashboardList() {
   if (loading) {
     return (
       <View style={styles.centerContainer}>
-        <ActivityIndicator size="small" color={colors.primary} />
+        <ActivityIndicator size="small" color="#6C63FF" />
       </View>
     );
   }
@@ -101,6 +112,7 @@ export default function TripDashboardList() {
 
   return (
     <View style={styles.container}>
+      {/* Neumorphic Segmented Toggle */}
       <View style={styles.toggleBar}>
         <TouchableOpacity
           style={[styles.toggleButton, activeTab === 'upcoming' && styles.activeToggleButton]}

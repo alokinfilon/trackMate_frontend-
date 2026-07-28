@@ -20,7 +20,7 @@ export const useHome = (navigation) => {
 
   useEffect(() => {
     fetchHistoricalSites(1, false);
-  }, []);
+  }, [fetchHistoricalSites]);
 
   const fetchHistoricalSites = useCallback((targetPage = 1, append = false) => {
     if (append) {

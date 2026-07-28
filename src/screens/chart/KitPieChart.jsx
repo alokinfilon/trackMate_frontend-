@@ -48,10 +48,10 @@ export default function KitPieChart() {
           const rawData = json.chartData;
 
           const statusColors = {
-            'upcoming': '#4D96FF',
-            'partially completed': '#FFD93D',
-            'completed': '#6BCB77',
-            'cancelled': '#FF6B6B',
+            'upcoming': '#6C63FF',
+            'partially completed': '#ED8936',
+            'completed': '#38B2AC',
+            'cancelled': '#E53E3E',
           };
 
           const formattedData = Object.keys(rawData)
@@ -77,12 +77,13 @@ export default function KitPieChart() {
     };
 
     fetchAnalytics();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   if (loading) {
     return (
       <View style={[styles.container, styles.center]}>
-        <ActivityIndicator size="large" color={colors.primary} />
+        <ActivityIndicator size="large" color="#6C63FF" />
         <Text style={styles.loadingText}>Compiling Trip Metrics...</Text>
       </View>
     );
@@ -99,7 +100,7 @@ export default function KitPieChart() {
   if (chartData.length === 0) {
     return (
       <View style={[styles.container, styles.center]}>
-        <Text style={styles.title}>Trip Overview Status</Text>
+        <Text style={styles.title}>Trip Overview</Text>
         <Text style={styles.noDataText}>No trip details logged yet.</Text>
       </View>
     );
@@ -107,19 +108,38 @@ export default function KitPieChart() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Trip Overview Status</Text>
+      {/* Header */}
+      <View style={styles.headerRow}>
+        <Text style={{ fontSize: 20 }}>📊</Text>
+        <Text style={styles.title}>Trip Overview</Text>
+      </View>
+      <Text style={styles.subtitle}>Status distribution across all trips</Text>
+
+      {/* Chart — no default legend */}
       <PieChart
         data={chartData}
-        width={screenWidth - 40}
-        height={220}
+        width={screenWidth - 72}
+        height={200}
         chartConfig={{
           color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
         }}
         accessor={"population"}
         backgroundColor={"transparent"}
         paddingLeft={"15"}
+        hasLegend={false}
         absolute
       />
+
+      {/* Custom Neumorphic Legend */}
+      <View style={styles.legendContainer}>
+        {chartData.map((item, index) => (
+          <View key={index} style={styles.legendItem}>
+            <View style={[styles.legendDot, { backgroundColor: item.color }]} />
+            <Text style={styles.legendText}>{item.name}</Text>
+            <Text style={styles.legendCount}>{item.population}</Text>
+          </View>
+        ))}
+      </View>
     </View>
   );
 }

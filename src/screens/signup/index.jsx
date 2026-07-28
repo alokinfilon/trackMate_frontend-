@@ -16,7 +16,6 @@ import {
   appleIcon,
   CustomButton
 } from '../../components/index';
-import LinearGradient from 'react-native-linear-gradient';
 import { Eye, EyeOff, Check, X, Info } from 'lucide-react-native';
 import { Tokens } from '../../theme/theme';
 import { styles } from './signup.styles';
@@ -59,13 +58,8 @@ export default function SignUpScreen() {
   const feedbackIconSize = Tokens.scaleAsset(12);
 
   return (
-    <LinearGradient
-      colors={['#ace9fd', '#ffffff']}
-      start={{ x: 0.44, y: 0 }}
-      end={{ x: 0.54, y: 0.98 }}
-      style={styles.screenContainer}
-    >
-      <StatusBar barStyle="light-content" backgroundColor="#0F0F0F" />
+    <View style={styles.screenContainer}>
+      <StatusBar barStyle="dark-content" backgroundColor="#E0E5EC" />
       <SafeAreaView style={styles.safeArea}>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
@@ -80,37 +74,29 @@ export default function SignUpScreen() {
             </View>
 
             <View style={styles.inputFieldsContainer}>
+              {/* Identifier Input — Neumorphic Inset */}
               <View style={styles.inputOuterView}>
-                <LinearGradient
-                  colors={['#ffffff', '#ffffff']}
-                  start={{ x: 0.01, y: 0.5 }}
-                  end={{ x: 0.99, y: 0.5 }}
-                  style={styles.inputGradientBackground}
-                >
+                <View style={styles.inputInnerContainer}>
                   <TextInput
                     style={[styles.inputText, { flex: 1 }]}
                     placeholder={strings.placeholders.identifier}
-                    placeholderTextColor="#000000"
+                    placeholderTextColor="#94A3B8"
                     keyboardType="default"
                     autoCapitalize="none"
                     value={identifier}
                     onChangeText={setIdentifier}
                   />
-                </LinearGradient>
+                </View>
               </View>
 
+              {/* Password Input */}
               <View style={styles.passwordView}>
                 <View style={styles.inputOuterView}>
-                  <LinearGradient
-                   colors={['#ffffff', '#ffffff']}
-                    start={{ x: 0.01, y: 0.5 }}
-                    end={{ x: 0.99, y: 0.5 }}
-                    style={styles.inputGradientBackground}
-                  >
+                  <View style={styles.inputInnerContainer}>
                     <TextInput
                       style={[styles.inputText, { flex: 1 }]}
                       placeholder={strings.placeholders.password}
-                      placeholderTextColor="#000000"
+                      placeholderTextColor="#94A3B8"
                       secureTextEntry={!passwordVisible}
                       autoCapitalize="none"
                       value={password}
@@ -125,12 +111,12 @@ export default function SignUpScreen() {
                       keyboardShouldPersistTaps="handled"
                     >
                       {passwordVisible ? (
-                        <EyeOff size={iconSize} color="#000000" />
+                        <EyeOff size={iconSize} color="#6B7280" />
                       ) : (
-                        <Eye size={iconSize} color="#000000" />
+                        <Eye size={iconSize} color="#6B7280" />
                       )}
                     </TouchableOpacity>
-                  </LinearGradient>
+                  </View>
                 </View>
                 {isPasswordFocused && (
                   <View style={styles.strengthView}>
@@ -154,7 +140,7 @@ export default function SignUpScreen() {
                           styles.meterBar,
                           {
                             backgroundColor:
-                              strengthScore >= 1 ? activeBarColor : '#45bbe9',
+                              strengthScore >= 1 ? activeBarColor : '#D5DAE1',
                           },
                         ]}
                       />
@@ -163,7 +149,7 @@ export default function SignUpScreen() {
                           styles.meterBar,
                           {
                             backgroundColor:
-                              strengthScore >= 2 ? activeBarColor : '#E5E5E5',
+                              strengthScore >= 2 ? activeBarColor : '#D5DAE1',
                           },
                         ]}
                       />
@@ -172,7 +158,7 @@ export default function SignUpScreen() {
                           styles.meterBar,
                           {
                             backgroundColor:
-                              strengthScore >= 3 ? activeBarColor : '#E5E5E5',
+                              strengthScore >= 3 ? activeBarColor : '#D5DAE1',
                           },
                         ]}
                       />
@@ -181,7 +167,7 @@ export default function SignUpScreen() {
                           styles.meterBar,
                           {
                             backgroundColor:
-                              strengthScore >= 4 ? activeBarColor : '#E5E5E5',
+                              strengthScore >= 4 ? activeBarColor : '#D5DAE1',
                           },
                         ]}
                       />
@@ -202,21 +188,21 @@ export default function SignUpScreen() {
                                     width: feedbackIconSize * 1.6,
                                     height: feedbackIconSize * 1.6,
                                     borderRadius: (feedbackIconSize * 1.8) / 2,
-                                    borderColor: '#2BBA52',
-                                    backgroundColor: '#2BBA521A',
+                                    borderColor: '#38B2AC',
+                                    backgroundColor: 'rgba(56,178,172,0.1)',
                                   },
                                 ]}
                               >
                                 <CheckMarkl
                                   size={feedbackIconSize - 2}
-                                  color="#2BBA52"
+                                  color="#38B2AC"
                                   strokeWidth={4}
                                 />
                               </View>
                             ) : (
                               <X
                                 size={feedbackIconSize + 4}
-                                color="#F16646"
+                                color="#E53E3E"
                                 strokeWidth={3}
                               />
                             )}
@@ -224,7 +210,7 @@ export default function SignUpScreen() {
                           <Text
                             style={[
                               styles.requirementItemText,
-                              hasMinLength && { color: '#2BBA52' },
+                              hasMinLength && { color: '#38B2AC' },
                             ]}
                           >
                             At least 8 characters
@@ -240,21 +226,21 @@ export default function SignUpScreen() {
                                     width: feedbackIconSize * 1.6,
                                     height: feedbackIconSize * 1.6,
                                     borderRadius: (feedbackIconSize * 1.8) / 2,
-                                    borderColor: '#2BBA52',
-                                    backgroundColor: '#2BBA521A',
+                                    borderColor: '#38B2AC',
+                                    backgroundColor: 'rgba(56,178,172,0.1)',
                                   },
                                 ]}
                               >
                                 <CheckMarkl
                                   size={feedbackIconSize - 2}
-                                  color="#2BBA52"
+                                  color="#38B2AC"
                                   strokeWidth={4}
                                 />
                               </View>
                             ) : (
                               <X
                                 size={feedbackIconSize + 4}
-                                color="#F16646"
+                                color="#E53E3E"
                                 strokeWidth={3}
                               />
                             )}
@@ -262,7 +248,7 @@ export default function SignUpScreen() {
                           <Text
                             style={[
                               styles.requirementItemText,
-                              hasCaseLetters && { color: '#2BBA52' },
+                              hasCaseLetters && { color: '#38B2AC' },
                             ]}
                           >
                             Capital and lowercase letters
@@ -278,21 +264,21 @@ export default function SignUpScreen() {
                                     width: feedbackIconSize * 1.6,
                                     height: feedbackIconSize * 1.6,
                                     borderRadius: (feedbackIconSize * 1.8) / 2,
-                                    borderColor: '#2BBA52',
-                                    backgroundColor: '#2BBA521A',
+                                    borderColor: '#38B2AC',
+                                    backgroundColor: 'rgba(56,178,172,0.1)',
                                   },
                                 ]}
                               >
                                 <CheckMarkl
                                   size={feedbackIconSize - 2}
-                                  color="#2BBA52"
+                                  color="#38B2AC"
                                   strokeWidth={4}
                                 />
                               </View>
                             ) : (
                               <X
                                 size={feedbackIconSize + 4}
-                                color="#F16646"
+                                color="#E53E3E"
                                 strokeWidth={3}
                               />
                             )}
@@ -300,7 +286,7 @@ export default function SignUpScreen() {
                           <Text
                             style={[
                               styles.requirementItemText,
-                              hasSpecialChar && { color: '#2BBA52' },
+                              hasSpecialChar && { color: '#38B2AC' },
                             ]}
                           >
                             A special character - # @ $ % & ! * _ ? ^ -
@@ -316,21 +302,21 @@ export default function SignUpScreen() {
                                     width: feedbackIconSize * 1.6,
                                     height: feedbackIconSize * 1.6,
                                     borderRadius: (feedbackIconSize * 1.8) / 2,
-                                    borderColor: '#2BBA52',
-                                    backgroundColor: '#2BBA521A',
+                                    borderColor: '#38B2AC',
+                                    backgroundColor: 'rgba(56,178,172,0.1)',
                                   },
                                 ]}
                               >
                                 <CheckMarkl
                                   size={feedbackIconSize - 2}
-                                  color="#2BBA52"
+                                  color="#38B2AC"
                                   strokeWidth={4}
                                 />
                               </View>
                             ) : (
                               <X
                                 size={feedbackIconSize + 4}
-                                color="#F16646"
+                                color="#E53E3E"
                                 strokeWidth={3}
                               />
                             )}
@@ -338,7 +324,7 @@ export default function SignUpScreen() {
                           <Text
                             style={[
                               styles.requirementItemText,
-                              hasNumber && { color: '#2BBA52' },
+                              hasNumber && { color: '#38B2AC' },
                             ]}
                           >
                             A Number
@@ -348,37 +334,30 @@ export default function SignUpScreen() {
                     </View>
                   </View>
                 )}
+
+                {/* Info Bar — Neumorphic inset well */}
                 <View style={styles.infoBarView}>
-                  <LinearGradient
-                    colors={['#ace9fd', '#bdedfd']}
-                    start={{ x: 0.02, y: 0.5 }}
-                    end={{ x: 0.98, y: 0.5 }}
-                    style={styles.infoBarInnerView}
-                  >
+                  <View style={styles.infoBarInnerView}>
                     <Info
                       size={34}
-                      color="#000000"
+                      color="#6C63FF"
                       style={styles.infoIconSpacing}
                     />
                     <Text style={styles.infoBarText}>
                      {strings.text.notice}
                     </Text>
-                  </LinearGradient>
+                  </View>
                 </View>
               </View>
 
+              {/* Confirm Password */}
               <View style={styles.inputView}>
                 <View style={styles.inputOuterView}>
-                  <LinearGradient
-                    colors={['#ffffff', '#ffffff']}
-                    start={{ x: 0.01, y: 0.5 }}
-                    end={{ x: 0.99, y: 0.5 }}
-                    style={styles.inputGradientBackground}
-                  >
+                  <View style={styles.inputInnerContainer}>
                     <TextInput
                       style={[styles.inputText, { flex: 1 }]}
                       placeholder={strings.placeholders.confirmPassword}
-                      placeholderTextColor="#000000"
+                      placeholderTextColor="#94A3B8"
                       secureTextEntry={!confirmPasswordVisible}
                       autoCapitalize="none"
                       value={confirmPassword}
@@ -395,12 +374,12 @@ export default function SignUpScreen() {
                       keyboardShouldPersistTaps="handled"
                     >
                       {confirmPasswordVisible ? (
-                        <EyeOff size={iconSize} color="#000000" />
+                        <EyeOff size={iconSize} color="#6B7280" />
                       ) : (
-                        <Eye size={iconSize} color="#000000" />
+                        <Eye size={iconSize} color="#6B7280" />
                       )}
                     </TouchableOpacity>
-                  </LinearGradient>
+                  </View>
                 </View>
 
                 {isConfirmPasswordFocused && confirmPassword.length > 0 && (
@@ -408,7 +387,7 @@ export default function SignUpScreen() {
                     <Text
                       style={[
                         styles.passwordMatchedText,
-                        isPasswordMatched && { color: '#2BBA52' },
+                        isPasswordMatched && { color: '#38B2AC' },
                       ]}
                     >
                       {isPasswordMatched
@@ -423,24 +402,24 @@ export default function SignUpScreen() {
                           height: feedbackIconSize * 1.6,
                           borderRadius: (feedbackIconSize * 1.8) / 2,
                           borderColor: isPasswordMatched
-                            ? '#2BBA52'
-                            : '#F16646',
+                            ? '#38B2AC'
+                            : '#E53E3E',
                           backgroundColor: isPasswordMatched
-                            ? '#2BBA521A'
-                            : '#F166461A',
+                            ? 'rgba(56,178,172,0.1)'
+                            : 'rgba(229,62,62,0.1)',
                         },
                       ]}
                     >
                       {isPasswordMatched ? (
                         <CheckMarkl
                           size={feedbackIconSize - 2}
-                          color="#2BBA52"
+                          color="#38B2AC"
                           strokeWidth={4}
                         />
                       ) : (
                         <X
                           size={feedbackIconSize - 2}
-                          color="#F16646"
+                          color="#E53E3E"
                           strokeWidth={3}
                         />
                       )}
@@ -449,24 +428,20 @@ export default function SignUpScreen() {
                 )}
               </View>
 
+              {/* Checkbox — Neumorphic */}
               <TouchableOpacity
                 style={styles.checkboxContainer}
                 onPress={() => setTermsAccepted(!termsAccepted)}
                 activeOpacity={0.8}
               >
                 {termsAccepted ? (
-                  <LinearGradient
-                    colors={['#19bff7', '#05b4ee', '#04b7f3', '#0397c8']}
-                    start={{ x: 0.1, y: 0.5 }}
-                    end={{ x: 0.7, y: 0.5 }}
-                    style={styles.checkmarkBoxActive}
-                  >
+                  <View style={styles.checkmarkBoxActive}>
                     <Check
                       size={feedbackIconSize}
-                      color="#656464"
+                      color="#FFFFFF"
                       strokeWidth={3}
                     />
-                  </LinearGradient>
+                  </View>
                 ) : (
                   <View style={styles.checkmarkBoxInactive} />
                 )}
@@ -478,15 +453,15 @@ export default function SignUpScreen() {
 
             <View style={styles.continueButtonView}>
               {loading ? (
-                <ActivityIndicator size="large" color="#50c9f1" />
+                <ActivityIndicator size="large" color="#6C63FF" />
               ) : (
                 <CustomButton
-                  colors={['#ffffff', '#ffffff', '#ffffff', '#ffffff']}
+                  variant="primary"
                   onPress={handleSignUp}
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
                   title={strings.buttons.continue}
-                  buttonStyle={{ borderRadius: Tokens.components.radiusButton }}
+                  buttonStyle={{ borderRadius: 16 }}
                 />
               )}
 
@@ -496,22 +471,22 @@ export default function SignUpScreen() {
                 <CustomButton
                   title={strings.buttons.google}
                   Icon={googleIcon}
-                  iconColor="#1c1c1c"
-                  colors={['#ffffff', '#ffffff']}
+                  iconColor="#3D4852"
+                  variant="secondary"
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
-                  buttonStyle={{ borderRadius: Tokens.components.radiusButton }}
+                  buttonStyle={{ borderRadius: 16 }}
                   onPress={() => handleAuth0Signup('google-oauth2')}
                 />
 
                 <CustomButton
                    title={strings.buttons.apple}
                   Icon={appleIcon}
-                  iconColor="#141313"
-                  colors={['#ffffff', '#ffffff']}
+                  iconColor="#3D4852"
+                  variant="secondary"
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
-                  buttonStyle={{ borderRadius: Tokens.components.radiusButton }}
+                  buttonStyle={{ borderRadius: 16 }}
                   onPress={() => handleAuth0Signup('apple')}
                 />
               </View>
@@ -531,7 +506,6 @@ export default function SignUpScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
-

@@ -1,5 +1,6 @@
 import { useState, useRef, useContext } from 'react';
 import { Animated } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../context/AuthContext';
 import authService from '../../services/authService';
 import { useAlertModal } from '../../components/index';
@@ -9,6 +10,7 @@ export const useProfileSettings = () => {
   const { setUserIsAuthenticated } = useContext(AuthContext);
   const { showModal } = useAlertModal();
   const [themeModalVisible, setThemeModalVisible] = useState(false);
+  const navigation = useNavigation();
 
   const handlePressIn = () => {
     Animated.spring(propScale, {

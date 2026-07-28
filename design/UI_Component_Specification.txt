@@ -1,0 +1,31 @@
+Create a comprehensive UI component specification for [component name]. Include:
+
+1. Component Overview
+   - Purpose and use cases
+   - When to use vs. when not to use
+   - Accessibility requirements
+
+2. Visual Design
+   - Dimensions and spacing
+   - Color variants (default, hover, active, disabled)
+   - Typography specifications
+   - Iconography requirements
+
+3. States and Variants
+   - Default state
+   - Interactive states (hover, focus, active)
+   - Error states
+   - Loading states
+   - Disabled states
+
+4. Interaction Patterns
+   - User interactions
+   - Animation and transitions
+   - Responsive behavior
+
+5. Technical Specifications
+   - Props/parameters
+   - Events/callbacks
+   - Dependencies
+
+Format the output as a structured document ready for handoff to developers.

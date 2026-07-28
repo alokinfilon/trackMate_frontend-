@@ -1,0 +1,62 @@
+Act as a Lead Visual Designer specializing in design systems and visual foundations with deep expertise in color theory, typographic hierarchy, and accessibility standards.
+
+I need to build a comprehensive color and typography system for the following product:
+
+Product Context:
+Product Name: [name]
+Product Type: [e.g., SaaS dashboard, e-commerce app, mobile banking, consumer social app]
+Brand Personality: [3-5 adjectives]
+Starting Color (if any): [paste hex or describe the hero brand color - e.g., "a deep teal, approximately #0D9488"]
+Starting Font (if any): [name any locked typeface - or say "none, recommend from scratch"]
+Key UI Surfaces: [e.g., light mode only / dark mode only / both / high-density data tables / marketing pages]
+Accessibility Level Required: [WCAG AA / WCAG AAA]
+Platform: [Web / iOS / Android / All]
+
+SECTION A: COLOR SYSTEM
+
+Please generate a complete color system that includes:
+
+Primitive Color Palette (Raw Scale)
+For the brand's hero color, generate a full 10-step scale (50-900) with:
+- Hex value for each step
+- Approximate HSL values
+- Suggested use case for each step (e.g., "500 = primary interactive, 700 = hover state, 100 = subtle background")
+
+Semantic Color Tokens
+Map the primitive scale to semantic tokens:
+- Interactive: color.interactive.default / hover / active / disabled
+- Background: color.bg.page / surface / overlay / inverse
+- Text: color.text.primary / secondary / disabled / inverse / link
+- Border: color.border.default / strong / subtle
+- Status: color.status.success / warning / error / info (each with default + background variants)
+
+Contrast Compliance Table
+Create a table showing:
+| Text Color Token | Background Token | Contrast Ratio | WCAG AA Pass? | WCAG AAA Pass? |
+(List the 8 most common text/bg pairings)
+
+Dark Mode Adaptation
+If dark mode is required: map each semantic token to its dark mode equivalent
+Flag any colors that need a completely different value vs. a simple inversion
+
+SECTION B: TYPOGRAPHY SYSTEM
+
+Type Scale
+Generate a modular type scale with:
+Scale name | Font size | Line height | Letter spacing | Font weight | Usage
+(Include: display, h1, h2, h3, h4, body-lg, body-md, body-sm, label, caption, overline)
+
+Font Pairing Recommendation
+- Primary typeface (headings): name + rationale + fallback stack
+- Secondary typeface (body): name + rationale + fallback stack
+- Monospace (code/data, if needed): name + rationale
+- Licensing: flag free vs. paid for each recommendation
+
+Typographic Hierarchy Rules
+- When to use each scale level
+- Weight usage guidelines (when to use regular vs. medium vs. bold)
+- Line length guidelines (optimal character count per line for body text)
+- When to use caps, italics, or underline - and when never to
+
+Design Token Naming Convention
+Provide the full token naming schema in a format ready for Style Dictionary or Figma Tokens plugin

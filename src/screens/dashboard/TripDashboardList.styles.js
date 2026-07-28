@@ -1,7 +1,8 @@
 import { StyleSheet } from 'react-native';
 
 export const createStyles = (colors, isDarkMode) => StyleSheet.create({
-  mainContainer:{flex:1
+  mainContainer: {
+    flex: 1,
   },
   container: {
     marginHorizontal: 10,
@@ -12,26 +13,31 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  // Neumorphic segmented toggle — inset well container
   toggleBar: {
     flexDirection: 'row',
-    backgroundColor: colors.surface,
-    borderRadius: 8,
+    backgroundColor: colors.bg,
+    borderRadius: 16,
     padding: 4,
-    marginBottom: 12,
+    marginBottom: 16,
+    // Neumorphic inset simulation
+    borderWidth: 1,
+    borderColor: 'rgba(163, 177, 198, 0.2)',
   },
   toggleButton: {
     flex: 1,
     paddingVertical: 10,
     alignItems: 'center',
-    borderRadius: 6,
+    borderRadius: 12,
   },
   activeToggleButton: {
-    backgroundColor: colors.card,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.1,
-    shadowRadius: 2,
-    elevation: 2,
+    backgroundColor: colors.bg,
+    // Neumorphic small extruded — pops out of the inset well
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: isDarkMode ? 0.7 : 0.5,
+    shadowRadius: 8,
+    elevation: 4,
   },
   toggleText: {
     fontSize: 13,
@@ -39,28 +45,41 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
     color: colors.textTertiary,
   },
   activeToggleText: {
-    color: colors.textPrimary,
+    color: '#6C63FF',
+    fontWeight: '700',
   },
   listPadding: {
     paddingBottom: 10,
   },
+  // Neumorphic trip card
   card: {
-    backgroundColor: colors.card,
-    borderRadius: 12,
-    padding: 16,
-    marginBottom: 12,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: isDarkMode ? 0.3 : 0.05,
-    shadowRadius: 6,
-    elevation: 2,
+    backgroundColor: colors.bg,
+    borderRadius: 24,
+    padding: 18,
+    marginBottom: 14,
     position: 'relative',
+    // Neumorphic extruded
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 6, height: 6 },
+    shadowOpacity: isDarkMode ? 0.7 : 0.55,
+    shadowRadius: 14,
+    elevation: 6,
+  },
+  // Left accent stripe
+  cardAccentStripe: {
+    position: 'absolute',
+    left: 0,
+    top: 16,
+    bottom: 16,
+    width: 4,
+    borderRadius: 2,
   },
   cardHeader: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    marginBottom: 6,
+    marginBottom: 8,
+    paddingLeft: 12,
   },
   headerRightContainer: {
     flexDirection: 'row',
@@ -69,67 +88,85 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   locationTitle: {
     fontSize: 16,
-    fontWeight: '700',
+    fontWeight: '800',
     color: colors.textPrimary,
+    letterSpacing: -0.2,
   },
+  // Status badge — small neumorphic pill
   badge: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    backgroundColor: colors.bg,
+    // Small extruded
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 2, height: 2 },
+    shadowOpacity: 0.4,
+    shadowRadius: 4,
+    elevation: 2,
   },
   badgeText: {
-    fontSize: 11,
-    fontWeight: '600',
+    fontSize: 10,
+    fontWeight: '700',
+    textTransform: 'capitalize',
   },
   editButton: {
-    paddingHorizontal: 8,
-    paddingVertical: 4,
-    borderRadius: 6,
-    backgroundColor: colors.surface,
-    borderWidth: 1,
-    borderColor: colors.divider,
+    paddingHorizontal: 10,
+    paddingVertical: 5,
+    borderRadius: 12,
+    backgroundColor: colors.bg,
+    // Small extruded
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.4,
+    shadowRadius: 6,
+    elevation: 3,
   },
   editButtonText: {
     fontSize: 11,
-    fontWeight: '600',
-    color: colors.textPrimary,
+    fontWeight: '700',
+    color: '#6C63FF',
   },
   subtext: {
     fontSize: 13,
     color: colors.textSecondary,
     marginBottom: 10,
+    paddingLeft: 12,
   },
   divider: {
     height: 1,
     backgroundColor: colors.divider,
-    marginVertical: 10,
+    marginVertical: 12,
   },
   cardFooter: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+    paddingLeft: 12,
   },
   label: {
     fontSize: 10,
-    fontWeight: '600',
+    fontWeight: '700',
     color: colors.textTertiary,
-    marginBottom: 2,
+    marginBottom: 3,
+    textTransform: 'uppercase',
+    letterSpacing: 0.8,
   },
   dateText: {
     fontSize: 12,
     color: colors.textPrimary,
-    fontWeight: '500',
+    fontWeight: '600',
   },
   rightAlign: {
     alignItems: 'flex-end',
   },
   priceText: {
-    fontSize: 15,
-    fontWeight: '700',
-    color: colors.primary,
+    fontSize: 16,
+    fontWeight: '800',
+    color: '#6C63FF',
   },
   errorText: {
-    color: colors.danger,
+    color: '#E53E3E',
     fontWeight: '500',
   },
   emptyContainer: {
@@ -142,9 +179,9 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   loadingOverlay: {
     ...StyleSheet.absoluteFillObject,
-    backgroundColor: 'rgba(0,0,0,0.1)',
+    backgroundColor: 'rgba(224, 229, 236, 0.7)',
     justifyContent: 'center',
     alignItems: 'center',
-    borderRadius: 12,
+    borderRadius: 24,
   }
 });

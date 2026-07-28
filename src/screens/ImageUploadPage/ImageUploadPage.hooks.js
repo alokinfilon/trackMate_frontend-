@@ -40,6 +40,7 @@ export const useImageUpload = (passedTripId) => {
       fetchGalleryData();
       fetchCollectionsData(); 
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode, activeTripId]);
 
   const fetchFallbackTripId = async () => {

@@ -31,11 +31,15 @@ export const createStyles = (colors) => StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     marginBottom: Tokens.gaps.large,
-    borderWidth: 2,
-    borderColor: colors.border,
     height: 60,
-    borderRadius: 12,
-    backgroundColor: colors.card
+    borderRadius: 32,
+    backgroundColor: colors.bg,
+    // Neumorphic extruded
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 5, height: 5 },
+    shadowOpacity: 0.6,
+    shadowRadius: 12,
+    elevation: 6,
   },
   screenHeaderTitleMainText: {
     fontFamily: Tokens.typography.families.semiBold,
@@ -50,25 +54,34 @@ export const createStyles = (colors) => StyleSheet.create({
   squareHeaderActionButtonItem: {
     width: 40,
     height: 40,
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: colors.border,
+    borderRadius: 12,
+    backgroundColor: colors.bg,
     justifyContent: 'center',
     alignItems: 'center',
+    // Neumorphic small extruded
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 6,
+    elevation: 3,
   },
   postCardOuterFrame: {
     width: '100%',
-    borderRadius: 20,
-    borderWidth: 0.5,
-    borderColor: colors.border,
+    borderRadius: 32,
     padding: 16,
     marginBottom: Tokens.gaps.xlarge,
-    borderWidth: 2
+    backgroundColor: colors.bg,
+    // Neumorphic extruded
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 6, height: 6 },
+    shadowOpacity: 0.6,
+    shadowRadius: 16,
+    elevation: 8,
   },
   imageDisplayContainer: {
     width: '100%',
     height: 389,
-    borderRadius: 16,
+    borderRadius: 20,
     backgroundColor: colors.surface,
     overflow: 'hidden',
     position: 'relative',
@@ -77,8 +90,6 @@ export const createStyles = (colors) => StyleSheet.create({
   mainPostMediaImage: {
     width: CAROUSEL_WIDTH,
     height: '100%',
-    borderColor: colors.border,
-    borderWidth: 1
   },
   mediaCarouselIndicatorTrack: {
     position: 'absolute',
@@ -87,7 +98,7 @@ export const createStyles = (colors) => StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     gap: Tokens.gaps.small,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    backgroundColor: 'rgba(61, 72, 82, 0.5)',
     paddingVertical: 6,
     paddingHorizontal: 12,
     borderRadius: 20,
@@ -96,9 +107,9 @@ export const createStyles = (colors) => StyleSheet.create({
     width: 8,
     height: 8,
     borderRadius: 4,
+    backgroundColor: 'rgba(224, 229, 236, 0.3)',
     borderWidth: 1,
-    borderColor: '#CCCCCC',
-    backgroundColor: 'rgba(255, 255, 255, 0.2)',
+    borderColor: 'rgba(224, 229, 236, 0.5)',
   },
   indicatorDotActive: {
     width: 8,

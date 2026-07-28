@@ -22,6 +22,7 @@ export function useProductDetails(route, navigation) {
     if (targetId) {
       fetchLocationDetails(targetId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [targetId]);
 
   const fetchLocationDetails = async (id) => {

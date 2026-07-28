@@ -74,7 +74,7 @@ export default function PlaceDetails({ route, navigation }) {
       let data = {};
       try {
         data = JSON.parse(rawText);
-      } catch (e) {}
+      } catch (e) { }
 
       if (response.ok && data.success !== false) {
         Alert.alert('Success', 'Trip added successfully!');

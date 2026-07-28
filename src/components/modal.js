@@ -6,8 +6,6 @@ import {
   TouchableOpacity,
   Modal,
 } from 'react-native';
-import LinearGradient from 'react-native-linear-gradient';
-import { Shadow } from 'react-native-shadow-2';
 import { X } from 'lucide-react-native';
 import { Tokens } from '../theme/theme';
 
@@ -32,16 +30,12 @@ export const ModalProvider = ({ children }) => {
     if (config?.onConfirm) config.onConfirm();
   };
 
-  const getVariantGradient = (variant) => {
+  const getVariantColor = (variant) => {
     switch (variant) {
-      case 'error': 
-        return ['#F8876C', '#F16646']; 
-      case 'success': 
-        return ['#F8876C', '#F16646'];
-      case 'warning': 
-        return ['#F8876C', '#F16646']; 
-      default: 
-        return ['#F8876C', '#F16646']; 
+      case 'error':   return '#E53E3E';
+      case 'success': return '#38B2AC';
+      case 'warning': return '#ED8936';
+      default:        return '#6C63FF';
     }
   };
 
@@ -55,73 +49,52 @@ export const ModalProvider = ({ children }) => {
         onRequestClose={hideModal}
       >
         <View style={styles.modalOverlayBlurContainer}>
-          <Shadow
-            distance={1}
-            startColor="#FDABAC"
-            endColor="#FDEABF"
-            offset={[0, 0]}
-            containerStyle={styles.shadowModalFluidContainer}
-            style={styles.shadowModalFluidStyle}
-          >
-            <LinearGradient
-              colors={['#262627', '#242426', '#1B1C1D']}
-              start={{ x: 0, y: 0 }}
-              end={{ x: 0, y: 0.98 }}
-              style={styles.modalCardBodyView}
+          <View style={styles.modalCardBodyView}>
+            {/* Close Button */}
+            <TouchableOpacity
+              style={styles.modalCloseButton}
+              onPress={hideModal}
+              activeOpacity={0.7}
             >
-              {/* Top Right Close 'X' Button */}
-              <TouchableOpacity
-                style={styles.modalCloseButton}
-                onPress={hideModal}
-                activeOpacity={0.7}
-              >
-                <X color="#9CA3AF" size={20} />
-              </TouchableOpacity>
+              <X color="#6B7280" size={20} />
+            </TouchableOpacity>
 
-              <Text style={styles.modalHeadingTitleText}>
-                {config?.title}
+            <Text style={styles.modalHeadingTitleText}>
+              {config?.title}
+            </Text>
+
+            <View style={styles.modalInputFieldsView}>
+              <Text style={styles.modalReferralText}>
+                {config?.message}
               </Text>
-
-              <View style={styles.modalInputFieldsView}>
-                <Text style={styles.modalReferralText}>
-                  {config?.message}
-                </Text>
-                
-                {/* Horizontal Action Footer Layout */}
-                <View style={styles.actionFooterRow}>
-                  {/* Cancel Action Button (renders only if requested) */}
-                  {(config?.onCancel || config?.cancelText) && (
-                    <TouchableOpacity 
-                      style={[styles.button, styles.cancelButton]} 
-                      onPress={hideModal}
-                    >
-                      <Text style={styles.cancelText}>
-                        {config?.cancelText || 'Cancel'}
-                      </Text>
-                    </TouchableOpacity>
-                  )}
-                  
-                  {/* Primary Confirm Action Gradient Button */}
+              
+              {/* Action Footer */}
+              <View style={styles.actionFooterRow}>
+                {/* Cancel Button */}
+                {(config?.onCancel || config?.cancelText) && (
                   <TouchableOpacity 
-                    style={styles.buttonTouch} 
-                    onPress={handleConfirm}
-                    activeOpacity={0.8}
+                    style={[styles.button, styles.cancelButton]} 
+                    onPress={hideModal}
                   >
-                    <LinearGradient
-                      colors={getVariantGradient(config?.variant)}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 0 }}
-                      style={styles.confirmGradientButton}
-                    >
-                      <Text style={styles.confirmText}>
-                        {config?.confirmText || 'OK'}
-                      </Text>
-                    </LinearGradient>
+                    <Text style={styles.cancelText}>
+                      {config?.cancelText || 'Cancel'}
+                    </Text>
                   </TouchableOpacity>
-                </View>
+                )}
+                
+                {/* Primary Confirm Button — Neumorphic accent */}
+                <TouchableOpacity 
+                  style={[styles.button, { backgroundColor: getVariantColor(config?.variant) }]} 
+                  onPress={handleConfirm}
+                  activeOpacity={0.8}
+                >
+                  <Text style={styles.confirmText}>
+                    {config?.confirmText || 'OK'}
+                  </Text>
+                </TouchableOpacity>
               </View>
-            </LinearGradient>
-          </Shadow>
+            </View>
+          </View>
         </View>
       </Modal>
     </ModalContext.Provider>
@@ -139,43 +112,48 @@ export const useAlertModal = () => {
 const styles = StyleSheet.create({
   modalOverlayBlurContainer: {
     flex: 1,
-    backgroundColor: 'rgba(18, 18, 19, 0.85)',
+    backgroundColor: 'rgba(61, 72, 82, 0.55)',
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 24,
   },
-  shadowModalFluidContainer: {
-    width: '100%',
-    maxWidth: 364,
-  },
-  shadowModalFluidStyle: {
-    width: '100%',
-    borderRadius: 20,
-  },
   modalCardBodyView: {
     width: '100%',
-    backgroundColor: '#1E1E20',
-    borderRadius: 20,
+    maxWidth: 364,
+    backgroundColor: '#E0E5EC',
+    borderRadius: 32,
     padding: 24,
     position: 'relative',
-    borderWidth: 0.5,
-    borderColor: '#323537',
+    // Neumorphic extruded shadow
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 8, height: 8 },
+    shadowOpacity: 0.7,
+    shadowRadius: 20,
+    elevation: 16,
   },
   modalCloseButton: {
     position: 'absolute',
     right: 16,
     top: 16,
-    width: 32,
-    height: 32,
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: '#E0E5EC',
     justifyContent: 'center',
     alignItems: 'center',
     zIndex: 10,
+    // Small extruded shadow
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 3, height: 3 },
+    shadowOpacity: 0.5,
+    shadowRadius: 6,
+    elevation: 3,
   },
   modalHeadingTitleText: {
     fontFamily: Tokens.typography.families.semiBold,
     fontSize: 18,
     lineHeight: 28,
-    color: '#FFFFFF',
+    color: '#3D4852',
     marginBottom: Tokens.gaps.xlarge,
     paddingRight: 24, 
   },
@@ -187,7 +165,7 @@ const styles = StyleSheet.create({
     fontFamily: Tokens.typography.families.regular,
     fontSize: 14,
     lineHeight: 24,
-    color: '#E5E5E5',
+    color: '#6B7280',
     marginVertical: 4,
   },
   actionFooterRow: {
@@ -197,32 +175,25 @@ const styles = StyleSheet.create({
     marginTop: 8,
   },
   button: {
-    paddingVertical: 10,
-    paddingHorizontal: 18,
-    borderRadius: 10,
-    minWidth: 85,
+    paddingVertical: 12,
+    paddingHorizontal: 20,
+    borderRadius: 16,
+    minWidth: 90,
     alignItems: 'center',
     justifyContent: 'center',
-  },
-  buttonTouch: {
-    minWidth: 85,
-    height: 40,
+    // Neumorphic small extruded
+    shadowColor: 'rgb(163, 177, 198)',
+    shadowOffset: { width: 4, height: 4 },
+    shadowOpacity: 0.5,
+    shadowRadius: 8,
+    elevation: 4,
   },
   cancelButton: {
-    backgroundColor: '#2D2D30',
-    borderWidth: 1,
-    borderColor: '#3F3F46',
-  },
-  confirmGradientButton: {
-    flex: 1,
-    borderRadius: 10,
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingHorizontal: 18,
+    backgroundColor: '#E0E5EC',
   },
   cancelText: {
     fontFamily: Tokens.typography.families.medium,
-    color: '#D4D4D8',
+    color: '#3D4852',
     fontSize: 14,
   },
   confirmText: {

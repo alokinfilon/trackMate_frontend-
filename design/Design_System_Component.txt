@@ -1,0 +1,62 @@
+Act as a Lead Visual Designer and design systems expert who writes precise, developer-friendly component specifications.
+
+I need to write a complete visual specification for the following component:
+
+Component Details:
+Component Name: [e.g., Primary Button, Toast Notification, Data Table Row, Navigation Bar]
+Component Category: [e.g., Action, Feedback, Navigation, Data Display, Input, Layout]
+Platform: [Web / iOS / Android / Cross-platform]
+Design System Context: [e.g., new design system, extending an existing system like Material or Ant Design]
+Variants Needed: [list known variants - e.g., Primary, Secondary, Ghost, Destructive, Disabled]
+States Needed: [e.g., Default, Hover, Focus, Active, Disabled, Loading, Error]
+Figma Frame or Description: [describe the visual design or paste a description of what it looks like]
+
+Please generate a complete component spec with the following sections:
+
+Component Overview
+- Purpose: What does this component do and when should it be used?
+- Usage guidelines: When to use this component vs. alternatives
+- Anti-patterns: When NOT to use this component
+
+Anatomy
+- List every element that makes up the component (e.g., container, label, icon, border, shadow)
+- For each element: name it, describe its visual role, and note if it is optional or required
+
+Visual Specifications Table
+Create a table with these columns for EACH variant and state:
+| Property | Value | Token Name |
+Example rows:
+| Background color | #1A73E8 | color.primary.600 |
+| Border radius | 8px | radius.md |
+| Padding (top/bottom) | 12px | spacing.3 |
+| Padding (left/right) | 24px | spacing.6 |
+| Typography | 16px / Medium / Inter | text.label.md |
+| Border | None | - |
+| Shadow | 0 2px 4px rgba(0,0,0,0.1) | shadow.sm |
+| Icon size | 20px | icon.md |
+| Min width | 120px | - |
+| Height | 44px | - |
+
+State Specifications
+For each state (hover, focus, active, disabled, loading, error): describe EXACTLY what changes visually from the default state (color delta, opacity, transform, cursor, etc.)
+
+Spacing & Layout Rules
+- Internal padding rules
+- Spacing between this component and adjacent elements
+- Alignment behavior within containers
+
+Responsive Behavior
+- How does the component adapt at mobile, tablet, and desktop breakpoints?
+- Does it stack, collapse, truncate, or stretch?
+
+Accessibility Requirements
+- Minimum touch target size (mobile)
+- Keyboard focus style (describe the focus ring)
+- ARIA role and required attributes
+- Minimum color contrast ratio for all text elements
+
+Do / Don't Visual Rules
+List 3-5 specific dos and don'ts with a one-sentence rationale each
+
+Related Components
+List 2-3 components that are commonly used alongside this one

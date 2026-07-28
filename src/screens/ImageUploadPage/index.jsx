@@ -15,7 +15,6 @@ import { useTheme } from '../../context/ThemeContext';
 import { createStyles } from './ImageUploadPage.styles';
 import { useImageUpload } from './ImageUploadPage.hooks';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
 
 export default function ImageUploadPage({ route }) {
   const tripId = route?.params?.tripId ;
@@ -51,20 +50,16 @@ export default function ImageUploadPage({ route }) {
 
   return (
     <SafeAreaProvider>
-      <LinearGradient
-        colors={[isDarkMode ? '#1E293B' : '#ace9fd', colors.bg]}
-        start={{ x: 1, y: 0 }}
-        end={{ x: 0, y: 0.98 }}
-        style={styles.screenContainer}
-      >
-        <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} backgroundColor="transparent" translucent />
+      <View style={styles.screenContainer}>
+        <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} backgroundColor={colors.bg} translucent={false} />
         <SafeAreaView
           style={styles.mainContainer}
           edges={['top', 'left', 'right']}
         >
+          {/* Header Nav */}
           <View style={styles.topNav}>
             <Text style={styles.headerTitle}>
-              {viewMode === 'gallery' ? 'Trip Gallery & Collections' : 'Upload Trip Media Asset'}
+              {viewMode === 'gallery' ? '🖼️ Gallery & Collections' : '📤 Upload Media'}
             </Text>
             <TouchableOpacity
               style={styles.switchButton}
@@ -87,44 +82,43 @@ export default function ImageUploadPage({ route }) {
 
               {loadingGallery ? (
                 <View style={styles.centerContainer}>
-                  <ActivityIndicator size="small" color={colors.primary} />
+                  <ActivityIndicator size="small" color="#6C63FF" />
                 </View>
               ) : (
                 <ScrollView contentContainerStyle={styles.scrollList}>
                   <Text style={styles.sectionHeading}>Collections</Text>
                   
-                  {/* 🎯 FIX 2: Clear selected items tracking safely across screen selections */}
                   {selectedCollectionId && (
                     <TouchableOpacity 
-                      style={{ marginBottom: 10, padding: 4 }}
+                      style={styles.clearSelectionBtn}
                       onPress={() => setSelectedCollectionId(null)}
                     >
-                      <Text style={{ color: colors.primary, fontWeight: '600' }}>⚠️ Clear Album Selection</Text>
+                      <Text style={styles.clearSelectionText}>⚠️ Clear Album Selection</Text>
                     </TouchableOpacity>
                   )}
 
                  {collections.length > 0 ? (
-                            collections.map((col, index) => {
-                              const isSelected = selectedCollectionId === col._id;
+                           collections.map((col, index) => {
+                             const isSelected = selectedCollectionId === col._id;
 
-                              return (
-                                <TouchableOpacity 
-                                  key={col._id || index} 
-                                  style={[styles.cardItem, isSelected && styles.selectedCardItem]} 
-                                  onPress={() => setSelectedCollectionId(col._id)} 
-                                >
-                                  <Text style={styles.cardTitle}>{col.name}</Text>
-                                  {col.description ? <Text style={styles.cardDesc}>{col.description}</Text> : null}
-                                  <Text style={styles.cardMeta}>Access: {col.accessibility}</Text>
-                                  {isSelected && <Text style={styles.checkmarkIcon}>✓ Selected for upload</Text>}
-                                </TouchableOpacity>
-                              );
-                            })
-                          ) :(
+                             return (
+                               <TouchableOpacity 
+                                 key={col._id || index} 
+                                 style={[styles.cardItem, isSelected && styles.selectedCardItem]} 
+                                 onPress={() => setSelectedCollectionId(col._id)} 
+                               >
+                                 <Text style={styles.cardTitle}>{col.name}</Text>
+                                 {col.description ? <Text style={styles.cardDesc}>{col.description}</Text> : null}
+                                 <Text style={styles.cardMeta}>Access: {col.accessibility}</Text>
+                                 {isSelected && <Text style={styles.checkmarkIcon}>✓ Selected for upload</Text>}
+                               </TouchableOpacity>
+                             );
+                           })
+                         ) :(
                     <Text style={styles.emptyText}>No collections found.</Text>
                   )}
 
-                  <Text style={[styles.sectionHeading, { marginTop: 20 }]}>All Uploaded Images</Text>
+                  <Text style={[styles.sectionHeading, { marginTop: 24 }]}>All Uploaded Images</Text>
                   {allImages.length > 0 ? (
                     <View style={styles.imageGrid}>
                       {allImages.map((imgItem, index) => (
@@ -144,21 +138,25 @@ export default function ImageUploadPage({ route }) {
           ) : (
             <View style={styles.container}>
               
-              {/* 🎯 FIX 3: Visual indicator displaying which folder the photo will upload into */}
-              <View style={{ backgroundColor: colors.surface, padding: 12, borderRadius: 8, marginBottom: 15 }}>
-                <Text style={{ color: colors.textSecondary }}>Target Folder:</Text>
-                <Text style={{ color: selectedCollectionId ? colors.primary : '#E65100', fontWeight: 'bold', marginTop: 2 }}>
+              {/* Target Folder — Neumorphic Card */}
+              <View style={styles.targetFolderCard}>
+                <Text style={styles.targetFolderLabel}>Target Folder:</Text>
+                <Text style={[styles.targetFolderValue, { color: selectedCollectionId ? '#6C63FF' : '#E53E3E' }]}>
                   {selectedCollectionId 
-                    ? `📁 linked directly to active Collection ID` 
-                    : "⚠️ loose photo inside trip (collectionId: null)"}
+                    ? `📁 Linked to active Collection` 
+                    : "⚠️ Loose photo (no collection selected)"}
                 </Text>
               </View>
 
+              {/* Image Preview — Neumorphic Inset Well */}
               <View style={styles.imagePreviewContainer}>
                 {photo ? (
                   <Image source={{ uri: photo.uri }} style={styles.previewImage} />
                 ) : (
-                  <Text style={styles.placeholderText}>No image captured yet</Text>
+                  <View style={{ alignItems: 'center', gap: 8 }}>
+                    <Text style={{ fontSize: 36 }}>📷</Text>
+                    <Text style={styles.placeholderText}>No image captured yet</Text>
+                  </View>
                 )}
               </View>
 
@@ -197,6 +195,7 @@ export default function ImageUploadPage({ route }) {
             </View>
           )}
 
+          {/* Create Collection Modal — Neumorphic Bottom Sheet */}
           <Modal
             visible={createModalVisible}
             animationType="slide"
@@ -204,26 +203,29 @@ export default function ImageUploadPage({ route }) {
             onRequestClose={() => setCreateModalVisible(false)}
           >
             <View style={styles.modalOverlay}>
-              <View style={[styles.modalContent, { backgroundColor: colors.card }]}>
+              <View style={styles.modalContent}>
+                {/* Drag Handle */}
+                <View style={styles.modalDragHandle} />
+
                 <View style={styles.modalHeader}>
-                  <Text style={[styles.modalTitle, { color: colors.textPrimary }]}>Create Gallery Collection</Text>
+                  <Text style={styles.modalTitle}>Create Gallery Collection</Text>
                   <TouchableOpacity onPress={() => setCreateModalVisible(false)}>
-                    <Text style={[styles.closeText, { color: colors.textSecondary }]}>✕</Text>
+                    <Text style={styles.closeText}>✕</Text>
                   </TouchableOpacity>
                 </View>
 
-                <Text style={[styles.inputLabel, { color: colors.textPrimary }]}>Collection Name</Text>
+                <Text style={styles.inputLabel}>Collection Name</Text>
                 <TextInput
-                  style={[styles.textInput, { backgroundColor: colors.surface }]}
+                  style={styles.textInput}
                   placeholder="e.g. Fort Sunset Shots"
                   placeholderTextColor={colors.textTertiary}
                   value={collectionName}
                   onChangeText={setCollectionName}
                 />
 
-                <Text style={[styles.inputLabel, { color: colors.textPrimary }]}>Description</Text>
+                <Text style={styles.inputLabel}>Description</Text>
                 <TextInput
-                  style={[styles.textInput, { backgroundColor: colors.surface }]}
+                  style={styles.textInput}
                   placeholder="Evening photos from day 2"
                   placeholderTextColor={colors.textTertiary}
                   value={collectionDescription}
@@ -245,5 +247,7 @@ export default function ImageUploadPage({ route }) {
             </View>
           </Modal>
         </SafeAreaView>
-      </LinearGradient>
-      </SafeAreaProvider>)}
+      </View>
+    </SafeAreaProvider>
+  );
+}

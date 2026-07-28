@@ -7,7 +7,7 @@ const PlusIcon1 = ({ size = 24, strokeWidth = 1.5, loading = false, ...props }) 
     return (
       <View style={{ width: size, height: size, justifyContent: 'center', alignItems: 'center' }}>
         {/* Uses the primary gradient color #FDABAC for the loading spinner */}
-        <ActivityIndicator size="small" color="#FDABAC" />
+        <ActivityIndicator size="small" color="#6C63FF" />
       </View>
     );
   }
@@ -24,8 +24,8 @@ const PlusIcon1 = ({ size = 24, strokeWidth = 1.5, loading = false, ...props }) 
       <Defs>
         {/* 90.92deg is roughly a horizontal left-to-right gradient */}
         <LinearGradient id="iconGradient" x1="0%" y1="0%" x2="100%" y2="0%">
-          <Stop offset="1.05%" stopColor="#FDABAC" />
-          <Stop offset="98.66%" stopColor="#FDEABF" />
+          <Stop offset="0%" stopColor="#6C63FF" />
+          <Stop offset="100%" stopColor="#8B84FF" />
         </LinearGradient>
       </Defs>
       <Path

@@ -9,7 +9,6 @@ import {
   ActivityIndicator
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
 import { Eye, EyeOff } from 'lucide-react-native';
 import { Tokens } from '../../theme/theme';
 import { styles } from './login.styles';
@@ -36,13 +35,8 @@ export default function LoginScreen() {
   const iconSize = Tokens.scaleAsset(24);
 
   return (
-    <LinearGradient
-      colors={['#ace9fd', '#ffffff']}
-      start={{ x: 0.44, y: 0 }}
-      end={{ x: 0.54, y: 0.98 }}
-      style={styles.screenContainer}
-    >
-      <StatusBar barStyle="light-content" backgroundColor="#0F0F0F" />
+    <View style={styles.screenContainer}>
+      <StatusBar barStyle="dark-content" backgroundColor="#E0E5EC" />
       <SafeAreaView style={styles.safeArea}>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
@@ -57,37 +51,29 @@ export default function LoginScreen() {
             </View>
 
             <View style={styles.inputFieldsContainer}>
+              {/* Email/Phone Input — Neumorphic Inset Well */}
               <View style={styles.inputOuterView}>
-                <LinearGradient
-                  colors={['#ffffff', '#ffffff']}
-                  start={{ x: 0.01, y: 0.5 }}
-                  end={{ x: 0.99, y: 0.5 }}
-                  style={styles.inputGradientBackground}
-                >
+                <View style={styles.inputInnerContainer}>
                   <TextInput
                     style={[styles.inputText, { flex: 1 }]}
                     placeholder={strings.placeholders.identifier}
-                    placeholderTextColor="#312f2f"
+                    placeholderTextColor="#94A3B8"
                     keyboardType="default"
                     autoCapitalize="none"
                     value={emailOrPhone}
                     onChangeText={setEmailOrPhone}
                   />
-                </LinearGradient>
+                </View>
               </View>
 
+              {/* Password Input */}
               <View style={styles.passwordView}>
                 <View style={styles.inputOuterView}>
-                  <LinearGradient
-                    colors={['#ffffff', '#ffffff']}
-                    start={{ x: 0.01, y: 0.5 }}
-                    end={{ x: 0.99, y: 0.5 }}
-                    style={styles.inputGradientBackground}
-                  >
+                  <View style={styles.inputInnerContainer}>
                     <TextInput
                       style={[styles.inputText, { flex: 1 }]}
                       placeholder={strings.placeholders.password}
-                      placeholderTextColor="#292929"
+                      placeholderTextColor="#94A3B8"
                       secureTextEntry={!passwordVisible}
                       autoCapitalize="none"
                       value={password}
@@ -99,17 +85,17 @@ export default function LoginScreen() {
                       activeOpacity={0.7}
                     >
                       {passwordVisible ? (
-                        <EyeOff size={iconSize} color="#000000" />
+                        <EyeOff size={iconSize} color="#6B7280" />
                       ) : (
-                        <Eye size={iconSize} color="#000000" />
+                        <Eye size={iconSize} color="#6B7280" />
                       )}
                     </TouchableOpacity>
-                  </LinearGradient>
+                  </View>
                 </View>
 
                 <View style={styles.strengthView}>
                   <TouchableOpacity
-                    onPress={() => navigation.navigate('ForgotPassword')}
+                    onPress={() => {}}
                     activeOpacity={0.7}
                     style={styles.strengthTextRow}
                   >
@@ -123,16 +109,16 @@ export default function LoginScreen() {
 
             <View style={styles.continueButtonView}>
               {loading ? (
-                <ActivityIndicator size="large" color="#3bc7f6" />
+                <ActivityIndicator size="large" color="#6C63FF" />
               ) : (
                 <CustomButton
-                  colors={['#ffffff', '#ffffff', '#ffffff', '#ffffff']}
+                  variant="primary"
                   onPress={handleLogin}
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
                   title={loading ? 'Logging in...' : strings.buttons.login}
                   disabled={loading}
-                  buttonStyle={{ borderRadius: Tokens.components.radiusButton }}
+                  buttonStyle={{ borderRadius: 16 }}
                 />
               )}
 
@@ -143,23 +129,23 @@ export default function LoginScreen() {
               <View style={styles.socialsView1}>
                 <CustomButton
                   title={strings.buttons.google}
-                   Icon={GoogleIcon}
-                  iconColor="#000000"
-                  colors={['#ffffff', '#ffffff']}
+                  Icon={GoogleIcon}
+                  iconColor="#3D4852"
+                  variant="secondary"
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
-                  buttonStyle={{ borderRadius: Tokens.components.radiusButton }}
+                  buttonStyle={{ borderRadius: 16 }}
                   onPress={() => handleAuth0Login('google-oauth2')}
                 />
 
                 <CustomButton
                   title={strings.buttons.apple}
-                 Icon={AppleIcon}
-                  iconColor="#000000"
-                  colors={['#ffffff', '#ffffff']}
+                  Icon={AppleIcon}
+                  iconColor="#3D4852"
+                  variant="secondary"
                   fontFamily={Tokens.typography.families.semiBold}
                   fontSize={Tokens.typography.sizes.subButton}
-                  buttonStyle={{ borderRadius: Tokens.components.radiusButton }}
+                  buttonStyle={{ borderRadius: 16 }}
                   onPress={() => handleAuth0Login('apple')}
                 />
               </View>
@@ -180,6 +166,6 @@ export default function LoginScreen() {
           </View>
         </ScrollView>
       </SafeAreaView>
-    </LinearGradient>
+    </View>
   );
 }
