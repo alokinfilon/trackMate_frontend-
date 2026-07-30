@@ -13,7 +13,7 @@ export const Tokens = {
     paddingHorizontal: 24,
     paddingVertical: 24,
   },
-  
+
   scaleAsset: (size) => Math.round(PixelRatio.roundToNearestPixel(size * scaleFactor)),
 
   gaps: {
@@ -23,7 +23,7 @@ export const Tokens = {
     xlarge: 24,
     separator: 32,
     section: 40,
-    mlarge:14,
+    mlarge: 14,
     Lsection: 50,
   },
 
@@ -50,8 +50,8 @@ export const Tokens = {
       button: 18,
       body: 14,
       small: 12,
-      subBody:13,
-      subButton:16
+      subBody: 13,
+      subButton: 16
     },
     lineHeights: {
       title: 28,
@@ -66,102 +66,102 @@ export const Tokens = {
 
 export const LIGHT_COLORS = {
   // Brand accent — soft violet
-  primary:        '#6C63FF',
-  primaryDark:    '#5A52E0',
-  primaryLight:   '#8B84FF',
-  primaryGhost:   'rgba(108, 99, 255, 0.10)',
-  primaryBorder:  'rgba(108, 99, 255, 0.18)',
+  primary: '#6C63FF',
+  primaryDark: '#5A52E0',
+  primaryLight: '#8B84FF',
+  primaryGhost: 'rgba(108, 99, 255, 0.10)',
+  primaryBorder: 'rgba(108, 99, 255, 0.18)',
 
   // Secondary accent — teal
-  accent:         '#38B2AC',
-  accentLight:    '#4FD1C5',
-  accentGhost:    'rgba(56, 178, 172, 0.10)',
+  accent: '#38B2AC',
+  accentLight: '#4FD1C5',
+  accentGhost: 'rgba(56, 178, 172, 0.10)',
 
   // Semantic
-  success:        '#38B2AC',
-  successGhost:   'rgba(56, 178, 172, 0.10)',
-  danger:         '#E53E3E',
-  dangerGhost:    'rgba(229, 62, 62, 0.08)',
-  warning:        '#ED8936',
-  warningGhost:   'rgba(237, 137, 54, 0.10)',
+  success: '#38B2AC',
+  successGhost: 'rgba(56, 178, 172, 0.10)',
+  danger: '#E53E3E',
+  dangerGhost: 'rgba(229, 62, 62, 0.08)',
+  warning: '#ED8936',
+  warningGhost: 'rgba(237, 137, 54, 0.10)',
 
-  // Neumorphic surfaces — ALL the same base color
-  bg:             '#E0E5EC',
-  card:           '#E0E5EC',
-  cardElevated:   '#E0E5EC',
-  surface:        '#E0E5EC',
+  // Surfaces — updated to match home screen's flat clean design
+  bg: '#FFFFFF',
+  card: '#F0F0F5',
+  cardElevated: '#FFFFFF',
+  surface: '#F0F0F5',
 
-  // Borders are TRANSPARENT in neumorphism — shadows define edges
-  border:         'transparent',
-  divider:        'rgba(163, 177, 198, 0.15)',
+  // Borders and dividers
+  border: 'rgba(0, 0, 0, 0.08)',
+  divider: 'rgba(0, 0, 0, 0.08)',
 
   // Typography — WCAG compliant
-  textPrimary:    '#3D4852',   // 7.5:1 contrast on #E0E5EC
-  textSecondary:  '#6B7280',   // 4.6:1 contrast (WCAG AA)
-  textTertiary:   '#94A3B8',
-  textOnPrimary:  '#FFFFFF',
+  textPrimary: '#1E293B',   // Darker slate for premium contrast on white/light grey
+  textSecondary: '#64748B',
+  textTertiary: '#94A3B8',
+  textOnPrimary: '#FFFFFF',
 
   // Legacy compatibility
-  darkBg:         '#2D3748',
-  darkCard:       '#3D4852',
-  darkSurface:    '#4A5568',
+  darkBg: '#13132B',
+  darkCard: '#242444',
+  darkSurface: '#1C1C3A',
 };
 
 export const DARK_COLORS = {
   // Brand accent — same violet
-  primary:        '#8B84FF',
-  primaryDark:    '#6C63FF',
-  primaryLight:   '#A5A0FF',
-  primaryGhost:   'rgba(139, 132, 255, 0.15)',
-  primaryBorder:  'rgba(139, 132, 255, 0.3)',
+  primary: '#8B84FF',
+  primaryDark: '#6C63FF',
+  primaryLight: '#A5A0FF',
+  primaryGhost: 'rgba(139, 132, 255, 0.15)',
+  primaryBorder: 'rgba(139, 132, 255, 0.3)',
 
   // Secondary accent
-  accent:         '#4FD1C5',
-  accentLight:    '#76E4DA',
-  accentGhost:    'rgba(79, 209, 197, 0.15)',
+  accent: '#4FD1C5',
+  accentLight: '#76E4DA',
+  accentGhost: 'rgba(79, 209, 197, 0.15)',
 
   // Semantic
-  success:        '#4FD1C5',
-  successGhost:   'rgba(79, 209, 197, 0.15)',
-  danger:         '#FC8181',
-  dangerGhost:    'rgba(252, 129, 129, 0.15)',
-  warning:        '#F6AD55',
-  warningGhost:   'rgba(246, 173, 85, 0.15)',
+  success: '#4FD1C5',
+  successGhost: 'rgba(79, 209, 197, 0.15)',
+  danger: '#FC8181',
+  dangerGhost: 'rgba(252, 129, 129, 0.15)',
+  warning: '#F6AD55',
+  warningGhost: 'rgba(246, 173, 85, 0.15)',
 
-  // Neumorphic dark surfaces — darker monochromatic base
-  bg:             '#2D3748',
-  card:           '#2D3748',
-  cardElevated:   '#3D4852',
-  surface:        '#2D3748',
+  // Surfaces — updated to match home screen's dark blue/slate theme
+  bg: '#13132B',
+  card: '#242444',
+  cardElevated: '#1C1C3A',
+  surface: '#242444',
 
-  // Still transparent/subtle in dark neumorphism
-  border:         'transparent',
-  divider:        'rgba(255, 255, 255, 0.06)',
+  // Borders and dividers
+  border: 'rgba(255, 255, 255, 0.08)',
+  divider: 'rgba(255, 255, 255, 0.08)',
 
   // Typography
-  textPrimary:    '#E2E8F0',
-  textSecondary:  '#A0AEC0',
-  textTertiary:   '#718096',
-  textOnPrimary:  '#FFFFFF',
+  textPrimary: '#F8FAFC',
+  textSecondary: '#94A3B8',
+  textTertiary: '#64748B',
+  textOnPrimary: '#FFFFFF',
 
   // Legacy
-  darkBg:         '#1A202C',
-  darkCard:       '#2D3748',
-  darkSurface:    '#3D4852',
+  darkBg: '#13132B',
+  darkCard: '#242444',
+  darkSurface: '#1C1C3A',
 };
 
-export const COLORS = LIGHT_COLORS; 
+export const COLORS = LIGHT_COLORS;
 
 // ─── Gradients ──────────────────────────────────────────────────────
 
 export const GRADIENTS = {
-  primary:      ['#6C63FF', '#8B84FF'],
+  primary: ['#6C63FF', '#8B84FF'],
   primaryShift: ['#6C63FF', '#A5A0FF'],
-  accent:       ['#38B2AC', '#4FD1C5'],
-  warm:         ['#ED8936', '#F6AD55'],
-  dark:         ['#2D3748', '#1A202C'],
-  glass:        ['rgba(224,229,236,0.95)', 'rgba(224,229,236,0.85)'],
-  cardShine:    ['rgba(255,255,255,0.12)', 'rgba(255,255,255,0.02)'],
+  accent: ['#38B2AC', '#4FD1C5'],
+  warm: ['#ED8936', '#F6AD55'],
+  dark: ['#2D3748', '#1A202C'],
+  glass: ['rgba(224,229,236,0.95)', 'rgba(224,229,236,0.85)'],
+  cardShine: ['rgba(255,255,255,0.12)', 'rgba(255,255,255,0.02)'],
 };
 
 // ─── Neumorphic Shadows ─────────────────────────────────────────────

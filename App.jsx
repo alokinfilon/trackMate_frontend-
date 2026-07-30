@@ -7,6 +7,7 @@ import { ModalProvider } from './src/components/modal';
 
 import { ThemeProvider } from './src/context/ThemeContext';
 import { AuthProvider } from './src/context/AuthContext';
+import { LanguageProvider } from './src/context/LanguageContext';
 import RootNavigator from './src/navigation/RootNavigator';
 
 export default function App() {
@@ -19,11 +20,13 @@ export default function App() {
           customScheme="com.trackmate.auth0"
         >
           <AuthProvider>
-            <ModalProvider>
-              <NavigationContainer>
-                <RootNavigator />
-              </NavigationContainer>
-            </ModalProvider>
+            <LanguageProvider>
+              <ModalProvider>
+                <NavigationContainer>
+                  <RootNavigator />
+                </NavigationContainer>
+              </ModalProvider>
+            </LanguageProvider>
           </AuthProvider>
         </Auth0Provider>
       </SafeAreaProvider>

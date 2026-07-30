@@ -35,6 +35,20 @@ import MessageCircleQuestionIcon from './svg/messageCircleQuestion';
 import InfoIcon from './svg/info';
 import UserRoundPenIcon from './svg/userRoundPen';
 
+// New setting SVG icons
+import AccountIcon from './svg/account';
+import ShieldCheckIcon from './svg/shieldCheckIcon';
+import MoonStarsIcon from './svg/moonStarsIcon';
+import GlobeIcon from './svg/globeIcon';
+import LuggageIcon from './svg/luggageIcon';
+import VerifiedBadgeIcon from './svg/verifiedBadgeIcon';
+import CreditCardBackIcon from './svg/creditCardBackIcon';
+import JournalCheckIcon from './svg/journalCheckIcon';
+import StarIconComponent from './svg/starIcon';
+import LogoutIcon from './svg/logoutIcon';
+import SettingsIcon from './svg/settingsIcon';
+import PenIcon from './svg/editPenIcon';
+
 export {
   CircleUserRoundIcon,
   ContactIcon,
@@ -72,5 +86,18 @@ export {
   CustomButton,
   useAlertModal,
   ModalProvider,
-  GradientText
+  GradientText,
+  // Export new icons
+  AccountIcon,
+  ShieldCheckIcon,
+  MoonStarsIcon,
+  GlobeIcon,
+  LuggageIcon,
+  VerifiedBadgeIcon,
+  CreditCardBackIcon,
+  JournalCheckIcon,
+  StarIconComponent,
+  LogoutIcon,
+  SettingsIcon,
+  PenIcon
 };

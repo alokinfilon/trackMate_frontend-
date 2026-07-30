@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useCallback } from 'react';
+import { useState, useEffect, useContext, useCallback, useRef, useMemo } from 'react';
 import { AuthContext } from '../../context/AuthContext'; 
 
 import { useAlertModal } from '../../components/index';
@@ -10,17 +10,16 @@ export const useHome = (navigation) => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
-  const [page, setPage] = useState(1);
+  const pageRef = useRef(1);
   const [hasMore, setHasMore] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
 
   const { setUserIsAuthenticated } = useContext(AuthContext);
   const [activeImageIndices, setActiveImageIndices] = useState({});
+  const [activeCategory, setActiveCategory] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
 
   const LIMIT = 30;
-
-  useEffect(() => {
-    fetchHistoricalSites(1, false);
-  }, [fetchHistoricalSites]);
 
   const fetchHistoricalSites = useCallback((targetPage = 1, append = false) => {
     if (append) {
@@ -86,15 +85,50 @@ export const useHome = (navigation) => {
       .finally(() => {
         setLoading(false);
         setLoadingMore(false);
+        setRefreshing(false);
       });
   }, []);
 
+  useEffect(() => {
+    fetchHistoricalSites(1, false);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
   const loadMoreSites = () => {
     if (loadingMore || !hasMore) return;
-    const nextPage = page + 1;
-    setPage(nextPage);
+    const nextPage = pageRef.current + 1;
+    pageRef.current = nextPage;
     fetchHistoricalSites(nextPage, true);
   };
+
+  const handleRefresh = useCallback(() => {
+    setRefreshing(true);
+    pageRef.current = 1;
+    setHasMore(true);
+    setPosts([]);
+    setActiveCategory('All');
+    setSearchQuery('');
+    fetchHistoricalSites(1, false);
+  }, [fetchHistoricalSites]);
+
+  // Derived: unique categories from posts
+  const categories = useMemo(() => {
+    const unique = [...new Set(posts.map(p => p.category).filter(Boolean))];
+    return ['All', ...unique];
+  }, [posts]);
+
+  // Derived: filtered posts by active category + search query
+  const filteredPosts = useMemo(() => {
+    return posts.filter(p => {
+      const matchesCategory = activeCategory === 'All' || p.category === activeCategory;
+      const q = searchQuery.trim().toLowerCase();
+      const matchesSearch =
+        !q ||
+        (p.name && p.name.toLowerCase().includes(q)) ||
+        (p.description && p.description.toLowerCase().includes(q)) ||
+        (p.geography?.region && p.geography.region.toLowerCase().includes(q));
+      return matchesCategory && matchesSearch;
+    });
+  }, [posts, activeCategory, searchQuery]);
 
   const handleLogoutPress = () => {
     showModal({
@@ -138,11 +172,19 @@ export const useHome = (navigation) => {
 
   return {
     posts,
+    filteredPosts,
+    categories,
+    activeCategory,
+    setActiveCategory,
+    searchQuery,
+    setSearchQuery,
     loading,
     loadingMore,
+    refreshing,
     hasMore,
     activeImageIndices,
     loadMoreSites,
+    handleRefresh,
     handleLogoutPress,
     handleCarouselScroll
   };

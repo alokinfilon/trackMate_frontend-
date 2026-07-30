@@ -109,7 +109,7 @@ const ImageUploadPageWrapper = (props) => {
   const styles = React.useMemo(() => createNavigationStyles(colors), [colors]);
   return (
     <SafeAreaView style={[styles.safeAreaWrapper, { backgroundColor: colors.bg }]} edges={['top', 'left', 'right']}>
-      <ImageUploadPage />
+      <ImageUploadPage {...props} />
     </SafeAreaView>
   );
 };

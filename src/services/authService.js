@@ -128,7 +128,7 @@ const authService = {
 
       console.log("Attempting to renew expired access token session...");
 
-      const response = await fetch(`${BASE_URL}/auth/refresh-token`, {
+      const response = await fetch(`${BASE_URL}/auth/token/refresh`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ refreshToken: savedRefreshToken }) 

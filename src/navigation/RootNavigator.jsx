@@ -10,6 +10,22 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../context/ThemeContext';
 import { createNavigationStyles } from './navigation.styles';
 
+import {
+  PersonalInfoScreen,
+  AccountSecurityScreen,
+  NotificationScreen,
+  AppearanceScreen,
+  LanguageScreen,
+  TravelPreferenceScreen,
+  BillingSubscriptionScreen,
+  PaymentMethodsScreen,
+  HelpSupportScreen,
+  RateUsScreen,
+  PrivacyTermsScreen,
+  FaqScreen,
+  ChangePasswordScreen,
+} from '../screens/index';
+
 const Stack = createNativeStackNavigator();
 
 const SafePlaceDetail = (props) => {
@@ -30,6 +46,19 @@ export default function RootNavigator() {
         <>
           <Stack.Screen name="MainTab" component={MainTabNavigator} />
           <Stack.Screen name="PlaceDetail" component={SafePlaceDetail} />
+          <Stack.Screen name="PersonalInfo" component={PersonalInfoScreen} />
+          <Stack.Screen name="AccountSecurity" component={AccountSecurityScreen} />
+          <Stack.Screen name="Notification" component={NotificationScreen} />
+          <Stack.Screen name="Appearance" component={AppearanceScreen} />
+          <Stack.Screen name="Language" component={LanguageScreen} />
+          <Stack.Screen name="TravelPreference" component={TravelPreferenceScreen} />
+          <Stack.Screen name="BillingSubscription" component={BillingSubscriptionScreen} />
+          <Stack.Screen name="PaymentMethods" component={PaymentMethodsScreen} />
+          <Stack.Screen name="HelpSupport" component={HelpSupportScreen} />
+          <Stack.Screen name="RateUs" component={RateUsScreen} />
+          <Stack.Screen name="PrivacyTerms" component={PrivacyTermsScreen} />
+          <Stack.Screen name="Faq" component={FaqScreen} />
+          <Stack.Screen name="ChangePassword" component={ChangePasswordScreen} />
         </>
       ) : (
         <>

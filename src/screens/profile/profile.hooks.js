@@ -1,16 +1,38 @@
-import { useState, useRef, useContext } from 'react';
+import { useState, useRef, useContext, useEffect, useCallback } from 'react';
 import { Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { AuthContext } from '../../context/AuthContext';
 import authService from '../../services/authService';
+import apiClient from '../../services/apiClient';
 import { useAlertModal } from '../../components/index';
 
 export const useProfileSettings = () => {
   const propScale = useRef(new Animated.Value(1)).current;
   const { setUserIsAuthenticated } = useContext(AuthContext);
   const { showModal } = useAlertModal();
-  const [themeModalVisible, setThemeModalVisible] = useState(false);
   const navigation = useNavigation();
+
+  const [profile, setProfile] = useState(null);
+  const [loading, setLoading] = useState(false);
+
+  const fetchProfile = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await apiClient('/auth/profile');
+      const json = await res.json();
+      if (json.success && json.data) {
+        setProfile(json.data);
+      }
+    } catch (err) {
+      console.error('Failed to fetch user profile:', err);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchProfile();
+  }, [fetchProfile]);
 
   const handlePressIn = () => {
     Animated.spring(propScale, {
@@ -28,8 +50,6 @@ export const useProfileSettings = () => {
     }).start();
   };
 
-  
-
   const handleLogout = () => {
     showModal({
       title: 'Confirm Logout',
@@ -37,7 +57,7 @@ export const useProfileSettings = () => {
       variant: 'warning',
       confirmText: 'Log Out',
       cancelText: 'Cancel',
-       onConfirm: async () => {
+      onConfirm: async () => {
         try {
           await authService.logout();
           setUserIsAuthenticated(false);
@@ -54,8 +74,9 @@ export const useProfileSettings = () => {
 
   return {
     propScale,
-    themeModalVisible,
-    setThemeModalVisible,
+    profile,
+    loading,
+    fetchProfile,
     handlePressIn,
     handlePressOut,
     handleLogout

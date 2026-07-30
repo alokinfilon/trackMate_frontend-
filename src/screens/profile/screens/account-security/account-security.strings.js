@@ -1,0 +1,18 @@
+export const strings = {
+  headerTitle: 'Account & Security',
+  secSettingsTitle: 'Security Settings',
+  changePass: 'Change Password',
+  rememberMeTitle: 'Remember Me',
+  rememberMeDesc: 'Stay logged in on this device',
+  biometricsTitle: 'Biometric Login',
+  biometricsDesc: 'Enable biometric scanning prompts',
+  faceIdTitle: 'Face ID',
+  faceIdDesc: 'Authenticate using facial recognition',
+  smsAuthTitle: 'SMS Authenticator',
+  smsAuthDesc: 'Receive secure verification codes via text',
+  googleAuthTitle: 'Google Authenticator',
+  googleAuthDesc: 'Use Google Authenticator for login verification',
+  sessionsTitle: 'Devices & Sessions',
+  deviceMgmtTitle: 'Device Management',
+  deviceMgmtDesc: 'View and manage devices logged into your account',
+};

@@ -91,25 +91,28 @@ export default function PlaceDetails({ route, navigation }) {
 
   if (loading) {
     return (
-      <LinearGradient
-        colors={[colors.bg, colors.bg]}
+      <View
         style={[
           styles.screenContainer,
-          { justifyContent: 'center', alignItems: 'center' },
+          { 
+            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
+            justifyContent: 'center', 
+            alignItems: 'center' 
+          },
         ]}
       >
         <ActivityIndicator size="large" color="#F8876C" />
-      </LinearGradient>
+      </View>
     );
   }
 
   return (
     <SafeAreaProvider>
-      <LinearGradient
-        colors={[isDarkMode ? '#1E293B' : '#ace9fd', colors.bg]}
-        start={{ x: 0.44, y: 0 }}
-        end={{ x: 0.54, y: 0.98 }}
-        style={styles.screenContainer}
+      <View
+        style={[
+          styles.screenContainer,
+          { backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF' }
+        ]}
       >
         <StatusBar
           barStyle={isDarkMode ? 'light-content' : 'dark-content'}
@@ -494,7 +497,7 @@ export default function PlaceDetails({ route, navigation }) {
             </View>
           </Modal>
         </SafeAreaView>
-      </LinearGradient>
+      </View>
     </SafeAreaProvider>
   );
 }

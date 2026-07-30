@@ -8,9 +8,12 @@ const apiClient = async (endpoint, options = {}) => {
   let accessToken = await authService.getAccessToken();
 
   const headers = {
-    'Content-Type': 'application/json',
     ...options.headers,
   };
+
+  if (!(options.body instanceof FormData)) {
+    headers['Content-Type'] = 'application/json';
+  }
 
   if (accessToken) {
     headers['Authorization'] = `Bearer ${accessToken}`;

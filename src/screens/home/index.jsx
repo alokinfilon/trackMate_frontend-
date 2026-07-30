@@ -1,132 +1,146 @@
 import React from 'react';
 import {
-  Text,
   View,
   FlatList,
-  Image,
   ActivityIndicator,
   StatusBar,
-  TouchableOpacity,
+  RefreshControl,
 } from 'react-native';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import LinearGradient from 'react-native-linear-gradient';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 import { useHome } from './home.hooks';
-import { createStyles, CAROUSEL_WIDTH } from './home.styles';
+import { createStyles } from './home.styles';
 import { useTheme } from '../../context/ThemeContext';
-import { strings } from './home.strings';
-import {BlurView} from '@react-native-community/blur'
+
+// Home-specific components
+import HomeHeader from './components/HomeHeader';
+import SearchBar from './components/SearchBar';
+import PromoCarousel from './components/PromoCarousel';
+import CategoryFilter from './components/CategoryFilter';
+import PlaceCard from './components/PlaceCard';
+import PopularCategoriesSection from './components/PopularCategoriesSection';
+
+// Shared components
+import SectionHeader from '../../components/SectionHeader';
+
 const Home = ({ navigation }) => {
   const {
-    posts,
+    filteredPosts,
+    categories,
+    activeCategory,
+    setActiveCategory,
+    searchQuery,
+    setSearchQuery,
     loading,
-    activeImageIndices,
-    handleCarouselScroll
+    loadingMore,
+    refreshing,
+    loadMoreSites,
+    handleRefresh,
   } = useHome(navigation);
 
-  const { isDarkMode, colors, gradients } = useTheme();
-  const styles = React.useMemo(() => createStyles(colors), [colors]);
-
-  const renderPostCard = ({ item: postItem }) => {
-    const currentActiveIndex = activeImageIndices[postItem.id] || 0;
-
-    return (
-      <TouchableOpacity 
-        activeOpacity={0.9} 
-        onPress={() => navigation.navigate('PlaceDetail', { id: postItem.id })}
-      >
-        <View style={styles.postCardOuterFrame}>
-          <View style={styles.imageDisplayContainer}>
-            <FlatList
-              data={postItem.images}
-              horizontal
-              pagingEnabled
-              showsHorizontalScrollIndicator={false}
-              snapToInterval={CAROUSEL_WIDTH}
-              decelerationRate="fast"
-              keyExtractor={(imgUrl, idx) => `${postItem.id}-img-${idx}`}
-              onScroll={e => handleCarouselScroll(postItem.id, e)}
-              scrollEventThrottle={16}
-              renderItem={({ item: imageUrl }) => (
-                <Image
-                  source={{ uri: imageUrl }}
-                  style={styles.mainPostMediaImage}
-                  resizeMode="cover"
-                />
-              )}
-            />
-
-            <View style={styles.mediaCarouselIndicatorTrack}>
-              {postItem.images.map((_, dotIndex) => {
-                if (dotIndex === currentActiveIndex) {
-                  return (
-                    <View
-                      key={dotIndex}
-                      style={[styles.indicatorDotActive, { backgroundColor: colors.primary }]}
-                    />
-                  );
-                }
-                return (
-                  <View key={dotIndex} style={styles.indicatorDotInactive} />
-                );
-              })}
-            </View>
-          </View>
-
-          <View style={styles.postContentContainerDescriptionBlock}>
-            <View style={styles.descriptionHeaderTitleWrapperRow}>
-              <Text style={styles.mainDescriptionTitleText} numberOfLines={2}>
-                {postItem.name}
-              </Text>
-              {postItem.rating && (
-                <Text style={styles.metricLabelValueStringText}>
-                  ★ {postItem.rating}
-                </Text>
-              )}
-            </View>
-            <Text style={styles.metricLabelValueStringText} numberOfLines={3}>
-              {postItem.description}
-            </Text>
-          </View>
-        </View>
-      </TouchableOpacity>
-    );
-  };
-
-  const renderHeader = () => (
-    <View style={styles.headerContainerWrapper}>
-      <View style={styles.topNavigationHeaderModuleOuterContainer}>
-        <Text style={styles.screenHeaderTitleMainText}>{strings.header.title}</Text>
-      </View>
-    </View>
+  const { isDarkMode, colors } = useTheme();
+  const styles = React.useMemo(
+    () => createStyles(colors, isDarkMode),
+    [colors, isDarkMode],
   );
 
-  return (
-    <SafeAreaProvider>
-      <View style={styles.screenContainer}>
-        <StatusBar barStyle={isDarkMode ? "light-content" : "dark-content"} backgroundColor="transparent" translucent />
-        <SafeAreaView
-          style={styles.mainContainer}
-          edges={['top', 'left', 'right']}
-        >
-          {loading ? (
-            <View style={styles.centerSpinnerLoaderViewFrame}>
-              <ActivityIndicator size="large" color={colors.primary} />
-            </View>
-          ) : (
-            <FlatList
-              data={posts}
-              renderItem={renderPostCard}
-              keyExtractor={item => item.id}
-              ListHeaderComponent={renderHeader}
-              contentContainerStyle={
-                styles.socialFeedScrollContentContainerSpacingPadding
-              }
-              showsVerticalScrollIndicator={false}
-            />
-          )}
-        </SafeAreaView>
+  // ── List header (everything above the place cards) ──────────────────
+  const ListHeader = React.useCallback(
+    () => (
+      <>
+        <HomeHeader onBellPress={() => {}} />
+        <SearchBar value={searchQuery} onChangeText={setSearchQuery} />
+        <PromoCarousel />
+        <CategoryFilter
+          categories={categories}
+          activeCategory={activeCategory}
+          onSelect={setActiveCategory}
+        />
+        <View style={styles.popularWrapper}>
+          <PopularCategoriesSection />
+        </View>
+        <View style={styles.recommendedHeader}>
+          <SectionHeader title="Recommended Places" />
+        </View>
+      </>
+    ),
+    [
+      searchQuery,
+      categories,
+      activeCategory,
+      styles,
+      setActiveCategory,
+      setSearchQuery,
+    ],
+  );
+
+  // ── List footer (pagination loader) ────────────
+  const ListFooter = React.useCallback(
+    () => (
+      <View>
+        {loadingMore && (
+          <View style={styles.footerLoader}>
+            <ActivityIndicator size="small" color="#FF6B35" />
+          </View>
+        )}
       </View>
-    </SafeAreaProvider>
+    ),
+    [loadingMore, styles.footerLoader],
+  );
+
+  if (loading) {
+    return (
+      <GestureHandlerRootView style={styles.rootView}>
+        <View style={styles.loaderContainer}>
+          <ActivityIndicator size="large" color="#FF6B35" />
+        </View>
+      </GestureHandlerRootView>
+    );
+  }
+
+  return (
+    <GestureHandlerRootView style={styles.rootView}>
+      <SafeAreaProvider>
+        <View style={styles.screenContainer}>
+          <StatusBar
+            barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+            backgroundColor="transparent"
+            translucent
+          />
+          <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+            <FlatList
+              data={filteredPosts}
+              keyExtractor={(item) => String(item.id)}
+              renderItem={({ item }) => (
+                <View style={styles.cardsPadding}>
+                  <PlaceCard
+                    item={item}
+                    onPress={(place) =>
+                      navigation.navigate('PlaceDetail', { id: place.id })
+                    }
+                  />
+                </View>
+              )}
+              ListHeaderComponent={ListHeader}
+              ListFooterComponent={ListFooter}
+              contentContainerStyle={styles.listContent}
+              showsVerticalScrollIndicator={false}
+              onEndReached={loadMoreSites}
+              onEndReachedThreshold={0.5}
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={handleRefresh}
+                  colors={['#FF6B35']}
+                  tintColor="#FF6B35"
+                />
+              }
+            />
+          </SafeAreaView>
+        </View>
+      </SafeAreaProvider>
+    </GestureHandlerRootView>
   );
 };
 
