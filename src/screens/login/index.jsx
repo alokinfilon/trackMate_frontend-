@@ -58,7 +58,7 @@ export default function LoginScreen() {
           <View style={styles.cardContainer}>
             {/* Logo Image */}
             <Image
-              source={require('../../../logo.png')}
+              source={require('../../../assets/logo.png')}
               style={styles.logoImage}
               resizeMode="contain"
             />

@@ -14,6 +14,7 @@ import {
   BackHandler,
 } from 'react-native';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { useIsFocused } from '@react-navigation/native';
 import { useTheme } from '../../context';
 import { createStyles } from './ImageUploadPage.styles';
 import { useImageUpload } from './ImageUploadPage.hooks';

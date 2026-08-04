@@ -92,7 +92,7 @@ export default function AnimatedSplashScreen({ isReady, onFinish }) {
       <View style={styles.centerWrapper}>
         {/* Animated App Logo */}
         <Animated.Image
-          source={require('../../logo.png')}
+          source={require('../../assets/logo.png')}
           style={[
             styles.logo,
             {
