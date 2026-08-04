@@ -5,6 +5,8 @@ import SignUpScreen from './signup/index'
 import SettingsScreen from './profile/index'
 import ImageUploadPage from './ImageUploadPage/index'
 import Dashboard from './dashboard/index'
+import DashboardDetails from './dashboard/details'
+import NotificationsScreen from './notifications/index'
 
 import PersonalInfoScreen from './profile/screens/personal-info/index'
 import AccountSecurityScreen from './profile/screens/account-security/index'
@@ -19,6 +21,7 @@ import RateUsScreen from './profile/screens/rate-us/index'
 import PrivacyTermsScreen from './profile/screens/privacy-terms/index'
 import FaqScreen from './profile/screens/faq/index'
 import ChangePasswordScreen from './profile/screens/change-password/index'
+import OnboardingScreen from './onboarding/index'
 
 export {
     Home, 
@@ -28,6 +31,8 @@ export {
     SettingsScreen,
     ImageUploadPage,
     Dashboard,
+    DashboardDetails,
+    NotificationsScreen,
     PersonalInfoScreen,
     AccountSecurityScreen,
     NotificationScreen,
@@ -40,5 +45,6 @@ export {
     RateUsScreen,
     PrivacyTermsScreen,
     FaqScreen,
-    ChangePasswordScreen
+    ChangePasswordScreen,
+    OnboardingScreen
 }

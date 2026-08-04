@@ -8,11 +8,10 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '../../../../context/ThemeContext';
+import { useTheme, useTranslation } from '../../../../context';
 import { useTravelPreference } from './travel-preference.hooks';
 import { createStyles } from './travel-preference.styles';
-import { useTranslation } from '../../../../context/LanguageContext';
+import { Arrow, CheckMarklIcon } from '../../../../components';
 
 export default function TravelPreferenceScreen({ navigation }) {
   const { colors, isDarkMode } = useTheme();
@@ -51,7 +50,7 @@ export default function TravelPreferenceScreen({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={handleBack} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#FF6B35" />
+          <Arrow size={28} color={isDarkMode ? '#FFFFFF' : '#000000'} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>{t('travelPreference.title')}</Text>
         <View style={{ width: 40 }} />
@@ -69,10 +68,10 @@ export default function TravelPreferenceScreen({ navigation }) {
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <Text style={[styles.title, { color: colors.textPrimary }]}>
-          {t(`travelPreference.title_${activeCategory.category}`) || activeCategory.title}
+          {t(`travelPreference.title_${activeCategory.category}`) === `travelPreference.title_${activeCategory.category}` ? activeCategory.title : t(`travelPreference.title_${activeCategory.category}`)}
         </Text>
         <Text style={[styles.subtitle, { color: colors.textSecondary }]}>
-          {t(`travelPreference.subtitle_${activeCategory.category}`) || activeCategory.subtitle}
+          {t(`travelPreference.subtitle_${activeCategory.category}`) === `travelPreference.subtitle_${activeCategory.category}` ? activeCategory.subtitle : t(`travelPreference.subtitle_${activeCategory.category}`)}
         </Text>
 
         {/* Circular Selection Grid */}
@@ -100,7 +99,7 @@ export default function TravelPreferenceScreen({ navigation }) {
                   {/* Selected checkmark overlay */}
                   {isSelected && (
                     <View style={styles.checkmarkWrap}>
-                      <Ionicons name="checkmark-circle" size={26} color="#FF6B35" />
+                      <CheckMarklIcon color="#FF6B35" strokeWidth={3.5} size={24} />
                     </View>
                   )}
                 </View>

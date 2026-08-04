@@ -3,14 +3,16 @@ import { View, Text, TouchableOpacity } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Svg, { Defs, LinearGradient, Stop, Rect } from 'react-native-svg';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useTheme } from '../context/ThemeContext';
+import { useTheme, useNotifications } from '../context';
 import { createNavigationStyles } from './navigation.styles';
-import {GradientText,
+import { useNavigation } from '@react-navigation/native';
+import {
    HomeIcon, 
-   CommunityIcon , 
-   CartIcon, 
-   MoreIcon
-   } from '../components/index';
+   CommunityIcon, 
+   CalendarCheckIcon,
+   SettingsIcon
+   } from '../components';
+import Ionicons from 'react-native-vector-icons/Ionicons';
 
 
    import {
@@ -18,7 +20,7 @@ import {GradientText,
     SettingsScreen,
     ImageUploadPage,
     Dashboard
-  } from '../screens/index'
+  } from '../screens'
 
 
 const Tab = createBottomTabNavigator();
@@ -37,10 +39,11 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
         let IconComp;
         if (route.name === 'HomeTab') IconComp = HomeIcon;
         else if (route.name === 'ImageUpload') IconComp = CommunityIcon;
-        else if (route.name === 'Dashboard') IconComp = CartIcon;
-        else if (route.name === 'setting') IconComp = MoreIcon;
+        else if (route.name === 'Dashboard') IconComp = CalendarCheckIcon;
+        else if (route.name === 'setting') IconComp = SettingsIcon;
 
         const onPress = () => {
+          console.log('[CustomTabBar] Tab pressed:', route.name, 'isActive:', isActive);
           const event = navigation.emit({
             type: 'tabPress',
             target: route.key,
@@ -48,7 +51,10 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
           });
 
           if (!isActive && !event.defaultPrevented) {
-            navigation.navigate({ name: route.name, mergeOriginalArgs: true });
+            console.log('[CustomTabBar] Navigating to:', route.name);
+            navigation.navigate(route.name, route.params);
+          } else {
+            console.log('[CustomTabBar] Navigation skipped. isActive:', isActive, 'defaultPrevented:', event.defaultPrevented);
           }
         };
 
@@ -66,10 +72,8 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                 <Svg height="2" width="60%">
                   <Defs>
                     <LinearGradient id="lineGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-                      <Stop offset="1.05%" stopColor="#08b8f3" />
-                      <Stop offset="32.02%" stopColor="#3ae3f6" />
-                      <Stop offset="56.43%" stopColor="#06a8a6" />
-                      <Stop offset="98.66%" stopColor="#31c8f1" />
+                      <Stop offset="0%" stopColor="#FF8C00" />
+                      <Stop offset="100%" stopColor="#FF6B35" />
                     </LinearGradient>
                   </Defs>
                   <Rect width="100%" height="3" fill="url(#lineGrad)" />
@@ -82,16 +86,21 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
                 size={22}
                 strokeWidth={1.8}
                 focused={isActive}
-                color={isActive ? colors.primary : colors.textSecondary}
+                color={isActive ? '#FF6B35' : colors.textSecondary}
               />
             )}
 
             {isActive ? (
-              <GradientText
-                text={label}
-                style={[styles.bottomItemLabel, styles.activeBottomItemLabel]}
+              <Text
                 numberOfLines={1}
-              />
+                style={[
+                  styles.bottomItemLabel,
+                  styles.activeBottomItemLabel,
+                  { color: '#FF6B35' }
+                ]}
+              >
+                {label}
+              </Text>
             ) : (
               <Text numberOfLines={1} style={styles.bottomItemLabel}>
                 {label}
@@ -104,6 +113,56 @@ const CustomTabBar = ({ state, descriptors, navigation }) => {
   );
 };
 
+// ── Notification Bell ────────────────────────────────────────────────────────
+function NotificationBell() {
+  const { colors } = useTheme();
+  const navigation = useNavigation();
+  const { unreadCount } = useNotifications();
+
+  return (
+    <TouchableOpacity
+      onPress={() => navigation.navigate('Notifications')}
+      style={{
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+      activeOpacity={0.7}
+    >
+      <Ionicons name="notifications-outline" size={24} color={colors.textPrimary} />
+      {unreadCount > 0 && (
+        <View
+          style={{
+            position: 'absolute',
+            top: 6,
+            right: 6,
+            minWidth: 16,
+            height: 16,
+            borderRadius: 8,
+            backgroundColor: '#EF4444',
+            alignItems: 'center',
+            justifyContent: 'center',
+            paddingHorizontal: 3,
+          }}
+        >
+          <Text
+            style={{
+              color: '#FFFFFF',
+              fontSize: 10,
+              fontFamily: 'Outfit-Bold',
+              lineHeight: 12,
+            }}
+          >
+            {unreadCount > 99 ? '99+' : unreadCount}
+          </Text>
+        </View>
+      )}
+    </TouchableOpacity>
+  );
+}
+
 const ImageUploadPageWrapper = (props) => {
   const { colors } = useTheme();
   const styles = React.useMemo(() => createNavigationStyles(colors), [colors]);
@@ -115,15 +174,22 @@ const ImageUploadPageWrapper = (props) => {
 };
 
 export default function MainTabNavigator() {
+  const { colors } = useTheme();
   return (
     <Tab.Navigator
       tabBar={(props) => <CustomTabBar {...props} />}
-      screenOptions={{ headerShown: false }}
+      screenOptions={{
+        headerShown: true,
+        headerRight: () => <View style={{ marginRight: 16 }}><NotificationBell /></View>,
+        headerTitle: '',
+        headerStyle: { backgroundColor: colors.bg, elevation: 0, shadowOpacity: 0 },
+        headerShadowVisible: false,
+      }}
     >
-      <Tab.Screen name="HomeTab" component={Home} options={{ tabBarLabel: 'Home' }} />
-      <Tab.Screen name="Dashboard" component={Dashboard} options={{ tabBarLabel: 'Dashboard' }} />
-      <Tab.Screen name="ImageUpload" component={ImageUploadPageWrapper} options={{ tabBarLabel: 'Memory' }} />
-      <Tab.Screen name="setting" component={SettingsScreen} options={{ tabBarLabel: 'Setting' }} />
+      <Tab.Screen name="HomeTab" component={Home} options={{ tabBarLabel: 'Home', headerShown: false }} />
+      <Tab.Screen name="Dashboard" component={Dashboard} options={{ tabBarLabel: 'My Booking', headerShown: false }} />
+      <Tab.Screen name="ImageUpload" component={ImageUploadPageWrapper} options={{ tabBarLabel: 'Memory', headerShown: false }} />
+      <Tab.Screen name="setting" component={SettingsScreen} options={{ tabBarLabel: 'Setting', headerShown: false }} />
     </Tab.Navigator>
   );
 }

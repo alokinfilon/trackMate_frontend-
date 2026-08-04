@@ -6,8 +6,8 @@ import {
   TouchableOpacity,
   StyleSheet,
 } from 'react-native';
-import { useTheme } from '../../../context/ThemeContext';
-import { Tokens } from '../../../theme/theme';
+import { useTheme } from '../../../context';
+import { Tokens } from '../../../theme';
 
 /**
  * Horizontal scrollable category filter chips.
@@ -16,6 +16,11 @@ import { Tokens } from '../../../theme/theme';
  *   activeCategory {string}   - Currently selected category
  *   onSelect       {func}     - Called with category string when chip tapped
  */
+const formatCategoryName = (cat) => {
+  if (!cat) return '';
+  return cat.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
+};
+
 const CategoryFilter = ({ categories, activeCategory, onSelect }) => {
   const { colors, isDarkMode } = useTheme();
 
@@ -55,7 +60,7 @@ const CategoryFilter = ({ categories, activeCategory, onSelect }) => {
                   : { color: colors.textSecondary },
               ]}
             >
-              {cat}
+              {formatCategoryName(cat)}
             </Text>
           </TouchableOpacity>
         );

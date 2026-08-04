@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { LIGHT_COLORS, DARK_COLORS, GRADIENTS, SHADOWS, RADIUS, SPACING, Tokens, NEU_SHADOWS } from '../theme/theme';
+import { LIGHT_COLORS, DARK_COLORS, GRADIENTS, SHADOWS, RADIUS, SPACING, Tokens, NEU_SHADOWS } from '../theme';
 
 const ThemeContext = createContext();
 

@@ -1,6 +1,6 @@
 import { useState } from 'react';
-import { useAlertModal } from '../../../../components/index';
-import { useTranslation } from '../../../../context/LanguageContext';
+import { useAlertModal } from '../../../../components';
+import { useTranslation } from '../../../../context';
 
 export const useChangePassword = (navigation) => {
   const [currentPassword, setCurrentPassword] = useState('');

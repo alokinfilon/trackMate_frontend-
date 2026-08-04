@@ -6,17 +6,6 @@ export const createNavigationStyles = (colors) => StyleSheet.create({
     flex: 1,
     backgroundColor: colors.bg,
   },
-  placeholderWrapper: {
-    flex: 1,
-    backgroundColor: colors.bg,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  placeholderText: {
-    color: colors.textPrimary,
-    fontSize: 24,
-    fontWeight: '900',
-  },
   bottomNavigation: {
     height: 78,
     paddingTop: 8,

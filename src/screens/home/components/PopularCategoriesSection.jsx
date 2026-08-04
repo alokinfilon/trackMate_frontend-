@@ -7,9 +7,9 @@ import {
   StyleSheet,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from '../../../context/ThemeContext';
-import { Tokens } from '../../../theme/theme';
-import SectionHeader from '../../../components/SectionHeader';
+import { useTheme } from '../../../context';
+import { Tokens } from '../../../theme';
+import { SectionHeader } from '../../../components';
 
 const POPULAR_CATEGORIES = [
   {

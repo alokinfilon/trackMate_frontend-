@@ -1,9 +1,7 @@
 
-import { useState, useEffect, useContext } from 'react';
+import { useState, useEffect } from 'react';
 import { CAROUSEL_WIDTH } from './place-detail.styles';
-import { AuthContext } from '../../context/AuthContext'; 
-
-import { useAlertModal } from '../../components/index';
+import { useAlertModal } from '../../components';
 
 export function useProductDetails(route, navigation) {
   const { locationId, id } = route.params || {};
@@ -16,7 +14,6 @@ export function useProductDetails(route, navigation) {
   const [activeIndex, setActiveIndex] = useState(0);
 
   const { showModal } = useAlertModal();
-  const { setUserIsAuthenticated } = useContext(AuthContext);
 
   useEffect(() => {
     if (targetId) {
@@ -28,7 +25,7 @@ export function useProductDetails(route, navigation) {
   const fetchLocationDetails = async (id) => {
     try {
       setLoading(true);
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/locations?page=1&limit=30`);
+      const response = await fetch(`https://trackmate-x7ue.onrender.com/locations?page=1&limit=10`);
       const json = await response.json();
 
       const sites = json.historicalSites || [];

@@ -6,19 +6,24 @@ import {
   TouchableOpacity,
   ScrollView,
   StatusBar,
-  ActivityIndicator
+  ActivityIndicator,
+  KeyboardAvoidingView,
+  Platform,
+  Image
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { Eye, EyeOff } from 'lucide-react-native';
-import { Tokens } from '../../theme/theme';
-import { styles } from './login.styles';
+import { Mail, Lock, Eye, EyeOff } from 'lucide-react-native';
+import { Tokens } from '../../theme';
+import { useTheme } from '../../context';
+import { createStyles } from './login.styles';
 import { strings } from './login.strings';
 import { useLogin } from './login.hooks';
-import CustomButton from '../../components/customButton';
-import GoogleIcon from '../../components/svg/googleIcon';
-import AppleIcon from '../../components/svg/appleIcon';
+import { GoogleIcon, AppleIcon } from '../../components';
 
 export default function LoginScreen() {
+  const { colors, isDarkMode } = useTheme();
+  const styles = React.useMemo(() => createStyles(colors, isDarkMode), [colors, isDarkMode]);
+
   const {
     emailOrPhone,
     setEmailOrPhone,
@@ -35,28 +40,44 @@ export default function LoginScreen() {
   const iconSize = Tokens.scaleAsset(24);
 
   return (
-    <View style={styles.screenContainer}>
-      <StatusBar barStyle="dark-content" backgroundColor="#E0E5EC" />
+    <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.screenContainer}
+    >
+      <StatusBar
+        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
+        backgroundColor={isDarkMode ? colors.bg : '#F8FAFC'}
+        translucent={false}
+      />
       <SafeAreaView style={styles.safeArea}>
         <ScrollView
           contentContainerStyle={styles.scrollContainer}
           showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
         >
-          <View style={styles.mainContainer}>
-            <View style={styles.header}>
-              <Text style={styles.titleText}>{strings.header.title}</Text>
-              <Text style={styles.subtitleText}>
-                {strings.header.subtitle}
-              </Text>
-            </View>
+          <View style={styles.cardContainer}>
+            {/* Logo Image */}
+            <Image
+              source={require('../../../logo.png')}
+              style={styles.logoImage}
+              resizeMode="contain"
+            />
 
+            {/* Centered Title */}
+            <Text style={styles.titleText}>Login</Text>
+
+            {/* Input Fields */}
             <View style={styles.inputFieldsContainer}>
-              {/* Email/Phone Input — Neumorphic Inset Well */}
-              <View style={styles.inputOuterView}>
-                <View style={styles.inputInnerContainer}>
+              {/* Email/Phone Input */}
+              <View style={styles.formGroup}>
+                <View style={styles.labelRow}>
+                  <Text style={styles.fieldLabel}>Email</Text>
+                </View>
+                <View style={styles.inputFieldContainer}>
+                  <Mail size={20} color="#94A3B8" style={styles.inputIcon} />
                   <TextInput
-                    style={[styles.inputText, { flex: 1 }]}
-                    placeholder={strings.placeholders.identifier}
+                    style={styles.inputText}
+                    placeholder="Enter your email"
                     placeholderTextColor="#94A3B8"
                     keyboardType="default"
                     autoCapitalize="none"
@@ -67,105 +88,94 @@ export default function LoginScreen() {
               </View>
 
               {/* Password Input */}
-              <View style={styles.passwordView}>
-                <View style={styles.inputOuterView}>
-                  <View style={styles.inputInnerContainer}>
-                    <TextInput
-                      style={[styles.inputText, { flex: 1 }]}
-                      placeholder={strings.placeholders.password}
-                      placeholderTextColor="#94A3B8"
-                      secureTextEntry={!passwordVisible}
-                      autoCapitalize="none"
-                      value={password}
-                      onChangeText={setPassword}
-                    />
-                    <TouchableOpacity
-                      onPress={() => setPasswordVisible(!passwordVisible)}
-                      style={styles.eyeButton}
-                      activeOpacity={0.7}
-                    >
-                      {passwordVisible ? (
-                        <EyeOff size={iconSize} color="#6B7280" />
-                      ) : (
-                        <Eye size={iconSize} color="#6B7280" />
-                      )}
-                    </TouchableOpacity>
-                  </View>
+              <View style={styles.formGroup}>
+                <View style={styles.labelRow}>
+                  <Text style={styles.fieldLabel}>Password</Text>
                 </View>
-
-                <View style={styles.strengthView}>
+                <View style={styles.inputFieldContainer}>
+                  <Lock size={20} color="#94A3B8" style={styles.inputIcon} />
+                  <TextInput
+                    style={styles.inputText}
+                    placeholder="Enter your password"
+                    placeholderTextColor="#94A3B8"
+                    secureTextEntry={!passwordVisible}
+                    autoCapitalize="none"
+                    value={password}
+                    onChangeText={setPassword}
+                  />
                   <TouchableOpacity
-                    onPress={() => {}}
+                    onPress={() => setPasswordVisible(!passwordVisible)}
+                    style={styles.eyeButton}
                     activeOpacity={0.7}
-                    style={styles.strengthTextRow}
                   >
-                    <Text style={styles.passwordStrengthText}>
-                      {strings.buttons.forgotPassword}
-                    </Text>
+                    {passwordVisible ? (
+                      <EyeOff size={iconSize} color="#94A3B8" />
+                    ) : (
+                      <Eye size={iconSize} color="#94A3B8" />
+                    )}
                   </TouchableOpacity>
                 </View>
+                <TouchableOpacity
+                  onPress={() => {}}
+                  activeOpacity={0.7}
+                  style={styles.forgotPasswordContainer}
+                >
+                  <Text style={styles.forgotPasswordLink}>
+                    {strings.buttons.forgotPassword}
+                  </Text>
+                </TouchableOpacity>
               </View>
             </View>
 
-            <View style={styles.continueButtonView}>
+            {/* Submit Button */}
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleLogin}
+              activeOpacity={0.85}
+              disabled={loading}
+            >
               {loading ? (
-                <ActivityIndicator size="large" color="#6C63FF" />
+                <ActivityIndicator size="small" color="#FFFFFF" />
               ) : (
-                <CustomButton
-                  variant="primary"
-                  onPress={handleLogin}
-                  fontFamily={Tokens.typography.families.semiBold}
-                  fontSize={Tokens.typography.sizes.subButton}
-                  title={loading ? 'Logging in...' : strings.buttons.login}
-                  disabled={loading}
-                  buttonStyle={{ borderRadius: 16 }}
-                />
+                <Text style={styles.submitButtonText}>Log In</Text>
               )}
+            </TouchableOpacity>
 
-              <View style={styles.socialsView}>
-                <Text style={styles.orSignUpWithText}>— or sign up with —</Text>
-              </View>
+            {/* Divider */}
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>or continue with</Text>
+              <View style={styles.dividerLine} />
+            </View>
 
-              <View style={styles.socialsView1}>
-                <CustomButton
-                  title={strings.buttons.google}
-                  Icon={GoogleIcon}
-                  iconColor="#3D4852"
-                  variant="secondary"
-                  fontFamily={Tokens.typography.families.semiBold}
-                  fontSize={Tokens.typography.sizes.subButton}
-                  buttonStyle={{ borderRadius: 16 }}
-                  onPress={() => handleAuth0Login('google-oauth2')}
-                />
+            {/* Social Buttons */}
+            <View style={styles.socialsContainer}>
+              <TouchableOpacity
+                style={styles.socialRoundButton}
+                onPress={() => handleAuth0Login('google-oauth2')}
+                activeOpacity={0.7}
+              >
+                <GoogleIcon size={24} />
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.socialRoundButton}
+                onPress={() => handleAuth0Login('apple')}
+                activeOpacity={0.7}
+              >
+                <AppleIcon size={24} color={colors.textPrimary} />
+              </TouchableOpacity>
+            </View>
 
-                <CustomButton
-                  title={strings.buttons.apple}
-                  Icon={AppleIcon}
-                  iconColor="#3D4852"
-                  variant="secondary"
-                  fontFamily={Tokens.typography.families.semiBold}
-                  fontSize={Tokens.typography.sizes.subButton}
-                  buttonStyle={{ borderRadius: 16 }}
-                  onPress={() => handleAuth0Login('apple')}
-                />
-              </View>
-
-              <View style={styles.footerView}>
-                <Text style={styles.footerText}>
-                  New here?{' '}
-                  <View style={styles.signupText}>
-                    <TouchableOpacity onPress={openSignUpDisplay}>
-                      <Text style={styles.loginLink}>
-                        {strings.buttons.signup}
-                      </Text>
-                    </TouchableOpacity>
-                  </View>
-                </Text>
-              </View>
+            {/* Footer */}
+            <View style={styles.footerContainer}>
+              <Text style={styles.footerText}>Not registered yet? </Text>
+              <TouchableOpacity onPress={openSignUpDisplay} activeOpacity={0.7}>
+                <Text style={styles.footerLinkText}>Sign Up &gt;</Text>
+              </TouchableOpacity>
             </View>
           </View>
         </ScrollView>
       </SafeAreaView>
-    </View>
+    </KeyboardAvoidingView>
   );
 }

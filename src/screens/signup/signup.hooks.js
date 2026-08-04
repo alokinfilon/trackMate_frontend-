@@ -1,10 +1,10 @@
 import { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth0 } from 'react-native-auth0';
-import { useAlertModal } from '../../components/index';
-import authService from '../../services/authService';
-import { saveTokens } from '../../utils/storage';
-import { AuthContext } from '../../context/AuthContext'; 
+import { useAlertModal } from '../../components';
+import { authService } from '../../services';
+import { saveTokens } from '../../utils';
+import { AuthContext } from '../../context';
 
 
 export const useSignup = () => {

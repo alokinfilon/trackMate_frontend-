@@ -4,10 +4,8 @@ import {
   StatusBar, Image, ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useFocusEffect } from '@react-navigation/native';
-import { useTheme } from '../../context/ThemeContext';
-import { useTranslation } from '../../context/LanguageContext';
+import { useTheme, useTranslation } from '../../context';
 
 import { useProfileSettings } from './profile.hooks';
 import { createStyles } from './profile.styles';
@@ -52,7 +50,7 @@ export default function SettingsScreen({ navigation }) {
       style={s.settingItem}
       onPress={onPress}
     >
-      <IconComponent size={22} color="#FF6B35" style={s.settingIcon} />
+      <IconComponent size={22} color={colors.textPrimary} style={s.settingIcon} />
       <Text style={s.settingLabel}>{label}</Text>
       <View style={{ marginLeft: 'auto' }}>
         <Arrow size={16} color={colors.textTertiary} style={{ transform: [{ rotate: '180deg' }] }} />
@@ -71,7 +69,7 @@ export default function SettingsScreen({ navigation }) {
           onPress={() => navigation.canGoBack() ? navigation.goBack() : navigation.navigate('HomeTab')}
           hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
         >
-          <Ionicons name="arrow-back" size={24} color="#FF6B35" />
+          <Arrow size={28} color={isDarkMode ? '#FFFFFF' : '#000000'} />
         </TouchableOpacity>
         <Text style={s.headerTitle}>{t('profile.title')}</Text>
       </View>
@@ -86,13 +84,13 @@ export default function SettingsScreen({ navigation }) {
               <Image source={{ uri: profile.user_image }} style={{ width: '100%', height: '100%' }} />
             ) : (
               <Text style={s.avatarInitial}>
-                {(profile?.full_name || 'Bagja Alfatih').charAt(0).toUpperCase()}
+                {(profile?.full_name || 'Traveler').charAt(0).toUpperCase()}
               </Text>
             )}
           </View>
           <View style={s.userMeta}>
-            <Text style={s.userName}>{profile?.full_name || 'Bagja Alfatih'}</Text>
-            <Text style={s.userEmail}>{profile?.email || 'bagjaalfatih17@gmail.com'}</Text>
+            <Text style={s.userName}>{profile?.full_name || 'Traveler'}</Text>
+            <Text style={s.userEmail}>{profile?.email || 'guest@trackmate.com'}</Text>
           </View>
         </View>
 

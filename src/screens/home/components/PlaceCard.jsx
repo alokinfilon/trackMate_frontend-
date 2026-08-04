@@ -9,7 +9,8 @@ import {
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
-import { Tokens } from '../../../theme/theme';
+import { Tokens } from '../../../theme';
+import { HeartIcon } from '../../../components';
 
 const FALLBACK_IMAGE = require('./images/image.png');
 
@@ -23,6 +24,8 @@ const THUMB_BORDER_RADIUS = 9;
 
 const PlaceCard = ({ item, onPress }) => {
   const [imageError, setImageError] = useState(false);
+  const [imageLoaded, setImageLoaded] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const heroImage = item.heroImage || (item.images && item.images[0]);
   const extraImages = (item.images || []).slice(1, 3);   // up to 2 thumbnails
   const extraCount = Math.max(0, (item.images || []).length - 3); // "+N"
@@ -51,76 +54,96 @@ const PlaceCard = ({ item, onPress }) => {
     null;
 
   return (
-    <GestureDetector gesture={tapGesture}>
-      <View style={styles.card}>
-        {/* ── Full-bleed hero image ── */}
+    <TouchableOpacity
+      activeOpacity={0.95}
+      onPress={() => onPress && onPress(item)}
+      style={styles.card}
+    >
+      {/* ── Full-bleed hero image ── */}
+      {!imageLoaded && (
         <Image
-          source={heroImage && !imageError ? { uri: heroImage } : FALLBACK_IMAGE}
-          defaultSource={FALLBACK_IMAGE}
-          onError={() => setImageError(true)}
-          style={styles.heroImage}
+          source={FALLBACK_IMAGE}
+          style={[styles.heroImage, { position: 'absolute' }]}
           resizeMode="cover"
         />
+      )}
+      <Image
+        source={heroImage && !imageError ? { uri: heroImage } : FALLBACK_IMAGE}
+        onError={() => setImageError(true)}
+        onLoad={() => setImageLoaded(true)}
+        style={styles.heroImage}
+        resizeMode="cover"
+      />
 
-        {/* ── Bottom gradient overlay ── */}
-        <LinearGradient
-          colors={['transparent', 'rgba(0,0,0,0.25)', 'rgba(0,0,0,0.75)']}
-          style={styles.gradient}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 0, y: 1 }}
-        />
+      {/* ── Bottom gradient overlay ── */}
+      <LinearGradient
+        colors={['transparent', 'rgba(0,0,0,0.25)', 'rgba(0,0,0,0.75)']}
+        style={styles.gradient}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 0, y: 1 }}
+      />
 
-        {/* ── Thumbnail strip — top right ── */}
-        {extraImages.length > 0 && (
-          <View style={styles.thumbStrip}>
-            {extraImages.map((uri, i) => (
-              <View key={i} style={styles.thumbWrapper}>
-                <Image source={{ uri }} style={styles.thumb} resizeMode="cover" />
-              </View>
-            ))}
-            {extraCount > 0 && (
-              <View style={styles.extraCountBadge}>
-                <Text style={styles.extraCountText}>+{extraCount}</Text>
-              </View>
-            )}
-          </View>
-        )}
-
-        {/* ── Bottom content overlay ── */}
-        <View style={styles.bottomOverlay}>
-          {/* Text block */}
-          <View style={styles.textBlock}>
-            {/* Title */}
-            <Text style={styles.title} numberOfLines={1}>
-              {item.name}
-            </Text>
-
-            {/* Region subtitle */}
-            {subtitle && (
-              <Text style={styles.subtitle} numberOfLines={1}>
-                {subtitle}
-              </Text>
-            )}
-
-            {/* Chips */}
-            {chips.length > 0 && (
-              <View style={styles.chipsRow}>
-                {chips.map((chip) => (
-                  <View key={chip} style={styles.chip}>
-                    <Text style={styles.chipText}>{chip}</Text>
-                  </View>
-                ))}
-              </View>
-            )}
-          </View>
-
-          {/* Heart button */}
-          <TouchableOpacity style={styles.heartButton} activeOpacity={0.8}>
-            <Text style={styles.heartIcon}>♡</Text>
-          </TouchableOpacity>
+      {/* ── Thumbnail strip — top right ── */}
+      {extraImages.length > 0 && (
+        <View style={styles.thumbStrip}>
+          {extraImages.map((uri, i) => (
+            <View key={i} style={styles.thumbWrapper}>
+              <Image source={{ uri }} style={styles.thumb} resizeMode="cover" />
+            </View>
+          ))}
+          {extraCount > 0 && (
+            <View style={styles.extraCountBadge}>
+              <Text style={styles.extraCountText}>+{extraCount}</Text>
+            </View>
+          )}
         </View>
+      )}
+
+      {/* ── Bottom content overlay ── */}
+      <View style={styles.bottomOverlay}>
+        {/* Text block */}
+        <View style={styles.textBlock}>
+          {/* Title */}
+          <Text style={styles.title} numberOfLines={1}>
+            {item.name}
+          </Text>
+
+          {/* Region subtitle */}
+          {subtitle && (
+            <Text style={styles.subtitle} numberOfLines={1}>
+              {subtitle}
+            </Text>
+          )}
+
+          {/* Chips */}
+          {chips.length > 0 && (
+            <View style={styles.chipsRow}>
+              {chips.map((chip) => (
+                <View key={chip} style={styles.chip}>
+                  <Text style={styles.chipText}>
+                    {chip.replace(/_/g, ' ').replace(/\b\w/g, val => val.toUpperCase())}
+                  </Text>
+                </View>
+              ))}
+            </View>
+          )}
+        </View>
+
+        {/* Heart button */}
+        <TouchableOpacity
+          style={styles.heartButton}
+          activeOpacity={0.8}
+          onPress={() => setIsLiked(!isLiked)}
+        >
+          <HeartIcon
+            size={20}
+            color={isLiked ? '#FF4B4B' : '#333333'}
+            fill={isLiked ? '#FF4B4B' : 'none'}
+            strokeWidth={2.2}
+          />
+        </TouchableOpacity>
       </View>
-    </GestureDetector>
+    </TouchableOpacity>
   );
 };
 
@@ -256,18 +279,14 @@ const styles = StyleSheet.create({
     width: 40,
     height: 40,
     borderRadius: 20,
-    backgroundColor: 'rgba(255,255,255,0.95)',
+    backgroundColor: '#FFFFFF',
     justifyContent: 'center',
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.2,
-    shadowRadius: 4,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
     elevation: 4,
-  },
-  heartIcon: {
-    fontSize: 18,
-    color: '#333',
   },
 });
 

@@ -17,10 +17,10 @@ const CommunityIcon = ({ focused, color = "#b8b8b8", ...props }) => {
       <Defs>
         {/* Core 90.92deg active color gradient stops */}
         <LinearGradient id="communityGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-          <Stop offset="1.05%" stopColor="#08d6ff" />
-          <Stop offset="32.02%" stopColor="#0977de" />
-          <Stop offset="56.43%" stopColor="#25d7ee" />
-          <Stop offset="98.66%" stopColor="#048db6" />
+          <Stop offset="1.05%" stopColor="#FF6B35" />
+          <Stop offset="32.02%" stopColor="#FF6B35" />
+          <Stop offset="56.43%" stopColor="#FF6B35" />
+          <Stop offset="98.66%" stopColor="#FF6B35" />
         </LinearGradient>
       </Defs>
 
@@ -32,7 +32,7 @@ const CommunityIcon = ({ focused, color = "#b8b8b8", ...props }) => {
         strokeWidth={1.5}
         d="m3 16 4.47-4.47a1.81 1.81 0 0 1 2.56 0L14 15.5m0 0 1.5 1.5M14 15.5l1.97-1.97a1.81 1.81 0 0 1 2.56 0L21 16"
       />
-      
+
       {/* Outer picture frame with the top-right corner plus sign feature */}
       <Path
         stroke={strokeColor}

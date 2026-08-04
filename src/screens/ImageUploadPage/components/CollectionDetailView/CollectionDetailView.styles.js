@@ -4,11 +4,11 @@ import { Tokens } from '../../../../theme/theme';
 export const createStyles = (colors, isDarkMode) =>
   StyleSheet.create({
     emptyButton: {
-      backgroundColor: '#1E5AE6',
+      backgroundColor: '#FF6B35',
       paddingHorizontal: 24,
       paddingVertical: 14,
       borderRadius: 24,
-      shadowColor: '#1E5AE6',
+      shadowColor: '#FF6B35',
       shadowOffset: { width: 0, height: 4 },
       shadowOpacity: 0.2,
       shadowRadius: 6,

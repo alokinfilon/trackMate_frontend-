@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
-import { Tokens } from '../theme/theme';
+import { useTheme } from '../context';
+import { Tokens } from '../theme';
 
 /**
  * Shared section heading row.

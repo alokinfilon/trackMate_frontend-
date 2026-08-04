@@ -17,10 +17,10 @@ const HomeIcon = ({ focused, color = "#b8b8b8", ...props }) => {
       <Defs>
         {/* Core 90.92deg active color gradient stop bounds */}
         <LinearGradient id="homeGrad" x1="0%" y1="50%" x2="100%" y2="50%">
-          <Stop offset="1.05%" stopColor="#08d6ff" />
-                    <Stop offset="32.02%" stopColor="#0977de" />
-                    <Stop offset="56.43%" stopColor="#25d7ee" />
-                    <Stop offset="98.66%" stopColor="#048db6" />
+          <Stop offset="1.05%" stopColor="#FF6B35ff" />
+          <Stop offset="32.02%" stopColor="#FF6B35" />
+          <Stop offset="56.43%" stopColor="#FF6B35" />
+          <Stop offset="98.66%" stopColor="#FF6B35" />
         </LinearGradient>
       </Defs>
 
@@ -32,7 +32,7 @@ const HomeIcon = ({ focused, color = "#b8b8b8", ...props }) => {
         strokeWidth={1.4}
         d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"
       />
-      
+
       {/* Outer house structure vector path */}
       <Path
         stroke={strokeColor}

@@ -1,7 +1,7 @@
 import * as React from "react";
 import Svg, { Path } from "react-native-svg";
 
-const HeartIcon = ({ size = 24, color = "#141B34", strokeWidth = 1.5, ...props }) => (
+const HeartIcon = ({ size = 24, color = "#141B34", strokeWidth = 1.5, fill = "none", ...props }) => (
   <Svg
     xmlns="http://www.w3.org/2000/svg"
     width={size}          // Controlled dynamically by size prop
@@ -12,6 +12,7 @@ const HeartIcon = ({ size = 24, color = "#141B34", strokeWidth = 1.5, ...props }
   >
     <Path
       stroke={color}             // Controlled dynamically by color prop
+      fill={fill}                // Controlled dynamically by fill prop
       strokeWidth={strokeWidth}  // Controlled dynamically by strokeWidth prop
       strokeLinecap="round"
       strokeLinejoin="round"

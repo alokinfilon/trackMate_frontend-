@@ -12,10 +12,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '../../../../context/ThemeContext';
+import { useTheme, useTranslation } from '../../../../context';
 import { useChangePassword } from './change-password.hooks';
 import { createStyles } from './change-password.styles';
-import { useTranslation } from '../../../../context/LanguageContext';
+import { Arrow } from '../../../../components';
 
 export default function ChangePasswordScreen({ navigation }) {
   const { colors, isDarkMode } = useTheme();
@@ -46,7 +46,7 @@ export default function ChangePasswordScreen({ navigation }) {
       {/* Header */}
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#FF6B35" />
+          <Arrow size={28} color={isDarkMode ? '#FFFFFF' : '#000000'} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>{t('changePassword.title')}</Text>
         <View style={{ width: 40 }} />
@@ -125,7 +125,7 @@ export default function ChangePasswordScreen({ navigation }) {
               />
               <TouchableOpacity
                 style={styles.visibilityBtn}
-                onPress={() => confirmPasswordVisible(!confirmPasswordVisible)}
+                onPress={() => setConfirmPasswordVisible(!confirmPasswordVisible)}
               >
                 <Ionicons
                   name={confirmPasswordVisible ? 'eye-outline' : 'eye-off-outline'}

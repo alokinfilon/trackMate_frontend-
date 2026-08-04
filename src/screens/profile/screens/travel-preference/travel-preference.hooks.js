@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
-import { useAlertModal } from '../../../../components/index';
-import apiClient from '../../../../services/apiClient';
+import { useAlertModal } from '../../../../components';
+import { apiClient } from '../../../../services';
 import { FALLBACK_PREFERENCES, strings } from './travel-preference.strings';
 
 export const useTravelPreference = (navigation) => {

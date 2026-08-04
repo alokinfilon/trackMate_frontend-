@@ -7,7 +7,7 @@ import {
   ActivityIndicator,
 } from 'react-native';
 
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context';
 import { useTripDashboard } from './TripDashboardList.hooks';
 import { createStyles } from './TripDashboardList.styles';
 

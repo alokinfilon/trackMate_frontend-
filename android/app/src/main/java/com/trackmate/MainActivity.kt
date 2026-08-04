@@ -4,8 +4,12 @@ import com.facebook.react.ReactActivity
 import com.facebook.react.ReactActivityDelegate
 import com.facebook.react.defaults.DefaultNewArchitectureEntryPoint.fabricEnabled
 import com.facebook.react.defaults.DefaultReactActivityDelegate
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import android.os.Bundle
 import org.devio.rn.splashscreen.SplashScreen
+
 class MainActivity : ReactActivity() {
 
   /**
@@ -15,6 +19,24 @@ class MainActivity : ReactActivity() {
 
 
 override fun onCreate(savedInstanceState: Bundle?) {
+    setTheme(R.style.AppTheme)
+    
+    // Create the default High Importance notification channel for FCM on Android 8.0+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        val channelId = "default_channel_id"
+        val channelName = "General Notifications"
+        val channelDescription = "Used for general app updates and alerts"
+        val importance = NotificationManager.IMPORTANCE_HIGH
+        val channel = NotificationChannel(channelId, channelName, importance).apply {
+            description = channelDescription
+            enableLights(true)
+            enableVibration(true)
+            setShowBadge(true)
+        }
+        val notificationManager = getSystemService(NotificationManager::class.java)
+        notificationManager?.createNotificationChannel(channel)
+    }
+
     SplashScreen.show(this)  // Keep your splash screen active
     super.onCreate(null)     // CHANGE THIS from (savedInstanceState) to (null)
 }

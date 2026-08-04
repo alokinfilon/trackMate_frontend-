@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Alert } from 'react-native';
-import apiClient from '../../../../services/apiClient';
+import { apiClient } from '../../../../services';
 
 const stripHtml = (html) => {
   if (!html) return '';

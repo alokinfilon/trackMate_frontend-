@@ -1,12 +1,15 @@
 import { useState, useEffect, useContext, useCallback, useRef, useMemo } from 'react';
-import { AuthContext } from '../../context/AuthContext'; 
+import { AuthContext } from '../../context';
+import { useIsFocused } from '@react-navigation/native';
 
-import { useAlertModal } from '../../components/index';
-import authService from '../../services/authService';
-import apiClient from '../../services/apiClient';
+import { useAlertModal } from '../../components';
+import { authService, apiClient } from '../../services';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { fetchProfile, selectUserImage } from '../../store/slices';
 
 export const useHome = (navigation) => {
   const { showModal } = useAlertModal();
+  const dispatch = useAppDispatch();
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [loadingMore, setLoadingMore] = useState(false);
@@ -17,9 +20,32 @@ export const useHome = (navigation) => {
   const { setUserIsAuthenticated } = useContext(AuthContext);
   const [activeImageIndices, setActiveImageIndices] = useState({});
   const [activeCategory, setActiveCategory] = useState('All');
+  const [searchText, setSearchText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
 
-  const LIMIT = 30;
+  const handleSearchSubmit = useCallback(() => {
+    setSearchQuery(searchText);
+  }, [searchText]);
+
+  const handleSearchChange = useCallback((text) => {
+    setSearchText(text);
+    if (!text.trim()) {
+      setSearchQuery('');
+    }
+  }, []);
+
+  const LIMIT = 10;
+
+  // Read userImage from Redux profile cache — no extra network request
+  const userImage = useAppSelector(selectUserImage);
+  const isFocused = useIsFocused();
+
+  useEffect(() => {
+    if (isFocused) {
+      // fetchProfile uses 5-min TTL cache, won't re-fetch if already fresh
+      dispatch(fetchProfile());
+    }
+  }, [isFocused, dispatch]);
 
   const fetchHistoricalSites = useCallback((targetPage = 1, append = false) => {
     if (append) {
@@ -69,7 +95,17 @@ export const useHome = (navigation) => {
             };
           });
 
-          setPosts(prev => append ? [...prev, ...formattedLocations] : formattedLocations);
+          setPosts(prev => {
+            const combined = append ? [...prev, ...formattedLocations] : formattedLocations;
+            const uniqueIds = new Set();
+            return combined.filter(item => {
+              if (uniqueIds.has(item.id)) {
+                return false;
+              }
+              uniqueIds.add(item.id);
+              return true;
+            });
+          });
 
           // If fewer items are returned than the limit, assume it's the end of the list
           if (rawList.length < LIMIT) {
@@ -176,8 +212,10 @@ export const useHome = (navigation) => {
     categories,
     activeCategory,
     setActiveCategory,
-    searchQuery,
-    setSearchQuery,
+    searchText,
+    setSearchText,
+    handleSearchSubmit,
+    handleSearchChange,
     loading,
     loadingMore,
     refreshing,
@@ -186,6 +224,7 @@ export const useHome = (navigation) => {
     loadMoreSites,
     handleRefresh,
     handleLogoutPress,
-    handleCarouselScroll
+    handleCarouselScroll,
+    userImage
   };
 };

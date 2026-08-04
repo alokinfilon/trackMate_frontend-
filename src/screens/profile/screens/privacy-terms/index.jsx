@@ -8,11 +8,12 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '../../../../context/ThemeContext';
+import { useTheme } from '../../../../context';
 import { usePrivacyTerms } from './privacy-terms.hooks';
 import { createStyles } from './privacy-terms.styles';
 import { strings } from './privacy-terms.strings';
+
+import { Arrow } from '../../../../components';
 
 export default function PrivacyTermsScreen({ route, navigation }) {
   const { type } = route.params;
@@ -27,7 +28,7 @@ export default function PrivacyTermsScreen({ route, navigation }) {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
+          <Arrow size={28} color={isDarkMode ? '#FFFFFF' : '#000000'} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>{title}</Text>
         <View style={{ width: 40 }} />

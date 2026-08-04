@@ -1,4 +1,4 @@
-import { Dimensions, PixelRatio, Platform } from 'react-native';
+import { Dimensions, PixelRatio } from 'react-native';
 
 const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
@@ -170,10 +170,8 @@ export const GRADIENTS = {
 // as the primary and simulate the light highlight via nested Views or
 // the NeuView component.
 
-const NEU_SHADOW_LIGHT_COLOR = 'rgba(255, 255, 255, 0.5)';
 const NEU_SHADOW_DARK_COLOR = 'rgb(163, 177, 198)';
 
-const NEU_DARK_SHADOW_LIGHT_COLOR = 'rgba(255, 255, 255, 0.05)';
 const NEU_DARK_SHADOW_DARK_COLOR = 'rgba(0, 0, 0, 0.4)';
 
 export const NEU_SHADOWS = {

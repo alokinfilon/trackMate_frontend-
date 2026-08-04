@@ -1,5 +1,4 @@
-import React, { useState } from 'react';
-
+import React, { useState, useEffect, useMemo } from 'react';
 import {
   Text,
   View,
@@ -10,56 +9,115 @@ import {
   FlatList,
   Alert,
   ActivityIndicator,
-  Modal,
   TextInput,
+  Platform,
+  Linking,
 } from 'react-native';
-
-import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
 import LinearGradient from 'react-native-linear-gradient';
-import { Tokens } from '../../theme/theme';
-import ArrowLeftIcon from '../../components/svg/arrow';
-import apiClient from '../../services/apiClient';
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Arrow as ArrowLeftIcon, HeartIcon, Skeleton, CalendarModal, AppModal } from '../../components';
+import { apiClient } from '../../services';
 import { createStyles } from './place-detail.styles';
 import { useProductDetails } from './place-detail.hooks';
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../../context';
+
+const getTodayStr = (offsetDays = 0) => {
+  const d = new Date();
+  if (offsetDays !== 0) {
+    d.setDate(d.getDate() + offsetDays);
+  }
+  const yyyy = d.getFullYear();
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const dd = String(d.getDate()).padStart(2, '0');
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const formatDateVisual = (dateStr) => {
+  if (!dateStr) return '';
+  const parts = dateStr.split('-');
+  if (parts.length !== 3) return dateStr;
+  const year = parts[0];
+  const monthIdx = parseInt(parts[1], 10) - 1;
+  const day = parseInt(parts[2], 10);
+  
+  const MONTHS = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const monthName = MONTHS[monthIdx] || parts[1];
+  
+  return `${day} ${monthName} ${year}`;
+};
 
 export default function PlaceDetails({ route, navigation }) {
   const { colors, isDarkMode } = useTheme();
-  const styles = React.useMemo(() => createStyles(colors), [colors]);
+  const styles = React.useMemo(() => createStyles(colors, isDarkMode), [colors, isDarkMode]);
+  
   const {
     place,
     loading,
-
     activeTab,
     setActiveTab,
     handleGoBack,
-    handleScroll,
   } = useProductDetails(route, navigation);
 
   const [addTripModalVisible, setAddTripModalVisible] = useState(false);
   const [tripPeople, setTripPeople] = useState('2');
-  const [tripStart, setTripStart] = useState('2026-08-15');
-  const [tripEnd, setTripEnd] = useState('2026-08-22');
-  const [tripSublocations, setTripSublocations] = useState([]);
+  const [tripStart, setTripStart] = useState(getTodayStr(0));
+  const [tripEnd, setTripEnd] = useState(getTodayStr(5));
   const [isAddingTrip, setIsAddingTrip] = useState(false);
 
-  const toggleSublocation = locName => {
-    setTripSublocations(prev => {
-      if (prev.includes(locName)) {
-        return prev.filter(name => name !== locName);
-      }
-      return [...prev, locName];
+  const [startCalendarVisible, setStartCalendarVisible] = useState(false);
+  const [endCalendarVisible, setEndCalendarVisible] = useState(false);
+
+  // Custom states for interactive detail screen
+  const [activeHeroImage, setActiveHeroImage] = useState(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [isDescriptionExpanded, setIsDescriptionExpanded] = useState(false);
+
+  // Sync activeHeroImage when place loads
+  useEffect(() => {
+    if (place) {
+      setActiveHeroImage(place.heroImage || (place.images && place.images[0]) || null);
+    }
+  }, [place]);
+
+  const openMapInDevice = () => {
+    if (!place) return;
+    const query = encodeURIComponent(`${place.name}, ${place.location || ''}`);
+    const url = Platform.select({
+      ios: `maps://?q=${query}`,
+      android: `geo:0,0?q=${query}`,
+      default: `https://www.google.com/maps/search/?api=1&query=${query}`
     });
+    
+    Linking.canOpenURL(url)
+      .then((supported) => {
+        if (supported) {
+          Linking.openURL(url);
+        } else {
+          Linking.openURL(`https://www.google.com/maps/search/?api=1&query=${query}`);
+        }
+      })
+      .catch(() => {
+        Alert.alert("Error", "Could not open map.");
+      });
   };
 
   const handleAddTripSubmit = async () => {
+    if (tripStart && tripEnd) {
+      const start = new Date(tripStart);
+      const end = new Date(tripEnd);
+      if (start > end) {
+        Alert.alert('Validation Error', 'Start date must be less than or equal to the end date.');
+        return;
+      }
+    }
+
     try {
       setIsAddingTrip(true);
 
       const payload = {
         location_id: place?.id || '',
-        sublocation: tripSublocations,
-        price: 140.5,
+        sublocation: [],
+        price: totalPrice,
         number_of_people: parseInt(tripPeople, 10) || 1,
         start_date: tripStart,
         end_date: tripEnd,
@@ -89,283 +147,414 @@ export default function PlaceDetails({ route, navigation }) {
     }
   };
 
-  if (loading) {
+  // Spec card calculations (mocked values aligned with place values)
+  const placeNameLength = place?.name?.length || 10;
+  const mockDistance = placeNameLength ? `${(placeNameLength % 8) + 8} Km` : '8 Km';
+  const mockTemp = placeNameLength ? `${(placeNameLength % 10) + 16}° C` : '20° C';
+  const mockRating = place?.rating ? parseFloat(place.rating).toFixed(1) : '4.5';
+  
+  const basePrice = (placeNameLength * 98) + 3150;
+  const mockPrice = `₹${basePrice}`;
+
+  const totalPrice = useMemo(() => {
+    const start = new Date(tripStart);
+    const end = new Date(tripEnd);
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) || 1;
+    const people = parseInt(tripPeople, 10) || 1;
+    return basePrice * diffDays * people;
+  }, [tripStart, tripEnd, tripPeople, basePrice]);
+
+  if (loading || !place) {
     return (
-      <View
-        style={[
-          styles.screenContainer,
-          { 
-            backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF',
-            justifyContent: 'center', 
-            alignItems: 'center' 
-          },
-        ]}
-      >
-        <ActivityIndicator size="large" color="#F8876C" />
+      <View style={styles.screenContainer}>
+        <StatusBar
+          barStyle={isDarkMode ? "light-content" : "dark-content"}
+          backgroundColor="transparent"
+          translucent
+        />
+        <View style={styles.mainContainer}>
+          <ScrollView showsVerticalScrollIndicator={false} contentContainerStyle={styles.scrollContent}>
+            {/* Curved Hero Section Placeholder */}
+            <View style={styles.heroWrapper}>
+              {/* Back button placeholder overlay */}
+              <View style={styles.headerButtonsRow}>
+                <Skeleton width={42} height={42} borderRadius={21} />
+                <Skeleton width={42} height={42} borderRadius={21} />
+              </View>
+              {/* Hero title placeholder at the bottom overlay */}
+              <View style={styles.titleOverlay}>
+                <Skeleton width={200} height={28} />
+                <View style={styles.locationRow}>
+                  <Skeleton width={130} height={13} />
+                </View>
+              </View>
+            </View>
+
+            {/* Specs placeholder */}
+            <View style={styles.specsContainer}>
+              {[1, 2, 3].map((i) => (
+                <View key={i} style={styles.specCard}>
+                  <Skeleton width={40} height={12} style={styles.marginBottom6} />
+                  <Skeleton width={60} height={16} />
+                </View>
+              ))}
+            </View>
+
+            {/* Description Section Placeholder */}
+            <View style={styles.descriptionContainer}>
+              <Skeleton width={120} height={18} style={styles.marginBottom12} />
+              <Skeleton width="100%" height={14} style={styles.marginBottom8} />
+              <Skeleton width="95%" height={14} style={styles.marginBottom8} />
+              <Skeleton width="85%" height={14} style={styles.marginBottom8} />
+            </View>
+
+            {/* Tabs Area Placeholder */}
+            <View style={styles.tabsContainer}>
+              <View style={styles.tabButtonsRow}>
+                {[1, 2, 3].map((i) => (
+                  <View
+                    key={i}
+                    style={[
+                      styles.tabButton,
+                      i === 1 ? styles.tabActiveButton : styles.tabInactiveButton
+                    ]}
+                  >
+                    <Skeleton width={70} height={14} />
+                  </View>
+                ))}
+              </View>
+              <View style={styles.tabContentWrapper}>
+                <Skeleton width={130} height={15} style={styles.marginBottom12} />
+                <Skeleton width="100%" height={13} style={styles.marginBottom8} />
+                <Skeleton width="90%" height={13} style={styles.marginBottom8} />
+              </View>
+            </View>
+          </ScrollView>
+
+          {/* Sticky Bottom Bar Placeholder */}
+          <View style={styles.bottomStickyBar}>
+            <View style={styles.priceBlock}>
+              <Skeleton width={60} height={12} style={styles.marginBottom4} />
+              <Skeleton width={100} height={22} />
+            </View>
+            <Skeleton width={52} height={52} borderRadius={26} />
+          </View>
+        </View>
       </View>
     );
   }
 
-  return (
-    <SafeAreaProvider>
-      <View
-        style={[
-          styles.screenContainer,
-          { backgroundColor: isDarkMode ? '#1E293B' : '#FFFFFF' }
-        ]}
-      >
-        <StatusBar
-          barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-          backgroundColor="transparent"
-          translucent
-        />
-        <SafeAreaView
-          style={styles.mainContainer}
-          edges={['top', 'left', 'right']}
-        >
-          <View style={styles.backHeaderView}>
-            <TouchableOpacity
-              style={styles.backButtonView}
-              onPress={handleGoBack}
-              activeOpacity={0.7}
-            >
-              <ArrowLeftIcon
-                size={Tokens.scaleAsset(24)}
-                color={colors.textPrimary}
-                strokeWidth={1.5}
-              />
-              <Text style={styles.backButtonText}>Back</Text>
-            </TouchableOpacity>
-          </View>
+  // Construct images list (Hero + gallery)
+  const allImages = place.heroImage ? [place.heroImage, ...place.images] : place.images || [];
+  const thumbnails = allImages.slice(0, 4);
 
+  return (
+    <View style={styles.screenContainer}>
+      <StatusBar
+        barStyle="light-content"
+        backgroundColor="transparent"
+        translucent
+      />
+      
+      <View style={styles.mainContainer}>
           <ScrollView
             showsVerticalScrollIndicator={false}
-            contentContainerStyle={styles.scrollContentContainer}
+            contentContainerStyle={styles.scrollContent}
           >
-            <View style={styles.headerView}>
-              <Text style={styles.productTitleText}>
-                {place?.name || 'Loading...'}
-              </Text>
-              <Text style={styles.productSubtitleText}>
-                {place?.location || ''}
-              </Text>
-              <Text style={styles.categoryText}>Historical Site</Text>
-            </View>
-
-            {place?.heroImage && (
-              <View style={[styles.postBoxView, styles.heroImageWrapper]}>
+            {/* ── Curved Hero Section ── */}
+            <View style={styles.heroWrapper}>
+              {activeHeroImage && (
                 <Image
-                  source={{ uri: place.heroImage }}
-                  style={styles.heroImageContent}
+                  source={{ uri: activeHeroImage }}
+                  style={styles.heroImage}
                   resizeMode="cover"
                 />
-              </View>
-            )}
+              )}
 
-            <View style={styles.sectionContainer}>
-              <Text style={styles.descriptionText}>{place?.description}</Text>
-              {place?.rating && (
-                <Text style={styles.ratingText}>Rating: ★ {place.rating}</Text>
+              {/* Dark Gradient Overlay for White Text Legibility */}
+              <LinearGradient
+                colors={['transparent', 'rgba(0,0,0,0.2)', 'rgba(0,0,0,0.7)']}
+                style={styles.gradientOverlay}
+              />
+
+              {/* Top Navigation Overlay */}
+              <View style={styles.headerButtonsRow}>
+                <TouchableOpacity
+                  style={styles.circularButton}
+                  onPress={handleGoBack}
+                  activeOpacity={0.7}
+                >
+                  <ArrowLeftIcon
+                    size={20}
+                    color={isDarkMode ? '#FFFFFF' : '#333333'}
+                    strokeWidth={2.5}
+                  />
+                </TouchableOpacity>
+
+                <TouchableOpacity
+                  style={styles.circularButton}
+                  onPress={() => setIsLiked(!isLiked)}
+                  activeOpacity={0.7}
+                >
+                  <HeartIcon
+                    size={20}
+                    color={isLiked ? '#FF4B4B' : (isDarkMode ? '#FFFFFF' : '#333333')}
+                    fill={isLiked ? '#FF4B4B' : 'none'}
+                    strokeWidth={2.2}
+                  />
+                </TouchableOpacity>
+              </View>
+
+              {/* Place Name and Location Subtitle */}
+              <View style={styles.titleOverlay}>
+                <Text style={styles.placeTitle} numberOfLines={2}>
+                  {place.name}
+                </Text>
+                <View style={styles.locationRow}>
+                  <Ionicons name="location-sharp" size={14} color="#FF6B35" />
+                  <Text style={styles.locationText} numberOfLines={1}>
+                    {place.location || place.geography?.address || 'N/A'}
+                  </Text>
+                </View>
+              </View>
+
+              {/* Floating Vertical Thumbnail Column */}
+              {thumbnails.length > 1 && (
+                <View style={styles.floatingGallery}>
+                  {thumbnails.map((uri, idx) => {
+                    const isActive = activeHeroImage === uri;
+                    return (
+                      <TouchableOpacity
+                        key={idx}
+                        style={[
+                          styles.thumbWrapper,
+                          isActive ? styles.thumbActive : styles.thumbInactive
+                        ]}
+                        onPress={() => setActiveHeroImage(uri)}
+                        activeOpacity={0.8}
+                      >
+                        <Image source={{ uri }} style={styles.thumbImage} resizeMode="cover" />
+                      </TouchableOpacity>
+                    );
+                  })}
+                </View>
               )}
             </View>
 
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Location</Text>
-
-              {/* Address Line */}
-              <Text style={styles.sectionBodyText}>
-                <Text style={styles.labelText}>Address: </Text>
-                <Text style={styles.answerText}>
-                  {place?.geography?.address || 'N/A'}
-                </Text>
-              </Text>
-
-              {/* City Line */}
-              <Text style={styles.sectionBodyText}>
-                <Text style={styles.labelText}>City: </Text>
-                <Text style={styles.answerText}>
-                  {place?.geography?.city || 'N/A'}
-                </Text>
-              </Text>
-
-              {/* State Line */}
-              <Text style={styles.sectionBodyText}>
-                <Text style={styles.labelText}>State: </Text>
-                <Text style={styles.answerText}>
-                  {place?.geography?.state || 'N/A'}
-                </Text>
-              </Text>
-
-              {/* Country Line */}
-              <Text style={styles.sectionBodyText}>
-                <Text style={styles.labelText}>Country: </Text>
-                <Text style={styles.answerText}>
-                  {place?.geography?.country || 'N/A'}
-                </Text>
-              </Text>
+            {/* ── Specs Cards Section ── */}
+            <View style={styles.specsContainer}>
+              <View style={styles.specCard}>
+                <Text style={styles.specLabel}>Distance</Text>
+                <Text style={styles.specValue}>{mockDistance}</Text>
+              </View>
+              <View style={styles.specCard}>
+                <Text style={styles.specLabel}>Temp</Text>
+                <Text style={styles.specValue}>{mockTemp}</Text>
+              </View>
+              <View style={styles.specCard}>
+                <Text style={styles.specLabel}>Rating</Text>
+                <Text style={styles.specValue}>{mockRating}</Text>
+              </View>
             </View>
 
-            <View style={styles.sectionContainer}>
-              <Text style={styles.sectionTitle}>Logistics</Text>
-              {/* Opening Hours Section */}
-              <Text style={styles.sectionBodyText}>
-                <Text style={styles.labelText}>Opening Hours: </Text>
-                <Text style={styles.answerText}>
-                  {place?.logistics?.opening_hours?.weekdays || 'N/A'}
-                </Text>
+            {/* ── Description Section ── */}
+            <View style={styles.descriptionContainer}>
+              <Text style={styles.sectionTitle}>Description</Text>
+              <Text
+                style={styles.descriptionText}
+                numberOfLines={isDescriptionExpanded ? undefined : 3}
+              >
+                {place.description}
               </Text>
-
-              {/* Best Time to Visit Section */}
-              <Text style={styles.sectionBodyText}>
-                <Text style={styles.labelText}>Best Time to Visit: </Text>
-                <Text style={styles.answerText}>
-                  {place?.logistics?.best_time_to_visit || 'N/A'}
-                </Text>
-              </Text>
-
-              {/* Crowd Level Section */}
-              <Text style={styles.sectionBodyText}>
-                <Text style={styles.labelText}>Crowd Level: </Text>
-                <Text style={styles.answerText}>
-                  {place?.logistics?.crowd_level_indicator || 'N/A'}
-                </Text>
-              </Text>
+              {place.description && place.description.length > 130 && (
+                <TouchableOpacity
+                  style={styles.readMoreBtn}
+                  onPress={() => setIsDescriptionExpanded(!isDescriptionExpanded)}
+                  activeOpacity={0.7}
+                >
+                  <Text style={styles.readMoreText}>
+                    {isDescriptionExpanded ? 'Read Less' : 'Read More...'}
+                  </Text>
+                </TouchableOpacity>
+              )}
             </View>
 
-            <View style={styles.Divider1} />
+            {/* ── Location Map Section ── */}
+            <View style={styles.mapSectionContainer}>
+              <Text style={styles.sectionTitle}>Location Map</Text>
+              <TouchableOpacity
+                style={styles.mapCard}
+                activeOpacity={0.9}
+                onPress={openMapInDevice}
+              >
+                <Image
+                  source={
+                    isDarkMode
+                      ? require('../../../assets/dark_map.png')
+                      : require('../../../assets/light_map.png')
+                  }
+                  style={styles.mapImage}
+                  resizeMode="cover"
+                />
 
-            <View style={styles.tabView}>
-              {['Trivia and Culture', 'Historical Context', 'Sub Location'].map(
-                tab => {
-                  const isTabActive = activeTab === tab;
+                {/* Floating Map Pin Marker */}
+                <View style={styles.mapMarkerContainer}>
+                  <View style={styles.markerCircle}>
+                    <Ionicons name="location" size={24} color="#FFFFFF" />
+                  </View>
+                  <View style={styles.markerPulse} />
+                </View>
+
+                {/* Google Maps style Info Box overlay in top-left */}
+                <View style={styles.mapInfoBox}>
+                  <View style={styles.mapInfoTextWrapper}>
+                    <Text numberOfLines={1} style={styles.mapInfoTitle}>
+                      {place.name || 'New York'}
+                    </Text>
+                    <Text numberOfLines={1} style={styles.mapInfoSubtitle}>
+                      {place.location || 'New York, USA'}
+                    </Text>
+                    <Text style={styles.mapInfoLink}>View larger map</Text>
+                  </View>
+                  <View style={styles.mapInfoDirectionsBtn}>
+                    <Ionicons name="navigate" size={12} color="#FFFFFF" />
+                  </View>
+                </View>
+
+                {/* Google Maps style Zoom buttons in bottom-right */}
+                <View style={styles.zoomControls}>
+                  <View style={[styles.zoomBtn, styles.zoomBtnBorder]}>
+                    <Text style={styles.zoomText}>+</Text>
+                  </View>
+                  <View style={styles.zoomBtn}>
+                    <Text style={styles.zoomText}>-</Text>
+                  </View>
+                </View>
+
+                {/* Google Mock Branding in bottom-left */}
+                <View style={styles.googleBranding}>
+                  <Text style={styles.googleText}>Google</Text>
+                </View>
+              </TouchableOpacity>
+            </View>
+
+            {/* ── Detailed Tabs Area ── */}
+            <View style={styles.tabsContainer}>
+              <View style={styles.tabButtonsRow}>
+                {['Trivia and Culture', 'Historical Context', 'Sub Location'].map(tab => {
+                  const isActive = activeTab === tab;
                   return (
                     <TouchableOpacity
                       key={tab}
+                      style={[
+                        styles.tabButton,
+                        isActive ? styles.tabActiveButton : styles.tabInactiveButton
+                      ]}
                       onPress={() => setActiveTab(tab)}
-                      activeOpacity={0.85}
-                      style={styles.buttonWrapper}
+                      activeOpacity={0.7}
                     >
-                      {isTabActive ? (
-                        <LinearGradient
-                          colors={[colors.border, colors.border]}
-                          start={{ x: 0, y: 0.5 }}
-                          end={{ x: 1, y: 0.5 }}
-                          style={styles.activeBorderGradientView}
-                        >
-                          <View style={styles.activeSolidBackgroundMaskShield}>
-                            <LinearGradient
-                              colors={[
-                                colors.primaryGhost,
-                                colors.primaryGhost,
-                              ]}
-                              start={{ x: 0, y: 0 }}
-                              end={{ x: 1, y: 0 }}
-                              style={styles.activeGredientView}
-                            >
-                              <Text style={styles.categoryTabText}>{tab}</Text>
-                            </LinearGradient>
-                          </View>
-                        </LinearGradient>
-                      ) : (
-                        <View style={styles.activeGredientView1}>
-                          <Text style={styles.categoryTabText1}>{tab}</Text>
-                        </View>
-                      )}
+                      <Text
+                        style={[
+                          styles.tabButtonText,
+                          isActive ? styles.tabActiveText : styles.tabInactiveText
+                        ]}
+                      >
+                        {tab === 'Trivia and Culture' ? 'Trivia' : tab === 'Historical Context' ? 'History' : 'Sub-Locations'}
+                      </Text>
                     </TouchableOpacity>
                   );
-                },
-              )}
-            </View>
-
-            {activeTab === 'Trivia and Culture' && (
-              <View style={styles.tabInfoView}>
-                <View style={styles.tabInfoView1}>
-                  <Text style={styles.tabText1}>Customs & Hidden Gems</Text>
-                  <Text style={styles.tabText2}>
-                    {place?.trivia?.hidden_gem ||
-                      'No customs information available.'}
-                  </Text>
-                </View>
-                <View style={styles.tabInfoView1}>
-                  <Text style={styles.tabText1}>Facts</Text>
-                  <Text style={styles.tabText2}>
-                    {place?.trivia?.quick_facts?.join('\n\n') ||
-                      'No facts available.'}
-                  </Text>
-                </View>
+                })}
               </View>
-            )}
 
-            {activeTab === 'Historical Context' && (
-              <View style={styles.tabInfoView}>
-                <View style={styles.tabInfoView1}>
-                  <Text style={styles.tabText1}>Era</Text>
-                  <Text style={styles.tabText2}>
-                    {place?.historicalContext?.historical_era || 'N/A'}
-                  </Text>
-                </View>
-                <View style={styles.tabInfoView1}>
-                  <Text style={styles.tabText1}>Architectural Style</Text>
-                  <Text style={styles.tabText2}>
-                    {place?.historicalContext?.architectural_style || 'N/A'}
-                  </Text>
-                </View>
-                <View style={styles.tabInfoView1}>
-                  <Text style={styles.tabText1}>Built In</Text>
-                  <Text style={styles.tabText2}>
-                    {place?.historicalContext?.year_established || 'N/A'}
-                  </Text>
-                </View>
-              </View>
-            )}
+              {/* Tab Content rendering */}
+              <View style={styles.tabContentWrapper}>
+                {activeTab === 'Trivia and Culture' && (
+                  <View style={styles.tabInfoView}>
+                    {/* Hidden Gem Tip Card */}
+                    <View style={styles.gemCard}>
+                      <View style={styles.gemIconContainer}>
+                        <Ionicons name="sparkles" size={16} color="#FF6B35" />
+                      </View>
+                       <View style={styles.flex1}>
+                        <Text style={styles.gemTitle}>Customs & Hidden Gems</Text>
+                        <Text style={styles.gemText}>
+                          {place.trivia?.hidden_gem || 'No customs information available.'}
+                        </Text>
+                      </View>
+                    </View>
 
-            {activeTab === 'Sub Location' && (
-              <View style={styles.tabInfoView}>
-                {place?.subLocations?.length > 0 ? (
-                  place.subLocations.map((loc, index) => (
-                    <View key={index} style={styles.tabInfoView1}>
-                      <Text style={styles.tabText1}>
-                        {loc.name || `Sub Location ${index + 1}`}
-                      </Text>
-                      <Text style={styles.tabText2}>
-                        {loc.description || 'No description'}
+                    {/* Quick Facts list with bullet points */}
+                    {place.trivia?.quick_facts?.length > 0 && (
+                      <View style={styles.marginTop8}>
+                        <Text style={styles.factsHeader}>Quick Facts</Text>
+                        {place.trivia.quick_facts.map((fact, idx) => (
+                          <View key={idx} style={styles.factRow}>
+                            <Ionicons name="bulb-outline" size={16} color="#FF6B35" style={styles.marginTop4} />
+                            <Text style={styles.factText}>{fact}</Text>
+                          </View>
+                        ))}
+                      </View>
+                    )}
+                  </View>
+                )}
+
+                {activeTab === 'Historical Context' && (
+                  <View style={styles.tabInfoView}>
+                    <View style={styles.tabInfoItem}>
+                      <Text style={styles.tabInfoLabel}>Historical Era</Text>
+                      <Text style={styles.tabInfoValue}>
+                        {place.historicalContext?.historical_era || 'N/A'}
                       </Text>
                     </View>
-                  ))
-                ) : (
-                  <View style={styles.tabInfoView1}>
-                    <Text style={styles.tabText1}>No Sub Locations</Text>
-                    <Text style={styles.tabText2}>
-                      There are no sub locations listed for this place.
-                    </Text>
+                    <View style={styles.tabInfoItem}>
+                      <Text style={styles.tabInfoLabel}>Architectural Style</Text>
+                      <Text style={styles.tabInfoValue}>
+                        {place.historicalContext?.architectural_style || 'N/A'}
+                      </Text>
+                    </View>
+                    <View style={styles.tabInfoItem}>
+                      <Text style={styles.tabInfoLabel}>Year Established</Text>
+                      <Text style={styles.tabInfoValue}>
+                        {place.historicalContext?.year_established || 'N/A'}
+                      </Text>
+                    </View>
+                  </View>
+                )}
+
+                {activeTab === 'Sub Location' && (
+                  <View style={styles.tabInfoView}>
+                    {place.subLocations?.length > 0 ? (
+                      place.subLocations.map((loc, index) => (
+                        <View key={index} style={styles.tabInfoItem}>
+                          <Text style={styles.tabInfoLabel}>{loc.name || `Sub Location ${index + 1}`}</Text>
+                          <Text style={styles.tabInfoValue}>{loc.description || 'No description'}</Text>
+                        </View>
+                      ))
+                    ) : (
+                      <View style={styles.tabInfoItem}>
+                        <Text style={styles.tabInfoLabel}>No Sub Locations</Text>
+                        <Text style={styles.tabInfoValue}>
+                          There are no sub locations listed for this place.
+                        </Text>
+                      </View>
+                    )}
                   </View>
                 )}
               </View>
-            )}
+            </View>
 
-            {place?.subLocations?.length > 0 && (
-              <View
-                style={[
-                  styles.sectionContainer,
-                  { marginTop: 30, paddingHorizontal: 0 },
-                ]}
-              >
-                <Text
-                  style={[
-                    styles.sectionTitle,
-                    { paddingHorizontal: 16, marginBottom: 12 },
-                  ]}
-                >
-                  Sub Locations
+            {/* ── Sub-locations Horizontal Carousel ── */}
+            {place.subLocations?.length > 0 && (
+              <View style={styles.subLocationsWrapper}>
+                <Text style={[styles.sectionTitle, styles.subLocationSectionTitle]}>
+                  Explore Sub Locations
                 </Text>
                 <FlatList
                   horizontal
                   showsHorizontalScrollIndicator={false}
                   data={place.subLocations}
-                  contentContainerStyle={[
-                    styles.subLocationCarouselContent,
-                    { paddingHorizontal: 16 },
-                  ]}
+                  contentContainerStyle={styles.subLocationCarouselContent}
                   keyExtractor={(item, index) => index.toString()}
                   renderItem={({ item, index }) => (
                     <View style={styles.subLocationCard}>
@@ -378,6 +567,7 @@ export default function PlaceDetails({ route, navigation }) {
                               : 'https://via.placeholder.com/150'),
                         }}
                         style={styles.subLocationImage}
+                        resizeMode="cover"
                       />
                       <View style={styles.subLocationTextContainer}>
                         <Text style={styles.subLocationTitle} numberOfLines={1}>
@@ -392,112 +582,112 @@ export default function PlaceDetails({ route, navigation }) {
                 />
               </View>
             )}
+          </ScrollView>
 
+          {/* ── Sticky Bottom Cost & Action Bar ── */}
+          <View style={styles.bottomStickyBar}>
+            <View style={styles.priceBlock}>
+              <Text style={styles.priceLabel}>Estimated Cost</Text>
+              <Text style={styles.priceAmount}>{mockPrice}</Text>
+            </View>
             <TouchableOpacity
-              style={styles.addTripBtn}
+              style={styles.actionChevronButton}
               activeOpacity={0.8}
               onPress={() => setAddTripModalVisible(true)}
             >
-              <Text style={styles.addTripBtnText}>Add Trip</Text>
+              <ArrowLeftIcon
+                size={22}
+                color={isDarkMode ? '#000000' : '#FFFFFF'}
+                strokeWidth={2.8}
+                style={{ transform: [{ rotate: '180deg' }] }} // Rotates left arrow to point right
+              />
             </TouchableOpacity>
-          </ScrollView>
+          </View>
+        </View>
 
-          <Modal
-            visible={addTripModalVisible}
-            transparent
-            animationType="fade"
-            onRequestClose={() => setAddTripModalVisible(false)}
+        {/* ── Add Trip Modal ── */}
+        <AppModal
+          title="Plan Trip"
+          visible={addTripModalVisible}
+          onClose={() => setAddTripModalVisible(false)}
+        >
+          <TextInput
+            style={styles.modalInput}
+            placeholder="Number of People"
+            placeholderTextColor={colors.textTertiary}
+            keyboardType="numeric"
+            value={tripPeople}
+            onChangeText={setTripPeople}
+          />
+
+          {/* Start Date Picker Button */}
+          <TouchableOpacity
+            style={[styles.modalInput, styles.modalInputTouchable]}
+            activeOpacity={0.8}
+            onPress={() => setStartCalendarVisible(true)}
           >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContent}>
-                <Text style={styles.modalTitle}>Add Trip</Text>
+            <Text style={tripStart ? styles.modalInputText : styles.modalInputPlaceholder}>
+              {tripStart ? `Start Date: ${formatDateVisual(tripStart)}` : 'Select Start Date'}
+            </Text>
+          </TouchableOpacity>
 
-                <TextInput
-                  style={styles.modalInput}
-                  placeholder="Number of People"
-                  placeholderTextColor={colors.textTertiary}
-                  keyboardType="numeric"
-                  value={tripPeople}
-                  onChangeText={setTripPeople}
+          {/* End Date Picker Button */}
+          <TouchableOpacity
+            style={[styles.modalInput, styles.modalInputTouchable]}
+            activeOpacity={0.8}
+            onPress={() => setEndCalendarVisible(true)}
+          >
+            <Text style={tripEnd ? styles.modalInputText : styles.modalInputPlaceholder}>
+              {tripEnd ? `End Date: ${formatDateVisual(tripEnd)}` : 'Select End Date'}
+            </Text>
+          </TouchableOpacity>
+
+          {/* Display Total Price */}
+          <Text style={[styles.labelText, styles.marginBottom14]}>
+            Total Price: ₹{totalPrice}
+          </Text>
+
+          {/* Start Date Calendar Modal */}
+          <CalendarModal
+            visible={startCalendarVisible}
+            onClose={() => setStartCalendarVisible(false)}
+            onSelectDate={setTripStart}
+            initialDate={tripStart}
+          />
+
+          {/* End Date Calendar Modal */}
+          <CalendarModal
+            visible={endCalendarVisible}
+            onClose={() => setEndCalendarVisible(false)}
+            onSelectDate={setTripEnd}
+            initialDate={tripEnd}
+          />
+
+          <View style={styles.modalActionRow}>
+            <TouchableOpacity
+              style={[styles.modalBtn, styles.cancelBtn]}
+              onPress={() => setAddTripModalVisible(false)}
+              disabled={isAddingTrip}
+            >
+              <Text style={styles.cancelBtnText}>Cancel</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={[styles.modalBtn, styles.confirmBtn]}
+              onPress={handleAddTripSubmit}
+              disabled={isAddingTrip}
+            >
+              {isAddingTrip ? (
+                <ActivityIndicator
+                  color="#FFFFFF"
+                  size="small"
                 />
-
-                <TextInput
-                  style={styles.modalInput}
-                  placeholder="Start Date (YYYY-MM-DD)"
-                  placeholderTextColor={colors.textTertiary}
-                  value={tripStart}
-                  onChangeText={setTripStart}
-                />
-
-                <TextInput
-                  style={styles.modalInput}
-                  placeholder="End Date (YYYY-MM-DD)"
-                  placeholderTextColor={colors.textTertiary}
-                  value={tripEnd}
-                  onChangeText={setTripEnd}
-                />
-
-                {place?.subLocations?.length > 0 && (
-                  <View style={{ marginBottom: 12 }}>
-                    <Text style={[styles.labelText, { marginBottom: 8 }]}>
-                      Select Sublocations:
-                    </Text>
-                    {place.subLocations.map((loc, idx) => {
-                      const locName = loc.name || `Sub Location ${idx + 1}`;
-                      const isSelected = tripSublocations.includes(locName);
-                      return (
-                        <TouchableOpacity
-                          key={idx}
-                          style={styles.checkboxRow}
-                          activeOpacity={0.7}
-                          onPress={() => toggleSublocation(locName)}
-                        >
-                          <View
-                            style={[
-                              styles.checkboxOuter,
-                              isSelected && styles.checkboxOuterSelected,
-                            ]}
-                          >
-                            {isSelected && (
-                              <View style={styles.checkboxInner} />
-                            )}
-                          </View>
-                          <Text style={styles.checkboxLabel}>{locName}</Text>
-                        </TouchableOpacity>
-                      );
-                    })}
-                  </View>
-                )}
-
-                <View style={styles.modalActionRow}>
-                  <TouchableOpacity
-                    style={[styles.modalBtn, styles.cancelBtn]}
-                    onPress={() => setAddTripModalVisible(false)}
-                    disabled={isAddingTrip}
-                  >
-                    <Text style={styles.cancelBtnText}>Cancel</Text>
-                  </TouchableOpacity>
-
-                  <TouchableOpacity
-                    style={[styles.modalBtn, styles.confirmBtn]}
-                    onPress={handleAddTripSubmit}
-                    disabled={isAddingTrip}
-                  >
-                    {isAddingTrip ? (
-                      <ActivityIndicator
-                        color={colors.textOnPrimary}
-                        size="small"
-                      />
-                    ) : (
-                      <Text style={styles.confirmBtnText}>Confirm</Text>
-                    )}
-                  </TouchableOpacity>
-                </View>
-              </View>
-            </View>
-          </Modal>
-        </SafeAreaView>
+              ) : (
+                <Text style={styles.confirmBtnText}>Plan Now</Text>
+              )}
+            </TouchableOpacity>
+          </View>
+        </AppModal>
       </View>
-    </SafeAreaProvider>
   );
 }

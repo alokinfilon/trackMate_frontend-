@@ -6,7 +6,7 @@ import {
   Image,
   Modal,
 } from 'react-native';
-import Ionicons from 'react-native-vector-icons/Ionicons';
+import CloseCircleIcon from '../../../../components/svg/closeCircleIcon';
 import { useImageViewerModal } from './ImageViewerModal.hooks';
 import { STRINGS } from './ImageViewerModal.strings';
 
@@ -28,7 +28,7 @@ export default function ImageViewerModal({
           style={styles.viewerCloseBtn}
           onPress={() => setActiveViewerImage(null)}
         >
-          <Ionicons name="close" size={30} color="#FFFFFF" />
+          <CloseCircleIcon size={30} color="#FFFFFF" />
         </TouchableOpacity>
 
         {activeViewerImage && (

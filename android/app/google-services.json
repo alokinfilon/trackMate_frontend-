@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "746521166248",
+    "project_id": "trackmate-67583",
+    "storage_bucket": "trackmate-67583.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:746521166248:android:5b5a0757f4414f86931d9d",
+        "android_client_info": {
+          "package_name": "com.trackmate"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCphIkZhoaOq3iseILVoWqVL0HZ-EqXPiE"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

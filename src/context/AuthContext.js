@@ -1,42 +1,48 @@
-import React, { createContext, useState, useEffect } from 'react';
-import authService from '../services/authService';
-import SplashScreen from 'react-native-splash-screen';
+import React, { createContext, useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { View, ActivityIndicator, StyleSheet } from 'react-native';
+
+import {
+  initAuth,
+  setAuthenticated,
+  setLogout,
+  selectIsAuthenticated,
+  selectAuthLoading,
+  clearProfile,
+  clearTrips,
+} from '../store/slices';
+import { authService } from '../services';
 
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  const [appIsLoading, setAppIsLoading] = useState(true);
-  const [userIsAuthenticated, setUserIsAuthenticated] = useState(false);
+  const dispatch = useDispatch();
+  const isAuthenticated = useSelector(selectIsAuthenticated);
+  const isLoading = useSelector(selectAuthLoading);
 
   useEffect(() => {
+    // Register logout callback to clear Redux state
     authService.setLogoutCallback(() => {
-      setUserIsAuthenticated(false);
+      dispatch(clearProfile());
+      dispatch(clearTrips());
+      dispatch(setLogout());
     });
 
-    const initializeAuthStatus = async () => {
-      try {
-        const token = await authService.getAccessToken();
+    // Initialize auth from stored token
+    dispatch(initAuth());
+  }, [dispatch]);
 
-        if (token) {
-          setUserIsAuthenticated(true);
-        }
-      } catch (error) {
-        console.error("Storage lookup initialization failed:", error);
-      } finally {
-        setAppIsLoading(false);
-        try {
-          SplashScreen.hide();
-        } catch (e) {
-          console.log("Splashscreen not linked or hidden manually.");
-        }
-      }
-    };
+  const setUserIsAuthenticated = (value) => {
+    if (value) {
+      dispatch(setAuthenticated(true));
+    } else {
+      dispatch(clearProfile());
+      dispatch(clearTrips());
+      dispatch(setLogout());
+    }
+  };
 
-    initializeAuthStatus();
-  }, []);
-
-  if (appIsLoading) {
+  if (isLoading) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" color="#08b8f3" />
@@ -45,7 +51,9 @@ export const AuthProvider = ({ children }) => {
   }
 
   return (
-    <AuthContext.Provider value={{ userIsAuthenticated, setUserIsAuthenticated }}>
+    <AuthContext.Provider
+      value={{ userIsAuthenticated: isAuthenticated, setUserIsAuthenticated }}
+    >
       {children}
     </AuthContext.Provider>
   );

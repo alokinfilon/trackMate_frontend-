@@ -1,10 +1,10 @@
 import { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth0 } from 'react-native-auth0';
-import { AuthContext } from '../../context/AuthContext'; 
-import { useAlertModal } from '../../components/modal';
-import authService from '../../services/authService';
-import { saveTokens } from '../../utils/storage';
+import { AuthContext } from '../../context';
+import { useAlertModal } from '../../components';
+import { authService } from '../../services';
+import { saveTokens } from '../../utils';
 
 export const useLogin = () => {
   const [emailOrPhone, setEmailOrPhone] = useState('');

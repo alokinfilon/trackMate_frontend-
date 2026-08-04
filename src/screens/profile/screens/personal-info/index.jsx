@@ -12,12 +12,10 @@ import {
   Image,
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '../../../../context/ThemeContext';
+import { useTheme, useTranslation } from '../../../../context';
 import { usePersonalInfo } from './personal-info.hooks';
 import { createStyles } from './personal-info.styles';
-import EditPenIcon from '../../../../components/svg/editPenIcon';
-import { useTranslation } from '../../../../context/LanguageContext';
+import { EditPenIcon, Arrow } from '../../../../components';
 
 export default function PersonalInfoScreen({ navigation }) {
   const { colors, isDarkMode } = useTheme();
@@ -56,7 +54,7 @@ export default function PersonalInfoScreen({ navigation }) {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#FF6B35" />
+          <Arrow size={28} color={isDarkMode ? '#FFFFFF' : '#000000'} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>{t('personalInfo.title')}</Text>
         <View style={{ width: 40 }} />

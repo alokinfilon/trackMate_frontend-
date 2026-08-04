@@ -1,32 +1,54 @@
 import React from 'react';
-import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
-import { useTheme } from '../../../context/ThemeContext';
-import { Tokens } from '../../../theme/theme';
+import { View, Text, TouchableOpacity, StyleSheet, Image } from 'react-native';
+import { useTheme } from '../../../context';
+import { Tokens } from '../../../theme';
+import { BellIcon, AccountIcon } from '../../../components';
+import { useNavigation } from '@react-navigation/native';
 
 /**
  * Home screen top navigation bar.
- * Left: orange square app icon | Center: app name | Right: bell icon
+ * Left: Profile Avatar (falls back to AccountIcon if no userImage) | Center: TrackMate title | Right: BellIcon with badge
  */
-const HomeHeader = ({ onBellPress }) => {
-  const { colors } = useTheme();
+const HomeHeader = ({ userImage, unreadCount, onBellPress }) => {
+  const { colors, isDarkMode } = useTheme();
+  const navigation = useNavigation();
 
   return (
     <View style={styles.container}>
-      {/* App icon */}
-      <View style={styles.appIconSquare}>
-        <Text style={styles.appIconEmoji}>📍</Text>
-      </View>
+      {/* Profile Avatar (Left) */}
+      <TouchableOpacity
+        activeOpacity={0.7}
+        onPress={() => navigation.navigate('setting')}
+        style={[
+          styles.profileBtn,
+          { backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.08)' : '#F3F4F6' }
+        ]}
+      >
+        {userImage ? (
+          <Image source={{ uri: userImage }} style={styles.profileImage} />
+        ) : (
+          <AccountIcon stroke={colors.textPrimary} width={22} height={22} />
+        )}
+      </TouchableOpacity>
 
-      {/* Title */}
+      {/* App Title (Center) */}
       <Text style={[styles.title, { color: colors.textPrimary }]}>TrackMate</Text>
 
-      {/* Bell */}
+      {/* Bell Notification Button (Right) */}
       <TouchableOpacity
         style={[styles.bellButton, { backgroundColor: colors.surface }]}
         onPress={onBellPress}
+        activeOpacity={0.7}
         hitSlop={{ top: 8, bottom: 8, left: 8, right: 8 }}
       >
-        <Text style={styles.bellIcon}>🔔</Text>
+        <BellIcon size={22} color={colors.textPrimary} />
+        {unreadCount > 0 && (
+          <View style={styles.badge}>
+            <Text style={styles.badgeText}>
+              {unreadCount > 99 ? '99+' : unreadCount}
+            </Text>
+          </View>
+        )}
       </TouchableOpacity>
     </View>
   );
@@ -40,16 +62,18 @@ const styles = StyleSheet.create({
     paddingHorizontal: Tokens.layout.paddingHorizontal,
     paddingVertical: Tokens.gaps.large,
   },
-  appIconSquare: {
+  profileBtn: {
     width: 44,
     height: 44,
-    borderRadius: 12,
-    backgroundColor: '#FF6B35',
-    justifyContent: 'center',
+    borderRadius: 22,
     alignItems: 'center',
+    justifyContent: 'center',
+    overflow: 'hidden',
   },
-  appIconEmoji: {
-    fontSize: 22,
+  profileImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 22,
   },
   title: {
     fontFamily: Tokens.typography.families.semiBold,
@@ -62,9 +86,25 @@ const styles = StyleSheet.create({
     borderRadius: 22,
     justifyContent: 'center',
     alignItems: 'center',
+    position: 'relative',
   },
-  bellIcon: {
-    fontSize: 20,
+  badge: {
+    position: 'absolute',
+    top: 4,
+    right: 4,
+    minWidth: 16,
+    height: 16,
+    borderRadius: 8,
+    backgroundColor: '#EF4444',
+    alignItems: 'center',
+    justifyContent: 'center',
+    paddingHorizontal: 3,
+  },
+  badgeText: {
+    color: '#FFFFFF',
+    fontSize: 10,
+    fontFamily: 'Outfit-Bold',
+    lineHeight: 12,
   },
 });
 

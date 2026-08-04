@@ -1,22 +1,27 @@
 import React from 'react';
-import { View, TextInput, StyleSheet, Text } from 'react-native';
-import { useTheme } from '../../../context/ThemeContext';
-import { Tokens } from '../../../theme/theme';
+import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { useTheme } from '../../../context';
+import { Tokens } from '../../../theme';
+
+import { ExploreIcon } from '../../../components';
 
 /**
  * Search bar for the home screen.
  * Props:
- *   value       {string}  - Current search query
- *   onChangeText {func}  - Called on text change
+ *   value        {string}   - Current search text in input
+ *   onChangeText {function} - Called on text change
+ *   onSubmit     {function} - Called to execute search query
  */
-const SearchBar = ({ value, onChangeText }) => {
+const SearchBar = ({ value, onChangeText, onSubmit }) => {
   const { colors, isDarkMode } = useTheme();
 
   const bgColor = isDarkMode ? '#242444' : '#F0F0F5';
 
   return (
     <View style={[styles.container, { backgroundColor: bgColor }]}>
-      <Text style={styles.icon}>🔍</Text>
+      <TouchableOpacity activeOpacity={0.7} onPress={onSubmit}>
+        <ExploreIcon color={colors.textSecondary} size={18} />
+      </TouchableOpacity>
       <TextInput
         value={value}
         onChangeText={onChangeText}
@@ -24,6 +29,7 @@ const SearchBar = ({ value, onChangeText }) => {
         placeholderTextColor={colors.textSecondary}
         style={[styles.input, { color: colors.textPrimary }]}
         returnKeyType="search"
+        onSubmitEditing={onSubmit}
       />
     </View>
   );

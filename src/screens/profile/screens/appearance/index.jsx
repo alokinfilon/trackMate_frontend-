@@ -8,10 +8,12 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '../../../../context/ThemeContext';
+import { useTheme } from '../../../../context';
 import { useAppearance } from './appearance.hooks';
 import { createStyles } from './appearance.styles';
 import { strings } from './appearance.strings';
+
+import { Arrow } from '../../../../components';
 
 export default function AppearanceScreen({ navigation }) {
   const { colors, isDarkMode } = useTheme();
@@ -24,7 +26,7 @@ export default function AppearanceScreen({ navigation }) {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
+          <Arrow size={28} color={isDarkMode ? '#FFFFFF' : '#000000'} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>{strings.headerTitle}</Text>
         <View style={{ width: 40 }} />

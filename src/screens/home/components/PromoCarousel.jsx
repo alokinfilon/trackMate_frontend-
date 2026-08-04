@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Image,
@@ -7,8 +7,8 @@ import {
   Dimensions,
   TouchableOpacity,
 } from 'react-native';
-import { useTheme } from '../../../context/ThemeContext';
-import { Tokens } from '../../../theme/theme';
+import { useTheme } from '../../../context';
+import { Tokens } from '../../../theme';
 
 const { width: SCREEN_WIDTH } = Dimensions.get('window');
 const BANNER_WIDTH = SCREEN_WIDTH - Tokens.layout.paddingHorizontal * 2;
@@ -23,15 +23,30 @@ const BANNERS = [
 const PromoCarousel = () => {
   const { colors } = useTheme();
   const [activeIndex, setActiveIndex] = useState(0);
+  const flatListRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      const nextIndex = (activeIndex + 1) % BANNERS.length;
+      setActiveIndex(nextIndex);
+      flatListRef.current?.scrollToIndex({ index: nextIndex, animated: true });
+    }, 3000);
+
+    return () => clearInterval(timer);
+  }, [activeIndex]);
 
   const handleScroll = (e) => {
     const index = Math.round(e.nativeEvent.contentOffset.x / BANNER_WIDTH);
-    setActiveIndex(index);
+    // Only update if it actually changes to prevent loop triggers
+    if (index !== activeIndex) {
+      setActiveIndex(index);
+    }
   };
 
   return (
     <View style={styles.wrapper}>
       <FlatList
+        ref={flatListRef}
         data={BANNERS}
         horizontal
         pagingEnabled
@@ -39,6 +54,7 @@ const PromoCarousel = () => {
         onScroll={handleScroll}
         scrollEventThrottle={16}
         keyExtractor={(item) => item.id}
+        onScrollToIndexFailed={() => {}}
         renderItem={({ item }) => (
           <View style={styles.bannerContainer}>
             <Image source={item.image} style={styles.bannerImage} resizeMode="cover" />

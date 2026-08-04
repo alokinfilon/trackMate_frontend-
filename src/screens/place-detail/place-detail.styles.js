@@ -1,512 +1,502 @@
-import { StyleSheet, Dimensions } from 'react-native';
-import { Tokens } from '../../theme/theme';
+import { StyleSheet, Dimensions, Platform } from 'react-native';
 
-const { width } = Dimensions.get('window');
-const TOTAL_PADDINGS = Tokens.layout.paddingHorizontal * 2;
-const TAB_CONTAINER_WIDTH = width - TOTAL_PADDINGS;
-const EXACT_TAB_WIDTH = (TAB_CONTAINER_WIDTH - (4 * 2)) / 3;
-const SINGLE_ROW_CHIP_WIDTH = (width - TOTAL_PADDINGS - Tokens.gaps.small * 5) / 7;
-const RECOMMENDATION_CARD_WIDTH = (width - TOTAL_PADDINGS - Tokens.gaps.small * 2) / 3;
+const { width, height } = Dimensions.get('window');
+const HERO_HEIGHT = height * 0.48; // Hero height spans ~48% of screen height
 
-export const CAROUSEL_WIDTH = width - TOTAL_PADDINGS;
-export const feedbackIconSize = Tokens.scaleAsset(12);
-
-export const createStyles = (colors) => StyleSheet.create({
-  categoryText: {
-    fontSize: Tokens.typography.sizes.body,
-    color: colors.textSecondary,
-    marginTop: 4,
-    fontFamily: Tokens.typography.families.regular,
-  },
-  heroImageWrapper: {
-    marginTop: 10,
-    borderRadius: 20,
-    overflow: 'hidden',
-  },
-  heroImageContent: {
-    width: '100%',
-    height: 389,
-    borderRadius: 12,
-  },
-  sectionContainer: {
-    paddingHorizontal: 16,
-    marginTop: 20,
-  },
-  descriptionText: {
-    fontSize: Tokens.typography.sizes.body,
-    color: colors.textSecondary,
-    fontFamily: Tokens.typography.families.regular,
-    lineHeight: 22,
-  },
-  ratingText: {
-    fontSize: Tokens.typography.sizes.body,
-    color: '#E53E3E',
-    fontFamily: Tokens.typography.families.semiBold,
-    marginTop: 10,
-  },
-  sectionTitle: {
-    fontSize: Tokens.typography.sizes.button,
-    color: colors.textPrimary,
-    fontFamily: Tokens.typography.families.medium,
-    marginBottom: 4,
-  },
-  sectionBodyText: {
-    fontSize: 14,
-    lineHeight: 20,
-    marginBottom: 8,
-    color: colors.textSecondary,
-  },
-  gallerySectionContainer: {
-  },
-  galleryTitle: {
-    fontSize: Tokens.typography.sizes.h3,
-    color: colors.textPrimary,
-    fontFamily: Tokens.typography.families.bold,
-    marginHorizontal: 16,
-    marginBottom: 12,
-  },
-  galleryImage: {
-    width: "auto",
-    height: 250,
-    borderRadius: 16,
-  },
+export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   screenContainer: {
     flex: 1,
-    backgroundColor: colors.bg,
+    backgroundColor: isDarkMode ? '#121212' : '#FFFFFF',
   },
   mainContainer: {
     flex: 1,
+  },
+  scrollContainer: {
+    flex: 1,
+  },
+  scrollContent: {
+    paddingBottom: 110, // Safeguard space for sticky bottom bar
+  },
+
+  // ── Hero Section ───────────────────────────────────────────────────────────
+  heroWrapper: {
+    width: width,
+    height: HERO_HEIGHT,
+    position: 'relative',
+    borderBottomLeftRadius: 44,
+    borderBottomRightRadius: 44,
+    overflow: 'hidden',
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#F3F4F6',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.15,
+        shadowRadius: 10,
+      },
+      android: {
+        elevation: 8,
+      },
+    }),
+  },
+  heroImage: {
     width: '100%',
-  },
-  scrollContentContainer: {
-    paddingHorizontal: Tokens.layout.paddingHorizontal,
-    paddingTop: Tokens.gaps.medium,
-    paddingBottom: 40,
-  },
-  backHeaderView: {
-    width: '100%',
-    height: 40,
-    paddingHorizontal: Tokens.layout.paddingHorizontal,
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backButtonView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Tokens.gaps.small,
     height: '100%',
   },
-  backButtonText: {
-    fontFamily: Tokens.typography.families.medium,
-    fontSize: Tokens.typography.sizes.body,
-    color: colors.textPrimary,
-  },
-  headerView: {
-    width: '100%',
-    gap: Tokens.gaps.small,
-    marginBottom: Tokens.gaps.large,
-  },
-  productTitleText: {
-    fontFamily: Tokens.typography.families.semiBold,
-    fontSize: Tokens.typography.sizes.title,
-    lineHeight: Tokens.typography.lineHeights.title,
-    color: colors.textPrimary,
-    fontWeight: '800',
-  },
-  productSubtitleText: {
-    fontFamily: Tokens.typography.families.regular,
-    fontSize: Tokens.typography.sizes.body,
-    lineHeight: Tokens.typography.lineHeights.body,
-    color: colors.textSecondary,
-  },
-  postBoxView: {
-    width: '100%',
-    height: 389,
-    borderRadius: 20,
-    overflow: 'hidden',
-    backgroundColor: colors.bg,
-    position: 'relative',
-    marginBottom: Tokens.gaps.large,
-  },
- 
-  ImageCarousel: {
+  gradientOverlay: {
     position: 'absolute',
-    bottom: 12,
-    alignSelf: 'center',
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: Tokens.gaps.small,
-    backgroundColor: 'rgba(61, 72, 82, 0.5)',
-    paddingVertical: 4,
-    paddingHorizontal: 12,
-    borderRadius: 20,
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: '65%',
   },
-  indicatorDotInactive: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: 'rgba(224, 229, 236, 0.3)',
-    borderWidth: 1,
-    borderColor: 'rgba(224, 229, 236, 0.5)',
-  },
-  indicatorDotActive: {
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-  },
-  priceView: {
+  headerButtonsRow: {
+    position: 'absolute',
+    top: Platform.OS === 'ios' ? 50 : 20,
+    left: 0,
+    right: 0,
     flexDirection: 'row',
     justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '100%',
-    marginBottom: Tokens.gaps.xlarge,
+    paddingHorizontal: 20,
+    zIndex: 10,
   },
-  priceText: {
-    fontFamily: Tokens.typography.families.semiBold,
-    fontSize: 16,
-    lineHeight: 26,
-    color: colors.textPrimary,
-  },
-  excludingExtrasLabel: {
-    fontFamily: Tokens.typography.families.regular,
-    fontSize: 16,
-    color: colors.textSecondary,
-  },
- 
-  controlRowView: {
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    gap: Tokens.gaps.large,
-    width: '100%',
-    paddingVertical: 4,
-  },
- 
-  Divider: {
-    width: '100%',
-    height: 0,
-    borderTopWidth: 1,
-    borderColor: colors.divider,
-    marginVertical: Tokens.gaps.large,
-  },
-  Divider1: {
-    width: '100%',
-    height: 0,
-    borderTopWidth: 1,
-    borderColor: colors.divider,
-    marginVertical: Tokens.gaps.large,
-  },
-  SelectionView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  SelectionText: {
-    fontFamily: Tokens.typography.families.semiBold,
-    fontSize: 16,
-    color: colors.textPrimary,
-    marginBottom: Tokens.gaps.xlarge,
-  },
-
-  buttonGroupBox: {
-    width: '100%',
-    gap: Tokens.gaps.large,
-    marginTop: 8,
-  },
-
-  // Neumorphic tab bar — inset well
-  tabView: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-    width: '100%',
-    height: 50,
-    marginTop: Tokens.gaps.xlarge,
-    marginBottom: Tokens.gaps.large,
-    gap: 2,
-    borderRadius: 16,
-    backgroundColor: colors.bg,
-    // Inset well simulation
-    borderWidth: 1,
-    borderColor: 'rgba(163, 177, 198, 0.2)',
-    padding: 4,
-  },
-  buttonWrapper: {
-    width: EXACT_TAB_WIDTH,
+  circularButton: {
+    width: 42,
     height: 42,
-  },
-  activeBorderGradientView: {
-    flex: 1,
-    padding: 1,
-    borderRadius: 12,
-    overflow: 'hidden',
-  },
-  activeSolidBackgroundMaskShield: {
-    flex: 1,
-    borderRadius: 12,
-    overflow: 'hidden',
-    backgroundColor: colors.bg,
-  },
-  activeGredientView: {
-    flex: 1,
-    borderRadius: 12,
-    justifyContent: 'center',
+    borderRadius: 21,
+    backgroundColor: isDarkMode ? '#2D3748' : '#FFFFFF',
     alignItems: 'center',
-    paddingHorizontal: 0,
-    backgroundColor: colors.bg,
-    // Neumorphic extruded tab
-    shadowColor: 'rgb(163, 177, 198)',
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
+    justifyContent: 'center',
+    borderWidth: 1,
+    borderColor: isDarkMode ? '#3E4E68' : '#E2E8F0',
+    shadowColor: '#000000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
     elevation: 3,
   },
-  activeGredientView1: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 2,
+  titleOverlay: {
+    position: 'absolute',
+    left: 20,
+    bottom: 24,
+    right: 100, // Leave clear gap for floating gallery thumbnails
+    zIndex: 5,
   },
-  categoryTabText: {
-    fontFamily: Tokens.typography.families.medium,
-    fontSize: 13, 
-    color: colors.textSecondary,
-    textAlign: 'center',
+  placeTitle: {
+    fontSize: 28,
+    fontFamily: 'Outfit-Bold',
+    color: '#FFFFFF',
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 2 },
+    textShadowRadius: 6,
+    letterSpacing: -0.5,
   },
-  categoryTabText1: {
-    fontFamily: Tokens.typography.families.medium,
-    fontSize: 13, 
-    color: '#6C63FF',
-    textAlign: 'center',
-    fontWeight: '700',
-  },
-  tabInfoView: {
-    width: '100%',
-    gap: Tokens.gaps.xlarge,
-    paddingVertical: 4,
-  },
-  tabInfoView2: {
-    width: '100%',
-    gap: Tokens.gaps.large,
-    paddingVertical: 4,
-  },
-  tabInfoView1: {
-    width: '100%',
-    gap: 6,
-  },
-  tabText1: {
-    fontFamily: Tokens.typography.families.semiBold,
-    fontSize: 13,
-    color: colors.textPrimary,
-  },
-  tabText2: {
-    fontFamily: Tokens.typography.families.light,
-    fontSize: 13,
-    lineHeight: Tokens.typography.lineHeights.body,
-    color: colors.textSecondary,
-  },
-  refundPolicyText: {
-    textDecorationLine: 'underline',
-    color: '#6C63FF',
-    fontFamily: Tokens.typography.families.medium,
-    fontSize: 13,
-  },
-  recommendationView: {
-    width: '100%',
-    gap: Tokens.gaps.large,
-    marginTop: Tokens.gaps.section,
-  },
-  recommendationText: {
-    fontFamily: Tokens.typography.families.semiBold,
-    fontSize: 20,
-    lineHeight: 25,
-    color: colors.textPrimary,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  recommendationPRoductView: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-  },
-  recommendationCardsView: {
+  locationRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    alignItems: 'center',
+    marginTop: 6,
+    gap: 4,
   },
-  recommendationItem: {
-    width: RECOMMENDATION_CARD_WIDTH,
-    height: 138,
-    borderRadius: 16,
-    backgroundColor: colors.bg,
+  locationText: {
+    fontSize: 13,
+    fontFamily: 'Outfit-Medium',
+    color: 'rgba(255, 255, 255, 0.85)',
+    textShadowColor: 'rgba(0, 0, 0, 0.4)',
+    textShadowOffset: { width: 0, height: 1 },
+    textShadowRadius: 3,
+  },
+
+  // ── Floating Gallery Vertical Column ───────────────────────────────────────
+  floatingGallery: {
+    position: 'absolute',
+    right: 20,
+    top: HERO_HEIGHT * 0.25,
+    gap: 12,
+    alignItems: 'center',
+    zIndex: 8,
+  },
+  thumbWrapper: {
+    width: 52,
+    height: 52,
+    borderRadius: 14,
+    borderWidth: 2,
     overflow: 'hidden',
-    // Neumorphic extruded small
-    shadowColor: 'rgb(163, 177, 198)',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    elevation: 4,
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.12,
+        shadowRadius: 4,
+      },
+      android: {
+        elevation: 3,
+      },
+    }),
   },
-  recommendationImage: {
+  thumbActive: {
+    borderColor: '#FF6B35',
+  },
+  thumbInactive: {
+    borderColor: '#FFFFFF',
+  },
+  thumbImage: {
     width: '100%',
     height: '100%',
   },
-  labelText: {
-    color: colors.textPrimary,
-    fontFamily: Tokens.typography.families.medium,
+
+  // ── Specs Section ──────────────────────────────────────────────────────────
+  specsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    marginTop: 24,
+    gap: 10,
   },
-  answerText: {
-    fontWeight: '400',
+  specCard: {
+    flex: 1,
+    borderRadius: 18,
+    borderWidth: 1.5,
+    paddingVertical: 14,
+    paddingHorizontal: 8,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+    borderColor: isDarkMode ? '#2D3748' : '#F1F5F9',
+  },
+  specLabel: {
+    fontSize: 12,
+    fontFamily: 'Outfit-Medium',
+    color: '#9CA3AF',
+    marginBottom: 4,
+  },
+  specValue: {
+    fontSize: 15,
+    fontFamily: 'Outfit-Bold',
+    color: '#FF6B35', // Accent theme color
+  },
+
+  // ── Description Section ────────────────────────────────────────────────────
+  descriptionContainer: {
+    paddingHorizontal: 20,
+    marginTop: 24,
+  },
+  sectionTitle: {
+    fontSize: 18,
+    fontFamily: 'Outfit-Bold',
+    color: colors.textPrimary,
+    marginBottom: 8,
+  },
+  descriptionText: {
+    fontSize: 14,
+    fontFamily: 'Outfit-Regular',
     color: colors.textSecondary,
+    lineHeight: 22,
+  },
+  readMoreBtn: {
+    marginTop: 6,
+  },
+  readMoreText: {
+    fontSize: 14,
+    fontFamily: 'Outfit-Bold',
+    color: '#FF6B35',
+  },
+
+  // ── Details Tabs Area ──────────────────────────────────────────────────────
+  tabsContainer: {
+    marginTop: 24,
+    paddingHorizontal: 20,
+  },
+  tabButtonsRow: {
+    flexDirection: 'row',
+    borderBottomWidth: 1.5,
+    borderBottomColor: isDarkMode ? '#2D3748' : '#F1F5F9',
+    marginBottom: 16,
+    justifyContent: 'space-between',
+  },
+  tabButton: {
+    paddingVertical: 8,
+    borderBottomWidth: 3,
+  },
+  tabActiveButton: {
+    borderBottomColor: '#FF6B35',
+  },
+  tabInactiveButton: {
+    borderBottomColor: 'transparent',
+  },
+  tabButtonText: {
+    fontSize: 14,
+    fontFamily: 'Outfit-Bold',
+  },
+  tabActiveText: {
+    color: colors.textPrimary,
+  },
+  tabInactiveText: {
+    color: '#9CA3AF',
+  },
+  tabContentWrapper: {
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#F9FAFB',
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+  },
+  gemCard: {
+    flexDirection: 'row',
+    gap: 12,
+    padding: 16,
+    borderRadius: 18,
+    backgroundColor: isDarkMode ? '#2D3748' : '#F9FAFB',
+    borderWidth: 1.5,
+    borderColor: isDarkMode ? '#3E4E68' : '#E2E8F0',
+    marginBottom: 20,
+  },
+  gemIconContainer: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+    borderWidth: 1,
+    borderColor: isDarkMode ? '#3E4E68' : '#E2E8F0',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  gemTitle: {
+    fontSize: 14,
+    fontFamily: 'Outfit-Bold',
+    color: colors.textPrimary,
+    marginBottom: 4,
+  },
+  gemText: {
+    fontSize: 13,
+    fontFamily: 'Outfit-Regular',
+    color: colors.textSecondary,
+    lineHeight: 18,
+    flex: 1,
+  },
+  factsHeader: {
+    fontSize: 15,
+    fontFamily: 'Outfit-Bold',
+    color: colors.textPrimary,
+    marginBottom: 12,
+    marginTop: 4,
+  },
+  factRow: {
+    flexDirection: 'row',
+    gap: 10,
+    alignItems: 'flex-start',
+    marginBottom: 12,
+  },
+  factBullet: {
+    fontSize: 14,
+    color: '#FF6B35',
+  },
+  factText: {
+    flex: 1,
+    fontSize: 13,
+    fontFamily: 'Outfit-Regular',
+    color: colors.textSecondary,
+    lineHeight: 18,
+  },
+  tabInfoItem: {
+    marginBottom: 14,
+  },
+  tabInfoLabel: {
+    fontSize: 12,
+    fontFamily: 'Outfit-Bold',
+    color: '#9CA3AF',
+    textTransform: 'uppercase',
+    letterSpacing: 0.5,
+    marginBottom: 2,
+  },
+  tabInfoValue: {
+    fontSize: 14,
+    fontFamily: 'Outfit-Regular',
+    color: colors.textPrimary,
+    lineHeight: 20,
+  },
+
+  // ── Sub-locations Carousel ─────────────────────────────────────────────────
+  subLocationsWrapper: {
+    marginTop: 10,
+    marginBottom: 24,
   },
   subLocationCarouselContent: {
-    paddingVertical: 4,
-    gap: Tokens.gaps.large,
+    paddingLeft: 20,
+    paddingRight: 10,
+    gap: 12,
   },
   subLocationCard: {
-    width: (width - TOTAL_PADDINGS - Tokens.gaps.large) / 2, 
-    borderRadius: 16,
-    backgroundColor: colors.bg,
+    width: 220,
+    borderRadius: 18,
     overflow: 'hidden',
-    // Neumorphic extruded
-    shadowColor: 'rgb(163, 177, 198)',
-    shadowOffset: { width: 5, height: 5 },
-    shadowOpacity: 0.5,
-    shadowRadius: 10,
-    elevation: 5,
+    borderWidth: 1.5,
+    borderColor: isDarkMode ? '#2D3748' : '#F1F5F9',
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
   },
   subLocationImage: {
     width: '100%',
     height: 120,
-    resizeMode: 'cover',
   },
   subLocationTextContainer: {
-    padding: 10,
+    padding: 12,
+    gap: 4,
   },
   subLocationTitle: {
-    fontFamily: Tokens.typography.families.semiBold,
     fontSize: 14,
+    fontFamily: 'Outfit-Bold',
     color: colors.textPrimary,
-    marginBottom: 4,
   },
   subLocationDesc: {
-    fontFamily: Tokens.typography.families.regular,
     fontSize: 12,
+    fontFamily: 'Outfit-Regular',
     color: colors.textSecondary,
+    lineHeight: 16,
   },
-  // Neumorphic CTA button
-  addTripBtn: {
-    backgroundColor: '#6C63FF',
-    paddingVertical: 14,
-    borderRadius: 16,
+
+  // ── Sticky Bottom Bar ──────────────────────────────────────────────────────
+  bottomStickyBar: {
+    position: 'absolute',
+    left: 0,
+    right: 0,
+    bottom: 0,
+    height: 85,
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+    borderTopWidth: 1.5,
+    borderTopColor: isDarkMode ? '#2D3748' : '#F1F5F9',
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
-    marginHorizontal: 16,
-    marginVertical: 20,
-    // Neumorphic extruded
-    shadowColor: 'rgb(163, 177, 198)',
-    shadowOffset: { width: 5, height: 5 },
-    shadowOpacity: 0.6,
-    shadowRadius: 10,
-    elevation: 6,
+    paddingHorizontal: 24,
+    paddingBottom: Platform.OS === 'ios' ? 15 : 0,
+    zIndex: 100,
   },
-  addTripBtnText: {
-    color: '#FFFFFF',
-    fontFamily: Tokens.typography.families.semiBold,
-    fontSize: 16,
-    fontWeight: '700',
+  priceBlock: {
+    justifyContent: 'center',
   },
-  // Neumorphic modal
+  priceLabel: {
+    fontSize: 12,
+    fontFamily: 'Outfit-Medium',
+    color: '#9CA3AF',
+    marginBottom: 2,
+  },
+  priceAmount: {
+    fontSize: 22,
+    fontFamily: 'Outfit-Bold',
+    color: colors.textPrimary,
+  },
+  actionChevronButton: {
+    width: 52,
+    height: 52,
+    borderRadius: 26,
+    backgroundColor: isDarkMode ? '#FFFFFF' : '#111827',
+    alignItems: 'center',
+    justifyContent: 'center',
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+      },
+      android: {
+        elevation: 5,
+      },
+    }),
+  },
+
+  // ── Modal Styles ───────────────────────────────────────────────────────────
   modalOverlay: {
     flex: 1,
-    backgroundColor: 'rgba(61, 72, 82, 0.55)',
+    backgroundColor: 'rgba(0, 0, 0, 0.6)',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 20,
   },
   modalContent: {
     width: '100%',
-    backgroundColor: colors.bg,
-    borderRadius: 32,
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+    borderRadius: 28,
     padding: 24,
-    // Neumorphic extruded
-    shadowColor: 'rgb(163, 177, 198)',
-    shadowOffset: { width: 8, height: 8 },
-    shadowOpacity: 0.7,
-    shadowRadius: 20,
-    elevation: 12,
+    ...Platform.select({
+      ios: {
+        shadowColor: '#000000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.25,
+        shadowRadius: 16,
+      },
+      android: {
+        elevation: 10,
+      },
+    }),
   },
   modalTitle: {
-    fontFamily: Tokens.typography.families.semiBold,
+    fontFamily: 'Outfit-Bold',
     fontSize: 20,
     color: colors.textPrimary,
-    marginBottom: 16,
+    marginBottom: 20,
     textAlign: 'center',
-    fontWeight: '800',
   },
   modalInput: {
-    backgroundColor: colors.bg,
+    backgroundColor: isDarkMode ? '#2D3748' : '#F9FAFB',
     borderRadius: 16,
-    paddingHorizontal: 12,
-    paddingVertical: 10,
-    marginBottom: 12,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+    marginBottom: 14,
     color: colors.textPrimary,
-    fontFamily: Tokens.typography.families.regular,
-    // Inset well
-    borderWidth: 1,
-    borderColor: 'rgba(163, 177, 198, 0.25)',
+    fontFamily: 'Outfit-Regular',
+    borderWidth: 1.5,
+    borderColor: isDarkMode ? '#3E4E68' : '#E2E8F0',
   },
   modalActionRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginTop: 12,
+    marginTop: 14,
     gap: 12,
   },
   modalBtn: {
     flex: 1,
-    paddingVertical: 12,
+    paddingVertical: 14,
     borderRadius: 16,
     alignItems: 'center',
-    // Neumorphic extruded small
-    shadowColor: 'rgb(163, 177, 198)',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    elevation: 4,
+    justifyContent: 'center',
   },
   cancelBtn: {
-    backgroundColor: colors.bg,
-    marginRight: 0,
+    backgroundColor: isDarkMode ? '#2D3748' : '#F3F4F6',
   },
   confirmBtn: {
-    backgroundColor: '#6C63FF',
-    marginLeft: 0,
+    backgroundColor: '#FF6B35',
   },
   cancelBtnText: {
     color: colors.textPrimary,
-    fontFamily: Tokens.typography.families.semiBold,
+    fontFamily: 'Outfit-Bold',
+    fontSize: 14,
   },
   confirmBtnText: {
     color: '#FFFFFF',
-    fontFamily: Tokens.typography.families.semiBold,
+    fontFamily: 'Outfit-Bold',
+    fontSize: 14,
   },
   checkboxRow: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderBottomWidth: 1,
-    borderBottomColor: colors.divider,
+    borderBottomColor: isDarkMode ? '#2D3748' : '#F3F4F6',
   },
   checkboxOuter: {
     width: 20,
     height: 20,
-    borderRadius: 8,
-    backgroundColor: colors.bg,
-    marginRight: 10,
+    borderRadius: 6,
+    backgroundColor: isDarkMode ? '#2D3748' : '#F9FAFB',
+    marginRight: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    borderWidth: 1,
-    borderColor: 'rgba(163, 177, 198, 0.3)',
+    borderWidth: 1.5,
+    borderColor: isDarkMode ? '#3E4E68' : '#D1D5DB',
   },
   checkboxOuterSelected: {
-    borderColor: '#6C63FF',
-    backgroundColor: '#6C63FF',
+    borderColor: '#FF6B35',
+    backgroundColor: '#FF6B35',
   },
   checkboxInner: {
     width: 10,
@@ -515,9 +505,233 @@ export const createStyles = (colors) => StyleSheet.create({
     borderRadius: 3,
   },
   checkboxLabel: {
-    fontFamily: Tokens.typography.families.regular,
+    fontFamily: 'Outfit-Regular',
     fontSize: 14,
     color: colors.textPrimary,
     flex: 1,
-  }
+  },
+  labelText: {
+    fontFamily: 'Outfit-Bold',
+    fontSize: 14,
+    color: colors.textPrimary,
+  },
+  // ── Map Card Section ──
+  mapSectionContainer: {
+    paddingHorizontal: 20,
+    marginTop: 24,
+  },
+  mapCard: {
+    height: 180,
+    borderRadius: 20,
+    overflow: 'hidden',
+    position: 'relative',
+    marginTop: 8,
+    borderWidth: 1.5,
+    borderColor: isDarkMode ? '#2D3748' : '#E2E8F0',
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#F3F4F6',
+  },
+  mapImage: {
+    width: '100%',
+    height: '100%',
+    opacity: isDarkMode ? 0.65 : 0.9,
+  },
+  mapMarkerContainer: {
+    position: 'absolute',
+    alignSelf: 'center',
+    top: '32%',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  markerCircle: {
+    width: 44,
+    height: 44,
+    borderRadius: 22,
+    backgroundColor: '#FF6B35',
+    alignItems: 'center',
+    justifyContent: 'center',
+    zIndex: 2,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 3 },
+    shadowOpacity: 0.3,
+    shadowRadius: 4,
+    elevation: 5,
+  },
+  markerPulse: {
+    position: 'absolute',
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    backgroundColor: 'rgba(255, 107, 53, 0.3)',
+    zIndex: 1,
+  },
+  mapBanner: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    backgroundColor: isDarkMode ? '#1E1E1E' : '#FFFFFF',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: 8,
+    paddingVertical: 10,
+    borderTopWidth: 1,
+    borderTopColor: isDarkMode ? '#2D3748' : '#F1F5F9',
+  },
+  mapBannerText: {
+    fontSize: 12,
+    fontFamily: 'Outfit-Bold',
+    color: '#FF6B35',
+  },
+  alignSelfCenter: {
+    alignSelf: 'center',
+  },
+  alignItemsCenter: {
+    alignItems: 'center',
+  },
+  flex1: {
+    flex: 1,
+  },
+  spacer40: {
+    width: 40,
+  },
+  marginBottom4: {
+    marginBottom: 4,
+  },
+  marginBottom6: {
+    marginBottom: 6,
+  },
+  marginBottom8: {
+    marginBottom: 8,
+  },
+  marginBottom12: {
+    marginBottom: 12,
+  },
+  marginBottom14: {
+    marginBottom: 14,
+  },
+  marginTop4: {
+    marginTop: 4,
+  },
+  marginTop8: {
+    marginTop: 8,
+  },
+  marginTop14: {
+    marginTop: 14,
+  },
+  width100: {
+    width: '100%',
+  },
+  width95: {
+    width: '95%',
+  },
+  width90: {
+    width: '90%',
+  },
+  width85: {
+    width: '85%',
+  },
+  modalInputText: {
+    color: colors.textPrimary,
+    fontFamily: 'Outfit-Regular',
+    fontSize: 14,
+  },
+  modalInputPlaceholder: {
+    color: colors.textTertiary,
+    fontFamily: 'Outfit-Regular',
+    fontSize: 14,
+  },
+  modalInputTouchable: {
+    justifyContent: 'center',
+  },
+  subLocationSectionTitle: {
+    paddingHorizontal: 20,
+    marginBottom: 12,
+  },
+  mapInfoBox: {
+    position: 'absolute',
+    top: 10,
+    left: 10,
+    backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.85)' : '#FFFFFF',
+    paddingHorizontal: 10,
+    paddingVertical: 8,
+    borderRadius: 4,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+    flexDirection: 'row',
+    alignItems: 'center',
+    maxWidth: '65%',
+  },
+  mapInfoTextWrapper: {
+    marginRight: 10,
+  },
+  mapInfoTitle: {
+    fontSize: 11,
+    fontWeight: 'bold',
+    color: isDarkMode ? '#FFFFFF' : '#1A202C',
+  },
+  mapInfoSubtitle: {
+    fontSize: 9,
+    color: isDarkMode ? '#A0AEC0' : '#4A5568',
+    marginTop: 1,
+  },
+  mapInfoLink: {
+    fontSize: 8.5,
+    color: '#3182CE',
+    marginTop: 3,
+    textDecorationLine: 'underline',
+  },
+  mapInfoDirectionsBtn: {
+    width: 22,
+    height: 22,
+    borderRadius: 11,
+    backgroundColor: '#3182CE',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  zoomControls: {
+    position: 'absolute',
+    bottom: 12,
+    right: 12,
+    backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.85)' : '#FFFFFF',
+    borderRadius: 4,
+    borderWidth: 1,
+    borderColor: isDarkMode ? '#2D3748' : '#E2E8F0',
+    overflow: 'hidden',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  zoomBtn: {
+    width: 28,
+    height: 28,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  zoomBtnBorder: {
+    borderBottomWidth: 1,
+    borderBottomColor: isDarkMode ? '#2D3748' : '#E2E8F0',
+  },
+  zoomText: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    color: isDarkMode ? '#FFFFFF' : '#4A5568',
+  },
+  googleBranding: {
+    position: 'absolute',
+    bottom: 12,
+    left: 12,
+    opacity: 0.7,
+  },
+  googleText: {
+    fontSize: 12,
+    fontWeight: '900',
+    color: isDarkMode ? '#A0AEC0' : '#718096',
+    letterSpacing: -0.5,
+  },
 });

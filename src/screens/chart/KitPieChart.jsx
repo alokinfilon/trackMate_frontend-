@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, Dimensions, Text, ActivityIndicator } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
-import authService from '../../services/authService';
-import { useTheme } from '../../context/ThemeContext';
+import { authService } from '../../services';
+import { useTheme } from '../../context';
 import { createStyles } from './KitPieChart.styles';
 
 const screenWidth = Dimensions.get('window').width;

@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Alert, Platform, PermissionsAndroid } from 'react-native';
-import { launchCamera } from 'react-native-image-picker';
-import authService from '../../services/authService';
-import apiClient from '../../services/apiClient';
+import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
+import { useIsFocused } from '@react-navigation/native';
+import { authService, apiClient } from '../../services';
 
 export const useImageUpload = (passedTripId) => {
   const [viewMode, setViewMode] = useState('gallery');
@@ -24,9 +24,9 @@ export const useImageUpload = (passedTripId) => {
   const [collectionAccessibility, setCollectionAccessibility] = useState('shared');
   const [creatingCollection, setCreatingCollection] = useState(false);
 
-  const [photo, setPhoto] = useState(null);
+  const [photosList, setPhotosList] = useState([]);
   const [uploading, setUploading] = useState(false);
-  const [caption, setCaption] = useState('Testing my cloud gallery upload!');
+  const [caption, setCaption] = useState('');
   const [accessibility, setAccessibility] = useState('shared');
 
   const activeTripId = passedTripId || internalTripId;
@@ -35,6 +35,60 @@ export const useImageUpload = (passedTripId) => {
   const [loadingCollectionPhotos, setLoadingCollectionPhotos] = useState(false);
   const [collectionTripId, setCollectionTripId] = useState(null);
   const [selectedTripFilters, setSelectedTripFilters] = useState([]);
+  const [collectionPermissions, setCollectionPermissions] = useState({
+    canView: true,
+    canAdd: true,
+    canEdit: true,
+    canDelete: true
+  });
+  const [refreshing, setRefreshing] = useState(false);
+
+  const [shareModalVisible, setShareModalVisible] = useState(false);
+  const [shareIdentifier, setShareIdentifier] = useState('');
+  const [shareRole, setShareRole] = useState('viewer');
+  const [sharingCollection, setSharingCollection] = useState(false);
+
+  const handleShareCollection = async () => {
+    if (!shareIdentifier.trim()) {
+      Alert.alert('Error', 'Please enter an email or phone number.');
+      return;
+    }
+    if (!selectedCollectionId) {
+      Alert.alert('Error', 'No collection selected.');
+      return;
+    }
+    try {
+      setSharingCollection(true);
+      const token = await authService.getAccessToken();
+      if (!token) return;
+
+      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections/${selectedCollectionId}/share`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          identifier: shareIdentifier.trim(),
+          role: shareRole
+        })
+      });
+
+      const json = await response.json();
+      if (response.ok && json.success) {
+        Alert.alert('Success 🎉', 'Collection shared successfully!');
+        setShareModalVisible(false);
+        setShareIdentifier('');
+      } else {
+        throw new Error(json.error || 'Failed to share collection.');
+      }
+    } catch (err) {
+      console.error('Share Collection Error:', err);
+      Alert.alert('Error', err.message || 'Network error while sharing collection.');
+    } finally {
+      setSharingCollection(false);
+    }
+  };
 
   // Get active trip details
   const activeTrip = trips.find(t => t._id === activeTripId);
@@ -45,22 +99,47 @@ export const useImageUpload = (passedTripId) => {
   };
   const activeTripName = getTripTitle(activeTrip);
 
-  useEffect(() => {
-    fetchFallbackTripId();
-  }, [passedTripId]);
+  const isFocused = useIsFocused();
+
+  // Added handleRefresh implementation
+  const handleRefresh = async () => {
+    setRefreshing(true);
+    try {
+      await Promise.all([
+        fetchFallbackTripId(),
+        fetchGalleryData(),
+        fetchCollectionsData(),
+        selectedCollectionId && selectedCollectionId !== 'loose'
+          ? fetchCollectionPhotosData(selectedCollectionId)
+          : Promise.resolve()
+      ]);
+    } catch (err) {
+      console.error('Refresh Error:', err);
+    } finally {
+      setRefreshing(false);
+    }
+  };
 
   useEffect(() => {
-    if (viewMode === 'gallery' && (activeTripId || selectedTripFilters.length > 0)) {
-      fetchGalleryData();
-      fetchCollectionsData(); 
+    if (isFocused) {
+      fetchFallbackTripId();
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [viewMode, activeTripId, selectedTripFilters]);
+  }, [isFocused, passedTripId]);
+
+  useEffect(() => {
+    if (isFocused && viewMode === 'gallery' && (activeTripId || selectedTripFilters.length > 0)) {
+      fetchGalleryData();
+      fetchCollectionsData();
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isFocused, viewMode, activeTripId, selectedTripFilters]);
 
   useEffect(() => {
     if (viewMode === 'collection-detail' && selectedCollectionId) {
       fetchCollectionPhotosData(selectedCollectionId);
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [viewMode, selectedCollectionId, allImages]);
 
   useEffect(() => {
@@ -213,6 +292,12 @@ export const useImageUpload = (passedTripId) => {
     if (colId === 'loose') {
       const loose = allImages.filter(img => !img.collectionId && !img.collection);
       setCollectionPhotos(loose);
+      setCollectionPermissions({
+        canView: true,
+        canAdd: true,
+        canEdit: true,
+        canDelete: true
+      });
       return;
     }
 
@@ -232,8 +317,21 @@ export const useImageUpload = (passedTripId) => {
       const json = await response.json();
       if (response.ok && json.success) {
         setCollectionPhotos(json.data?.photos || json.photos || []);
+        if (json.data?.permissions) {
+          setCollectionPermissions(json.data.permissions);
+        } else {
+          setCollectionPermissions({
+            canView: true,
+            canAdd: true,
+            canEdit: true,
+            canDelete: true
+          });
+        }
       } else {
         setCollectionPhotos([]);
+        Alert.alert('Access Denied', json.error || 'Collection not found or access denied.');
+        setViewMode('gallery');
+        setSelectedCollectionId(null);
       }
     } catch (err) {
       console.error("Failed to fetch collection photos:", err);
@@ -349,6 +447,42 @@ export const useImageUpload = (passedTripId) => {
       await handleUpdateCollection();
     } else {
       await handleCreateCollection();
+    }
+  };
+
+  const handleUpdateCollectionAccessibility = async (colId, nextAccessibility) => {
+    try {
+      const token = await authService.getAccessToken();
+      if (!token) return;
+
+      const targetCol = collections.find(c => c._id === colId);
+      if (!targetCol) return;
+
+      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections/${colId}`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          tripId: targetCol.tripId || null,
+          name: targetCol.name,
+          description: targetCol.description || '',
+          accessibility: nextAccessibility
+        })
+      });
+
+      const json = await response.json();
+      if (response.ok && json.success) {
+        Alert.alert("Success 🎉", `Accessibility updated to ${nextAccessibility}!`);
+        await fetchCollectionsData();
+        setCollections(prev => prev.map(c => c._id === colId ? { ...c, accessibility: nextAccessibility } : c));
+      } else {
+        throw new Error(json.message || "Failed to update collection accessibility.");
+      }
+    } catch (err) {
+      console.error("Update Collection Accessibility Error: ", err);
+      Alert.alert("Error", err.message || "Network error while updating accessibility.");
     }
   };
 
@@ -496,9 +630,32 @@ export const useImageUpload = (passedTripId) => {
         return;
       }
       if (response.assets && response.assets.length > 0) {
-        setPhoto(response.assets[0]);
+        setPhotosList(prev => [...prev, response.assets[0]]);
       }
     });
+  };
+
+  const selectFromGallery = async () => {
+    const options = {
+      mediaType: 'photo',
+      quality: 0.8,
+      selectionLimit: 0,
+    };
+
+    launchImageLibrary(options, (response) => {
+      if (response.didCancel) return;
+      if (response.errorCode) {
+        Alert.alert('Gallery Error', `Error code: ${response.errorCode}`);
+        return;
+      }
+      if (response.assets && response.assets.length > 0) {
+        setPhotosList(prev => [...prev, ...response.assets]);
+      }
+    });
+  };
+
+  const removePhotoFromStaging = (indexToRemove) => {
+    setPhotosList(prev => prev.filter((_, idx) => idx !== indexToRemove));
   };
 
   const uploadImage = async () => {
@@ -506,8 +663,8 @@ export const useImageUpload = (passedTripId) => {
       Alert.alert("Error", "Cannot upload image without a valid trip ID.");
       return;
     }
-    if (!photo || !photo.uri) {
-      Alert.alert('Please capture a photo first');
+    if (photosList.length === 0) {
+      Alert.alert('Staging Area Empty', 'Please select or capture at least one photo first.');
       return;
     }
 
@@ -521,45 +678,52 @@ export const useImageUpload = (passedTripId) => {
         return;
       }
 
-      const formData = new FormData();
-      const cleanUri = Platform.OS === 'android' ? photo.uri : photo.uri.replace('file://', '');
+      const uploadPromises = photosList.map(async (p) => {
+        const formData = new FormData();
+        const cleanUri = Platform.OS === 'android' ? p.uri : p.uri.replace('file://', '');
 
-      formData.append('image', {
-        uri: cleanUri,
-        type: photo.type || 'image/jpeg',
-        name: photo.fileName || `trip_image_${Date.now()}.jpg`,
+        formData.append('image', {
+          uri: cleanUri,
+          type: p.type || 'image/jpeg',
+          name: p.fileName || `trip_image_${Date.now()}.jpg`,
+        });
+
+        formData.append('caption', caption);
+        formData.append('accessibility', accessibility);
+
+        if (selectedCollectionId) {
+          formData.append('collectionId', selectedCollectionId);
+        }
+
+        const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/${activeTripId}`, {
+          method: 'POST',
+          body: formData,
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+        });
+
+        const rawText = await response.text();
+        let json;
+        try {
+          json = JSON.parse(rawText);
+        } catch (e) {
+          throw new Error(`Server returned non-JSON response.`);
+        }
+
+        if (!response.ok || !json.success) {
+          throw new Error(json.message || 'Server upload execution sequence failed');
+        }
+        return json;
       });
 
-      formData.append('caption', caption);
-      formData.append('accessibility', accessibility);
+      await Promise.all(uploadPromises);
 
-      if (selectedCollectionId) {
-        formData.append('collectionId', selectedCollectionId);
-      }
-
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/${activeTripId}`, {
-        method: 'POST',
-        body: formData,
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-      });
-
-      const rawText = await response.text();
-      let json;
-      try {
-        json = JSON.parse(rawText);
-      } catch (e) {
-        throw new Error(`Server returned non-JSON response.`);
-      }
-
-      if (response.ok && json.success) {
-        Alert.alert('Success 🎉', 'Image uploaded into your gallery storage!');
-        setPhoto(null);
-        setViewMode('gallery');
-      } else {
-        throw new Error(json.message || 'Server upload execution sequence failed');
-      }
+      Alert.alert('Success 🎉', `Successfully uploaded ${photosList.length} image(s) to your gallery storage!`);
+      setPhotosList([]);
+      setCaption('');
+      fetchGalleryData();
+      setViewMode('gallery');
     } catch (err) {
       console.error('Upload Failure Log: ', err);
       Alert.alert('Upload Failed', err.message || 'Network connectivity error.');
@@ -590,8 +754,11 @@ export const useImageUpload = (passedTripId) => {
     setCollectionAccessibility,
     creatingCollection,
     handleCreateCollection: handleSaveCollection,
-    photo,
+    photosList,
+    setPhotosList,
     takePhoto,
+    selectFromGallery,
+    removePhotoFromStaging,
     uploadImage,
     uploading,
     selectedCollectionId,
@@ -604,6 +771,7 @@ export const useImageUpload = (passedTripId) => {
     startEditCollection,
     startCreateCollection,
     handleDeleteCollection,
+    handleUpdateCollectionAccessibility,
     handleRemoveImageFromCollection,
     collectionPhotos,
     loadingCollectionPhotos,
@@ -614,5 +782,16 @@ export const useImageUpload = (passedTripId) => {
     selectedTripFilters,
     setSelectedTripFilters,
     handleDeleteImage,
+    refreshing,
+    handleRefresh,
+    shareModalVisible,
+    setShareModalVisible,
+    shareIdentifier,
+    setShareIdentifier,
+    shareRole,
+    setShareRole,
+    sharingCollection,
+    handleShareCollection,
+    collectionPermissions,
   };
 };

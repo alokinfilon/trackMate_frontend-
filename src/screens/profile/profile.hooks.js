@@ -1,38 +1,35 @@
-import { useState, useRef, useContext, useEffect, useCallback } from 'react';
+import { useRef, useContext, useEffect, useCallback } from 'react';
 import { Animated } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
-import { AuthContext } from '../../context/AuthContext';
-import authService from '../../services/authService';
-import apiClient from '../../services/apiClient';
-import { useAlertModal } from '../../components/index';
+import { AuthContext } from '../../context';
+import { authService } from '../../services';
+import { useAlertModal } from '../../components';
+import { useAppDispatch, useAppSelector } from '../../store';
+import {
+  fetchProfile,
+  selectProfile,
+  selectProfileLoading,
+} from '../../store/slices';
 
 export const useProfileSettings = () => {
   const propScale = useRef(new Animated.Value(1)).current;
   const { setUserIsAuthenticated } = useContext(AuthContext);
   const { showModal } = useAlertModal();
   const navigation = useNavigation();
+  const dispatch = useAppDispatch();
 
-  const [profile, setProfile] = useState(null);
-  const [loading, setLoading] = useState(false);
-
-  const fetchProfile = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await apiClient('/auth/profile');
-      const json = await res.json();
-      if (json.success && json.data) {
-        setProfile(json.data);
-      }
-    } catch (err) {
-      console.error('Failed to fetch user profile:', err);
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  // Read from Redux cache — no duplicate /auth/profile request
+  const profile = useAppSelector(selectProfile);
+  const loading = useAppSelector(selectProfileLoading);
 
   useEffect(() => {
-    fetchProfile();
-  }, [fetchProfile]);
+    // Will use TTL cache — skips network if fetched within last 5 minutes
+    dispatch(fetchProfile());
+  }, [dispatch]);
+
+  const fetchProfileRefresh = useCallback(() => {
+    dispatch(fetchProfile());
+  }, [dispatch]);
 
   const handlePressIn = () => {
     Animated.spring(propScale, {
@@ -65,10 +62,10 @@ export const useProfileSettings = () => {
             index: 0,
             routes: [{ name: 'SignUpScreen' }],
           });
-        }  catch (error) {
+        } catch (error) {
           console.log(error);
         }
-      }
+      },
     });
   };
 
@@ -76,9 +73,9 @@ export const useProfileSettings = () => {
     propScale,
     profile,
     loading,
-    fetchProfile,
+    fetchProfile: fetchProfileRefresh,
     handlePressIn,
     handlePressOut,
-    handleLogout
+    handleLogout,
   };
 };

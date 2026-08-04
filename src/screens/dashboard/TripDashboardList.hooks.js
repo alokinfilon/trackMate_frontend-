@@ -1,146 +1,96 @@
-import { useState, useEffect } from 'react';
+import { useCallback, useState, useEffect } from 'react';
 import { Alert } from 'react-native';
-import authService from '../../services/authService';
+import { useAppDispatch, useAppSelector } from '../../store';
+import { apiClient } from '../../services';
+import {
+  fetchTrips,
+  silentRefreshTrips,
+  updateTripStatus,
+  setRefreshing,
+  selectTrips,
+  selectTripsLoading,
+  selectTripsRefreshing,
+  selectTripsError,
+  selectActionLoadingId,
+  fetchProfile,
+  selectUserImage,
+} from '../../store/slices';
 
 export const useTripDashboard = () => {
-  const [trips, setTrips] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-  const [actionLoadingId, setActionLoadingId] = useState(null);
-  const [activeTab, setActiveTab] = useState('upcoming');
+  const dispatch = useAppDispatch();
 
-  useEffect(() => {
-    fetchTrips();
+  // Read from Redux store — shared cache, no duplicate fetches
+  const trips = useAppSelector(selectTrips);
+  const loading = useAppSelector(selectTripsLoading);
+  const refreshing = useAppSelector(selectTripsRefreshing);
+  const error = useAppSelector(selectTripsError);
+  const actionLoadingId = useAppSelector(selectActionLoadingId);
+  const userImage = useAppSelector(selectUserImage);
+
+  const [locations, setLocations] = useState([]);
+  const [selectedTripId, setSelectedTripId] = useState(null);
+
+  const fetchLocations = useCallback(async () => {
+    try {
+      const response = await apiClient('/locations?page=1&limit=100');
+      const json = await response.json();
+      const sites = json && (json.historicalSites || json.data || (Array.isArray(json) ? json : []));
+      if (sites) {
+        setLocations(sites);
+      }
+    } catch (err) {
+      console.error('Failed to fetch locations in dashboard hook:', err);
+    }
   }, []);
 
-  const fetchTrips = async () => {
-    try {
-      setLoading(true);
-      const token = await authService.getAccessToken();
+  useEffect(() => {
+    fetchLocations();
+  }, [fetchLocations]);
 
-      if (!token) {
-        setError("Session expired. Please log in again.");
-        setLoading(false);
-        return;
-      }
+  const initDashboard = useCallback(
+    async (options = {}) => {
+      const { isRefresh = false } = options;
 
-      const response = await fetch('https://trackmate-x7ue.onrender.com/api/trips', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
-
-      const rawText = await response.text();
-
-      if (rawText.trim().startsWith('<')) {
-        setError("Server error page returned.");
-        setLoading(false);
-        return;
-      }
-
-      const json = JSON.parse(rawText);
-
-      if (json.success && json.data) {
-        setTrips(json.data);
+      if (isRefresh) {
+        // Pull-to-refresh: show spinner in scroll view
+        dispatch(setRefreshing(true));
+        await Promise.all([dispatch(fetchProfile()), dispatch(fetchTrips()), fetchLocations()]);
+      } else if (trips.length === 0) {
+        // First load: no cached trips, show full skeleton
+        await Promise.all([dispatch(fetchProfile()), dispatch(fetchTrips()), fetchLocations()]);
       } else {
-        setError(json.message || 'Failed to capture trip records.');
+        // Tab re-focus with cached trips: silent background refresh — NO skeleton
+        dispatch(fetchProfile()); // TTL-cached, usually a no-op
+        dispatch(silentRefreshTrips());
+        fetchLocations();
       }
-    } catch (err) {
-      console.error("Trip Fetch Error: ", err);
-      setError('Network connectivity failure.');
-    } finally {
-      setLoading(false);
-    }
-  };
+    },
+    [dispatch, trips.length, fetchLocations]
+  );
 
-  const handleUpdateStatus = async (tripId, newStatus) => {
-    try {
-      setActionLoadingId(tripId);
-      const token = await authService.getAccessToken();
-
-      if (!token) {
-        Alert.alert("Error", "Session expired. Please log in again.");
-        return;
+  const handleUpdateStatus = useCallback(
+    async (tripId, newStatus) => {
+      const result = await dispatch(updateTripStatus({ tripId, newStatus }));
+      if (updateTripStatus.rejected.match(result)) {
+        Alert.alert('Failed', result.payload || 'Could not update trip status.');
+        // Re-fetch to revert the optimistic update
+        dispatch(fetchTrips());
       }
-
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/trips/${tripId}/update-status`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({ status: newStatus })
-      });
-
-      const rawText = await response.text();
-      const json = JSON.parse(rawText);
-
-      if (response.ok && (json.success || json.data)) {
-        setTrips(prevTrips =>
-          prevTrips.map(trip =>
-            trip._id === tripId ? { ...trip, status: newStatus } : trip
-          )
-        );
-      } else {
-        Alert.alert("Failed", json.message || "Could not update trip status.");
-      }
-
-      console.log('====================================');
-      console.log(tripId);
-      console.log('====================================');
-    } catch (err) {
-      console.error("Status Update Error: ", err);
-      Alert.alert("Error", "Network connectivity failure while updating status.");
-    } finally {
-      setActionLoadingId(null);
-    }
-  };
-
-  const handleEditPress = (item) => {
-    Alert.alert(
-      "Update Trip Status",
-      `Manage status for ${item.location_id.replace('loc_', '').toUpperCase()}`,
-      [
-        {
-          text: "Mark as Completed",
-          onPress: () => handleUpdateStatus(item._id, 'completed')
-        },
-        {
-          text: "Cancel Trip",
-          style: 'destructive',
-          onPress: () => handleUpdateStatus(item._id, 'cancelled')
-        },
-        {
-          text: "Dismiss",
-          style: "cancel"
-        }
-      ]
-    );
-  };
-
-  const filteredTrips = trips.filter(trip => {
-    const status = trip.status?.toLowerCase();
-    if (activeTab === 'upcoming') {
-      return status === 'upcoming';
-    }
-    if (activeTab === 'completed') {
-      return status === 'completed' || status === 'partially completed';
-    }
-    if (activeTab === 'cancelled') {
-      return status === 'cancelled';
-    }
-    return false;
-  });
+    },
+    [dispatch]
+  );
 
   return {
+    trips,
     loading,
+    refreshing,
     error,
-    activeTab,
-    setActiveTab,
-    filteredTrips,
     actionLoadingId,
-    handleEditPress
+    userImage,
+    refreshDashboard: initDashboard,
+    handleUpdateStatus,
+    locations,
+    selectedTripId,
+    setSelectedTripId,
   };
 };

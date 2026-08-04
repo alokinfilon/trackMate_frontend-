@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { Platform, Alert } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker';
-import apiClient from '../../../../services/apiClient';
+import { apiClient } from '../../../../services';
 
 export const usePersonalInfo = (navigation) => {
   const [loading, setLoading] = useState(false);

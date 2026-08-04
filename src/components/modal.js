@@ -7,13 +7,15 @@ import {
   Modal,
 } from 'react-native';
 import { X } from 'lucide-react-native';
-import { Tokens } from '../theme/theme';
+import { Tokens } from '../theme';
+import { useTheme } from '../context';
 
 const ModalContext = createContext(undefined);
 
 export const ModalProvider = ({ children }) => {
   const [visible, setVisible] = useState(false);
   const [config, setConfig] = useState(null);
+  const { colors, isDarkMode } = useTheme();
 
   const showModal = (options) => {
     setConfig(options);
@@ -35,9 +37,11 @@ export const ModalProvider = ({ children }) => {
       case 'error':   return '#E53E3E';
       case 'success': return '#38B2AC';
       case 'warning': return '#ED8936';
-      default:        return '#6C63FF';
+      default:        return colors.primary || '#6C63FF';
     }
   };
+
+  const styles = React.useMemo(() => createStyles(colors, isDarkMode), [colors, isDarkMode]);
 
   return (
     <ModalContext.Provider value={{ showModal, hideModal }}>
@@ -56,7 +60,7 @@ export const ModalProvider = ({ children }) => {
               onPress={hideModal}
               activeOpacity={0.7}
             >
-              <X color="#6B7280" size={20} />
+              <X color={colors.textSecondary} size={20} />
             </TouchableOpacity>
 
             <Text style={styles.modalHeadingTitleText}>
@@ -82,7 +86,7 @@ export const ModalProvider = ({ children }) => {
                   </TouchableOpacity>
                 )}
                 
-                {/* Primary Confirm Button — Neumorphic accent */}
+                {/* Primary Confirm Button */}
                 <TouchableOpacity 
                   style={[styles.button, { backgroundColor: getVariantColor(config?.variant) }]} 
                   onPress={handleConfirm}
@@ -103,102 +107,132 @@ export const ModalProvider = ({ children }) => {
 
 export const useAlertModal = () => {
   const context = useContext(ModalContext);
+  console.log('useAlertModal context value:', context);
   if (!context) {
     throw new Error('useAlertModal must be used within a ModalProvider');
   }
   return context;
 };
 
-const styles = StyleSheet.create({
-  modalOverlayBlurContainer: {
-    flex: 1,
-    backgroundColor: 'rgba(61, 72, 82, 0.55)',
-    justifyContent: 'center',
-    alignItems: 'center',
-    paddingHorizontal: 24,
-  },
-  modalCardBodyView: {
-    width: '100%',
-    maxWidth: 364,
-    backgroundColor: '#E0E5EC',
-    borderRadius: 32,
-    padding: 24,
-    position: 'relative',
-    // Neumorphic extruded shadow
-    shadowColor: 'rgb(163, 177, 198)',
-    shadowOffset: { width: 8, height: 8 },
-    shadowOpacity: 0.7,
-    shadowRadius: 20,
-    elevation: 16,
-  },
-  modalCloseButton: {
-    position: 'absolute',
-    right: 16,
-    top: 16,
-    width: 36,
-    height: 36,
-    borderRadius: 18,
-    backgroundColor: '#E0E5EC',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 10,
-    // Small extruded shadow
-    shadowColor: 'rgb(163, 177, 198)',
-    shadowOffset: { width: 3, height: 3 },
-    shadowOpacity: 0.5,
-    shadowRadius: 6,
-    elevation: 3,
-  },
-  modalHeadingTitleText: {
-    fontFamily: Tokens.typography.families.semiBold,
-    fontSize: 18,
-    lineHeight: 28,
-    color: '#3D4852',
-    marginBottom: Tokens.gaps.xlarge,
-    paddingRight: 24, 
-  },
-  modalInputFieldsView: {
-    width: '100%',
-    gap: Tokens.gaps.large,
-  },
-  modalReferralText: {
-    fontFamily: Tokens.typography.families.regular,
-    fontSize: 14,
-    lineHeight: 24,
-    color: '#6B7280',
-    marginVertical: 4,
-  },
-  actionFooterRow: {
-    flexDirection: 'row',
-    justifyContent: 'flex-end',
-    gap: 12,
-    marginTop: 8,
-  },
-  button: {
-    paddingVertical: 12,
-    paddingHorizontal: 20,
-    borderRadius: 16,
-    minWidth: 90,
-    alignItems: 'center',
-    justifyContent: 'center',
-    // Neumorphic small extruded
-    shadowColor: 'rgb(163, 177, 198)',
-    shadowOffset: { width: 4, height: 4 },
-    shadowOpacity: 0.5,
-    shadowRadius: 8,
-    elevation: 4,
-  },
-  cancelButton: {
-    backgroundColor: '#E0E5EC',
-  },
-  cancelText: {
-    fontFamily: Tokens.typography.families.medium,
-    color: '#3D4852',
-    fontSize: 14,
-  },
-  confirmText: {
-    fontFamily: Tokens.typography.families.semiBold,
-    color: '#FFFFFF',
-    fontSize: 14,
-  },
-});
+export const AppModal = ({ visible, onClose, title, children }) => {
+  const { colors, isDarkMode } = useTheme();
+  const styles = React.useMemo(() => createStyles(colors, isDarkMode), [colors, isDarkMode]);
+
+  return (
+    <Modal
+      visible={visible}
+      transparent
+      animationType="fade"
+      onRequestClose={onClose}
+    >
+      <View style={styles.modalOverlayBlurContainer}>
+        <View style={styles.modalCardBodyView}>
+          {/* Close Button */}
+          <TouchableOpacity
+            style={styles.modalCloseButton}
+            onPress={onClose}
+            activeOpacity={0.7}
+          >
+            <X color={colors.textSecondary} size={20} />
+          </TouchableOpacity>
+
+          {title ? (
+            <Text style={styles.modalHeadingTitleText}>
+              {title}
+            </Text>
+          ) : null}
+
+          <View style={styles.modalInputFieldsView}>
+            {children}
+          </View>
+        </View>
+      </View>
+    </Modal>
+  );
+};
+
+
+const createStyles = (colors, isDarkMode) =>
+  StyleSheet.create({
+    modalOverlayBlurContainer: {
+      flex: 1,
+      backgroundColor: isDarkMode ? 'rgba(0, 0, 0, 0.75)' : 'rgba(0, 0, 0, 0.45)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      paddingHorizontal: 24,
+    },
+    modalCardBodyView: {
+      width: '100%',
+      maxWidth: 364,
+      maxHeight: '80%',
+      backgroundColor: colors.cardElevated || colors.card || (isDarkMode ? '#242444' : '#FFFFFF'),
+      borderRadius: 24,
+      padding: 24,
+      position: 'relative',
+      // Modern subtle shadow
+      shadowColor: '#000000',
+      shadowOffset: { width: 0, height: 4 },
+      shadowOpacity: isDarkMode ? 0.3 : 0.1,
+      shadowRadius: 12,
+      elevation: 8,
+    },
+    modalCloseButton: {
+      position: 'absolute',
+      right: 16,
+      top: 16,
+      width: 36,
+      height: 36,
+      borderRadius: 18,
+      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.05)',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 10,
+    },
+    modalHeadingTitleText: {
+      fontFamily: Tokens.typography.families.semiBold,
+      fontSize: 18,
+      lineHeight: 28,
+      color: colors.textPrimary,
+      marginBottom: 16,
+      paddingRight: 24, 
+    },
+    modalInputFieldsView: {
+      width: '100%',
+      gap: 16,
+      flexShrink: 1,
+    },
+    modalReferralText: {
+      fontFamily: Tokens.typography.families.regular,
+      fontSize: 14,
+      lineHeight: 22,
+      color: colors.textSecondary,
+      marginVertical: 4,
+    },
+    actionFooterRow: {
+      flexDirection: 'row',
+      justifyContent: 'flex-end',
+      gap: 12,
+      marginTop: 8,
+    },
+    button: {
+      paddingVertical: 12,
+      paddingHorizontal: 20,
+      borderRadius: 12,
+      minWidth: 90,
+      alignItems: 'center',
+      justifyContent: 'center',
+    },
+    cancelButton: {
+      backgroundColor: isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(0, 0, 0, 0.05)',
+    },
+    cancelText: {
+      fontFamily: Tokens.typography.families.medium,
+      color: colors.textSecondary,
+      fontSize: 14,
+    },
+    confirmText: {
+      fontFamily: Tokens.typography.families.semiBold,
+      color: '#FFFFFF',
+      fontSize: 14,
+    },
+  });

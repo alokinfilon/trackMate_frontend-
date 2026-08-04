@@ -9,10 +9,11 @@ import {
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import LinearGradient from 'react-native-linear-gradient';
-import { useTheme } from '../../../../context/ThemeContext';
-import { useBillingSubscription } from './billing-subscription.hooks';
+import { useTheme } from '../../../../context';
 import { createStyles } from './billing-subscription.styles';
 import { strings, INVOICES } from './billing-subscription.strings';
+
+import { Arrow } from '../../../../components';
 
 export default function BillingSubscriptionScreen({ navigation }) {
   const { colors, isDarkMode, gradients } = useTheme();
@@ -23,7 +24,7 @@ export default function BillingSubscriptionScreen({ navigation }) {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color={colors.textPrimary} />
+          <Arrow size={28} color={isDarkMode ? '#FFFFFF' : '#000000'} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>{strings.headerTitle}</Text>
         <View style={{ width: 40 }} />

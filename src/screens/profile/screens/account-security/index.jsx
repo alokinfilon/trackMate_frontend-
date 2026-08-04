@@ -10,11 +10,10 @@ import {
 } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import Ionicons from 'react-native-vector-icons/Ionicons';
-import { useTheme } from '../../../../context/ThemeContext';
+import { useTheme, useTranslation } from '../../../../context';
 import { useAccountSecurity } from './account-security.hooks';
 import { createStyles } from './account-security.styles';
-import { useAlertModal } from '../../../../components/index';
-import { useTranslation } from '../../../../context/LanguageContext';
+import { useAlertModal, Arrow } from '../../../../components';
 
 export default function AccountSecurityScreen({ navigation }) {
   const { colors, isDarkMode } = useTheme();
@@ -50,7 +49,7 @@ export default function AccountSecurityScreen({ navigation }) {
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
       <View style={styles.header}>
         <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backButton}>
-          <Ionicons name="arrow-back" size={24} color="#FF6B35" />
+          <Arrow size={28} color={isDarkMode ? '#FFFFFF' : '#000000'} />
         </TouchableOpacity>
         <Text style={[styles.headerTitle, { color: colors.textPrimary }]}>{t('accountSecurity.title')}</Text>
         <View style={{ width: 40 }} />

@@ -24,6 +24,7 @@ export default function CollectionDetailView({
   handleRemoveImageFromCollection,
   setActiveViewerImage,
   handleDeleteImage,
+  collectionPermissions = { canView: true, canAdd: true, canEdit: true, canDelete: true },
 }) {
   const {
     styles,
@@ -54,53 +55,23 @@ export default function CollectionDetailView({
         onMomentumScrollEnd={() => setFabVisible(true)}
       >
         <Text style={styles.detailCollectionTitle}>{selectedCol?.name}</Text>
-        <Text style={styles.detailCollectionMeta}>
-          {selectedCol?.description || STRINGS.noDescription}
-        </Text>
-        <View style={styles.detailBadgeRow}>
-          <View
-            style={[
-              styles.statusBadge,
-              {
-                backgroundColor:
-                  selectedCol?.accessibility === 'shared'
-                    ? 'rgba(255, 107, 53, 0.08)'
-                    : 'rgba(0, 0, 0, 0.05)',
-              },
-            ]}
-          >
-            <Text
-              style={[
-                styles.statusBadgeText,
-                {
-                  color:
-                    selectedCol?.accessibility === 'shared'
-                      ? '#FF6B35'
-                      : colors.textSecondary,
-                },
-              ]}
-            >
-              {selectedCol?.accessibility === 'shared'
-                ? STRINGS.sharedAlbum
-                : STRINGS.privateAlbum}
-            </Text>
-          </View>
-        </View>
 
         {imagesToRender.length === 0 ? (
           <View style={styles.detailEmptyContainer}>
             <Ionicons name="images-outline" size={48} color={colors.textTertiary} />
             <Text style={styles.detailEmptyText}>{STRINGS.noImagesText}</Text>
-            <TouchableOpacity
-              style={[styles.emptyButton, { marginTop: 12, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 6 }]}
-              onPress={() => {
-                setSelectedCollectionId(selectedCollectionId === 'loose' ? null : selectedCollectionId);
-                setViewMode('upload');
-              }}
-            >
-              <PlusIcon size={16} color="#FFFFFF" strokeWidth={2.5} />
-              <Text style={styles.emptyButtonText}>{STRINGS.addPhotoBtn}</Text>
-            </TouchableOpacity>
+            {collectionPermissions.canAdd && (
+              <TouchableOpacity
+                style={[styles.emptyButton, { marginTop: 12, alignSelf: 'center', flexDirection: 'row', alignItems: 'center', gap: 6 }]}
+                onPress={() => {
+                  setSelectedCollectionId(selectedCollectionId === 'loose' ? null : selectedCollectionId);
+                  setViewMode('upload');
+                }}
+              >
+                <PlusIcon size={16} color="#FFFFFF" strokeWidth={2.5} />
+                <Text style={styles.emptyButtonText}>{STRINGS.addPhotoBtn}</Text>
+              </TouchableOpacity>
+            )}
           </View>
         ) : (() => {
           const getAspectRatio = (index) => {
@@ -254,7 +225,7 @@ export default function CollectionDetailView({
       </ScrollView>
 
       {/* Floating Action Button to upload directly to this collection */}
-      {fabVisible && (
+      {fabVisible && collectionPermissions.canAdd && (
         <TouchableOpacity
           style={styles.fab}
           onPress={() => {
