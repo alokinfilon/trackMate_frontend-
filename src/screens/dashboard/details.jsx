@@ -13,7 +13,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '../../context';
 import { createDashboardStyles } from './dashboard.styles';
 import { useTripDashboard } from './TripDashboardList.hooks';
-import { Skeleton, Arrow, StarIconComponent } from '../../components';
+import { Skeleton, Arrow } from '../../components';
 
 export default function DashboardDetails({ route, navigation }) {
   const { tripId } = route.params || {};
@@ -162,7 +162,6 @@ export default function DashboardDetails({ route, navigation }) {
   // Matched location details
   const placeName = matchedLocation?.name || selectedTrip?.location_id.replace('loc_', '').toUpperCase() || 'Elysium Gardens';
   const placeImage = matchedLocation?.media?.hero_image_url || matchedLocation?.media?.gallery?.[0] || 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=300';
-  const placeRating = matchedLocation?.overall_rating || '4.5';
   const placeRegion = matchedLocation ? `${matchedLocation.geography?.city}, ${matchedLocation.geography?.state}` : 'London, England';
 
   return (
@@ -224,10 +223,7 @@ export default function DashboardDetails({ route, navigation }) {
                   </Text>
                 </View>
 
-                <View style={styles.ratingCol}>
-                  <StarIconComponent size={14} color="#FF6B35" />
-                  <Text style={styles.ratingText}>{placeRating}</Text>
-                </View>
+
               </View>
 
               <View style={styles.divider} />

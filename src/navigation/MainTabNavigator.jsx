@@ -13,6 +13,7 @@ import {
    SettingsIcon
    } from '../components';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import { Tokens } from '../theme/theme';
 
 
    import {
@@ -151,7 +152,7 @@ function NotificationBell() {
             style={{
               color: '#FFFFFF',
               fontSize: 10,
-              fontFamily: 'Outfit-Bold',
+              fontFamily: Tokens.typography.families.semiBold,
               lineHeight: 12,
             }}
           >

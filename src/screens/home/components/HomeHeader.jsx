@@ -103,7 +103,7 @@ const styles = StyleSheet.create({
   badgeText: {
     color: '#FFFFFF',
     fontSize: 10,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     lineHeight: 12,
   },
 });

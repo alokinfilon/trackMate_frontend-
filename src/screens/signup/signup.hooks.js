@@ -2,7 +2,7 @@ import { useState, useContext } from 'react';
 import { useNavigation } from '@react-navigation/native';
 import { useAuth0 } from 'react-native-auth0';
 import { useAlertModal } from '../../components';
-import { authService } from '../../services';
+import { authService, httpService } from '../../services';
 import { saveTokens } from '../../utils';
 import { AuthContext } from '../../context';
 
@@ -30,8 +30,6 @@ export const useSignup = () => {
     }
   };
   
-  const BACKEND_URL = 'https://trackmate-x7ue.onrender.com';
-
   const hasMinLength = password.length >= 8;
   const hasCaseLetters = /[a-z]/.test(password) && /[A-Z]/.test(password);
   const hasSpecialChar = /[#@$%&!*_?^]/.test(password);
@@ -159,14 +157,7 @@ export const useSignup = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 60000);
 
-      const response = await fetch(`${BACKEND_URL}/auth/auth0-sync`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenToSend}`
-        },
-        signal: controller.signal
-      });
+      const response = await httpService.auth.syncAuth0User(tokenToSend, controller.signal);
 
       clearTimeout(timeoutId);
 

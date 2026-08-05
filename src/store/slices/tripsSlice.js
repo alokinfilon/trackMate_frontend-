@@ -1,7 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { authService } from '../../services';
-
-const BASE_URL = 'https://trackmate-x7ue.onrender.com';
+import { authService, httpService } from '../../services';
 
 const doFetchTrips = async (rejectWithValue) => {
   const token = await authService.getAccessToken();
@@ -9,13 +7,7 @@ const doFetchTrips = async (rejectWithValue) => {
     return rejectWithValue('Session expired. Please log in again.');
   }
 
-  const response = await fetch(`${BASE_URL}/api/trips`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      Authorization: `Bearer ${token}`,
-    },
-  });
+  const response = await httpService.trips.getTrips();
 
   const rawText = await response.text();
   if (rawText.trim().startsWith('<')) {
@@ -66,17 +58,7 @@ export const updateTripStatus = createAsyncThunk(
         return rejectWithValue('Session expired.');
       }
 
-      const response = await fetch(
-        `${BASE_URL}/api/trips/${tripId}/update-status`,
-        {
-          method: 'PATCH',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({ status: newStatus }),
-        }
-      );
+      const response = await httpService.trips.updateTripStatus(tripId, newStatus);
 
       const rawText = await response.text();
       const json = JSON.parse(rawText);

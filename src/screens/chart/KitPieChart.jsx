@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Dimensions, Text, ActivityIndicator } from 'react-native';
 import { PieChart } from 'react-native-chart-kit';
-import { authService } from '../../services';
+import { authService, httpService } from '../../services';
 import { useTheme } from '../../context';
 import { createStyles } from './KitPieChart.styles';
 
@@ -26,13 +26,7 @@ export default function KitPieChart() {
           return;
         }
 
-        const response = await fetch('https://trackmate-x7ue.onrender.com/api/trips/analytics/chart-stats', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const response = await httpService.trips.getAnalytics();
 
         const rawText = await response.text();
 

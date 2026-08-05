@@ -592,13 +592,14 @@ export default function PlaceDetails({ route, navigation }) {
             </View>
             <TouchableOpacity
               style={styles.actionChevronButton}
-              activeOpacity={0.8}
+              activeOpacity={0.85}
               onPress={() => setAddTripModalVisible(true)}
             >
+              <Text style={styles.actionButtonText}>Plan Trip</Text>
               <ArrowLeftIcon
-                size={22}
-                color={isDarkMode ? '#000000' : '#FFFFFF'}
-                strokeWidth={2.8}
+                size={16}
+                color="#FFFFFF"
+                strokeWidth={3}
                 style={{ transform: [{ rotate: '180deg' }] }} // Rotates left arrow to point right
               />
             </TouchableOpacity>

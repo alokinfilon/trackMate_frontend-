@@ -1,4 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
+import { Tokens } from '../../theme/theme';
 
 export const createStyles = (colors, isDarkMode) =>
   StyleSheet.create({
@@ -23,7 +24,7 @@ export const createStyles = (colors, isDarkMode) =>
     },
     headerTitle: {
       fontSize: 32,
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
       color: colors.textPrimary,
       letterSpacing: -0.5,
     },
@@ -48,13 +49,13 @@ export const createStyles = (colors, isDarkMode) =>
     },
     subtitleText: {
       fontSize: 14,
-      fontFamily: 'Outfit-Medium',
+      fontFamily: Tokens.typography.families.medium,
       color: '#9CA3AF',
       marginTop: 4,
     },
     subtitleHighlight: {
       color: '#FF6B35',
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
     },
 
     // ── Section List ──────────────────────────────────────────────────────────
@@ -68,7 +69,7 @@ export const createStyles = (colors, isDarkMode) =>
     },
     sectionHeaderText: {
       fontSize: 16,
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
       color: colors.textPrimary,
     },
 
@@ -147,17 +148,17 @@ export const createStyles = (colors, isDarkMode) =>
     },
     bodyText: {
       fontSize: 14,
-      fontFamily: 'Outfit-Regular',
+      fontFamily: Tokens.typography.families.regular,
       color: colors.textSecondary,
       lineHeight: 18,
     },
     boldName: {
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
       color: colors.textPrimary,
     },
     subtitleTextRow: {
       fontSize: 12,
-      fontFamily: 'Outfit-Regular',
+      fontFamily: Tokens.typography.families.regular,
       color: '#9CA3AF',
       marginTop: 2,
     },
@@ -184,16 +185,16 @@ export const createStyles = (colors, isDarkMode) =>
     acceptButtonText: {
       color: '#FFFFFF',
       fontSize: 12,
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
     },
     declineButtonText: {
       color: colors.textPrimary,
       fontSize: 12,
-      fontFamily: 'Outfit-Medium',
+      fontFamily: Tokens.typography.families.medium,
     },
     actionedText: {
       fontSize: 12,
-      fontFamily: 'Outfit-Medium',
+      fontFamily: Tokens.typography.families.medium,
       color: '#9CA3AF',
       marginTop: 6,
       fontStyle: 'italic',
@@ -239,13 +240,13 @@ export const createStyles = (colors, isDarkMode) =>
     },
     emptyTitle: {
       fontSize: 18,
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
       color: colors.textPrimary,
       textAlign: 'center',
     },
     emptySubtitle: {
       fontSize: 14,
-      fontFamily: 'Outfit-Regular',
+      fontFamily: Tokens.typography.families.regular,
       color: colors.textSecondary,
       textAlign: 'center',
       lineHeight: 20,

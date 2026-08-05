@@ -3,7 +3,7 @@ import { useNavigation } from '@react-navigation/native';
 import { useAuth0 } from 'react-native-auth0';
 import { AuthContext } from '../../context';
 import { useAlertModal } from '../../components';
-import { authService } from '../../services';
+import { authService, httpService } from '../../services';
 import { saveTokens } from '../../utils';
 
 export const useLogin = () => {
@@ -48,14 +48,7 @@ export const useLogin = () => {
       const controller = new AbortController();
       const timeoutId = setTimeout(() => controller.abort(), 60000);
 
-      const response = await fetch(`${BACKEND_URL}/auth/auth0-sync`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${tokenToSend}`
-        },
-        signal: controller.signal
-      });
+      const response = await httpService.auth.syncAuth0User(tokenToSend, controller.signal);
       
       clearTimeout(timeoutId);
 

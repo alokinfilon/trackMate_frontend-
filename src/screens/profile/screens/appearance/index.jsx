@@ -41,10 +41,10 @@ export default function AppearanceScreen({ navigation }) {
             onPress={() => toggleTheme('light')}
           >
             <View style={styles.rowLeft}>
-              <Ionicons name="sunny-outline" size={22} color={colors.primary} style={styles.icon} />
+              <Ionicons name="sunny-outline" size={22} color={'#FF6B35'} style={styles.icon} />
               <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>{strings.lightTheme}</Text>
             </View>
-            {!isDarkMode && <Ionicons name="checkmark-circle" size={20} color={colors.primary} />}
+            {!isDarkMode && <Ionicons name="checkmark-circle" size={20} color={'#FF6B35'} />}
           </TouchableOpacity>
 
           <TouchableOpacity
@@ -52,10 +52,10 @@ export default function AppearanceScreen({ navigation }) {
             onPress={() => toggleTheme('dark')}
           >
             <View style={styles.rowLeft}>
-              <Ionicons name="moon-outline" size={22} color={colors.primary} style={styles.icon} />
+              <Ionicons name="moon-outline" size={22} color={'#FF6B35'} style={styles.icon} />
               <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>{strings.darkTheme}</Text>
             </View>
-            {isDarkMode && <Ionicons name="checkmark-circle" size={20} color={colors.primary} />}
+            {isDarkMode && <Ionicons name="checkmark-circle" size={20} color={'#FF6B35'} />}
           </TouchableOpacity>
         </View>
       </ScrollView>

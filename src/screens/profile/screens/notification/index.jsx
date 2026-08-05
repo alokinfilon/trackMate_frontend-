@@ -32,7 +32,7 @@ export default function NotificationScreen({ navigation }) {
   if (loading) {
     return (
       <SafeAreaView style={[styles.container, { backgroundColor: colors.bg, alignItems: 'center', justifyContent: 'center' }]} edges={['top']}>
-        <ActivityIndicator color={colors.primary} />
+        <ActivityIndicator color={'#FF6B35'} />
       </SafeAreaView>
     );
   }
@@ -57,7 +57,7 @@ export default function NotificationScreen({ navigation }) {
         <View style={[styles.groupCard, { backgroundColor: colors.surface }]}>
           <View style={styles.row}>
             <View style={styles.rowLeft}>
-              <Ionicons name="notifications-outline" size={22} color={colors.primary} style={styles.icon} />
+              <Ionicons name="notifications-outline" size={22} color={'#FF6B35'} style={styles.icon} />
               <View style={styles.textContainer}>
                 <Text style={[styles.rowLabel, { color: colors.textPrimary }]}>All Notifications</Text>
                 <Text style={[styles.rowSubLabel, { color: colors.textSecondary }]}>
@@ -68,7 +68,7 @@ export default function NotificationScreen({ navigation }) {
             <Switch
               value={allEnabled}
               onValueChange={setAllEnabled}
-              trackColor={{ false: '#767577', true: colors.primary }}
+              trackColor={{ false: '#767577', true: '#FF6B35' }}
             />
           </View>
         </View>
@@ -79,7 +79,7 @@ export default function NotificationScreen({ navigation }) {
         <View style={[styles.groupCard, { backgroundColor: colors.surface }]}>
           <View style={[styles.row, { borderBottomWidth: 1, borderBottomColor: colors.divider }]}>
             <View style={styles.rowLeft}>
-              <Ionicons name="airplane-outline" size={22} color={allEnabled ? colors.primary : colors.textTertiary} style={styles.icon} />
+              <Ionicons name="airplane-outline" size={22} color={allEnabled ? '#FF6B35' : colors.textTertiary} style={styles.icon} />
               <View style={styles.textContainer}>
                 <Text style={[styles.rowLabel, { color: allEnabled ? colors.textPrimary : colors.textTertiary }]}>{strings.tripLabel}</Text>
                 <Text style={[styles.rowSubLabel, { color: colors.textSecondary }]}>{strings.tripDesc}</Text>
@@ -89,13 +89,13 @@ export default function NotificationScreen({ navigation }) {
               value={allEnabled && trips}
               onValueChange={setTrips}
               disabled={!allEnabled}
-              trackColor={{ false: '#767577', true: colors.primary }}
+              trackColor={{ false: '#767577', true: '#FF6B35' }}
             />
           </View>
 
           <View style={[styles.row, { borderBottomWidth: 1, borderBottomColor: colors.divider }]}>
             <View style={styles.rowLeft}>
-              <Ionicons name="gift-outline" size={22} color={allEnabled ? colors.primary : colors.textTertiary} style={styles.icon} />
+              <Ionicons name="gift-outline" size={22} color={allEnabled ? '#FF6B35' : colors.textTertiary} style={styles.icon} />
               <View style={styles.textContainer}>
                 <Text style={[styles.rowLabel, { color: allEnabled ? colors.textPrimary : colors.textTertiary }]}>{strings.promoLabel}</Text>
                 <Text style={[styles.rowSubLabel, { color: colors.textSecondary }]}>{strings.promoDesc}</Text>
@@ -105,13 +105,13 @@ export default function NotificationScreen({ navigation }) {
               value={allEnabled && promos}
               onValueChange={setPromos}
               disabled={!allEnabled}
-              trackColor={{ false: '#767577', true: colors.primary }}
+              trackColor={{ false: '#767577', true: '#FF6B35' }}
             />
           </View>
 
           <View style={styles.row}>
             <View style={styles.rowLeft}>
-              <Ionicons name="alarm-outline" size={22} color={allEnabled ? colors.primary : colors.textTertiary} style={styles.icon} />
+              <Ionicons name="alarm-outline" size={22} color={allEnabled ? '#FF6B35' : colors.textTertiary} style={styles.icon} />
               <View style={styles.textContainer}>
                 <Text style={[styles.rowLabel, { color: allEnabled ? colors.textPrimary : colors.textTertiary }]}>{strings.reminderLabel}</Text>
                 <Text style={[styles.rowSubLabel, { color: colors.textSecondary }]}>{strings.reminderDesc}</Text>
@@ -121,7 +121,7 @@ export default function NotificationScreen({ navigation }) {
               value={allEnabled && reminders}
               onValueChange={setReminders}
               disabled={!allEnabled}
-              trackColor={{ false: '#767577', true: colors.primary }}
+              trackColor={{ false: '#767577', true: '#FF6B35' }}
             />
           </View>
         </View>

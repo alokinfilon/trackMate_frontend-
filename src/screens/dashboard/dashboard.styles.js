@@ -1,4 +1,5 @@
 import { StyleSheet } from 'react-native';
+import { Tokens } from '../../theme';
 
 export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   screenContainer: {
@@ -20,13 +21,13 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   greetingText: {
     fontSize: 26,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
     letterSpacing: -0.5,
   },
   greetingSubText: {
     fontSize: 13,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: colors.textSecondary,
     marginTop: 2,
   },
@@ -34,7 +35,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   // ── Horizontal Trips Selector ──
   selectorHeader: {
     fontSize: 15,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
     marginBottom: 10,
     textTransform: 'uppercase',
@@ -66,7 +67,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   tripChipTitle: {
     fontSize: 13,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
   },
   activeTripChipTitle: {
     color: '#FFFFFF',
@@ -76,7 +77,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   tripChipSubtitle: {
     fontSize: 10,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     marginTop: 2,
   },
   activeTripChipSubtitle: {
@@ -117,25 +118,25 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   placeName: {
     fontSize: 18,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
     letterSpacing: -0.3,
   },
   placeSub: {
     fontSize: 12,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: '#9CA3AF',
     marginTop: 2,
   },
   placePrice: {
     fontSize: 18,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#FF6B35',
     marginTop: 8,
   },
   placePriceUnit: {
     fontSize: 12,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: '#9CA3AF',
   },
   ratingCol: {
@@ -148,7 +149,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   ratingText: {
     fontSize: 12,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
   },
   divider: {
@@ -158,7 +159,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 16,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
     marginBottom: 14,
   },
@@ -170,12 +171,12 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   detailLabel: {
     fontSize: 13,
-    fontFamily: 'Outfit-Medium',
+    fontFamily: Tokens.typography.families.medium,
     color: '#9CA3AF',
   },
   detailValue: {
     fontSize: 13,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
   },
   methodBadge: {
@@ -188,7 +189,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   methodBadgeText: {
     fontSize: 11,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#FF6B35',
   },
 
@@ -210,7 +211,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   actionPayBtnText: {
     color: '#FFFFFF',
     fontSize: 15,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
   },
   actionPayBtnCompleted: {
     backgroundColor: '#10B981',
@@ -231,7 +232,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   emptyText: {
     fontSize: 15,
-    fontFamily: 'Outfit-Medium',
+    fontFamily: Tokens.typography.families.medium,
     color: '#9CA3AF',
     textAlign: 'center',
     lineHeight: 22,
@@ -243,7 +244,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   errorText: {
     fontSize: 14,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#EF4444',
   },
 
@@ -259,7 +260,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   detailsHeaderTitle: {
     fontSize: 18,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
   },
   cancelHeaderBtn: {
@@ -272,7 +273,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   cancelHeaderBtnText: {
     fontSize: 13,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#EF4444',
   },
   backButton: {
@@ -294,7 +295,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   listHeaderTitle: {
     fontSize: 20,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
     textAlign: 'center',
     flex: 1,
@@ -316,7 +317,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   tabText: {
     fontSize: 14,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#9CA3AF',
   },
   activeTabText: {
@@ -360,12 +361,12 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   cardPlaceName: {
     fontSize: 16,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
   },
   cardPlaceSub: {
     fontSize: 12,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: '#9CA3AF',
     marginTop: 2,
   },
@@ -386,12 +387,12 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   cardDateText: {
     fontSize: 13,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
   },
   cardDateLabel: {
     fontSize: 10,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: '#9CA3AF',
     marginTop: 2,
   },
@@ -405,12 +406,12 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   cardPriceText: {
     fontSize: 15,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.primary,
   },
   cardPriceLabel: {
     fontSize: 10,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: '#9CA3AF',
     marginTop: 2,
   },
@@ -431,7 +432,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   cardRebookBtnText: {
     fontSize: 13,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#FF6B35',
   },
   cardReviewBtn: {
@@ -444,7 +445,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   cardReviewBtnText: {
     fontSize: 13,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#FFFFFF',
   },
   cardWideBtn: {
@@ -457,7 +458,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   cardWideBtnText: {
     fontSize: 13,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#FFFFFF',
   },
   spacer40: {
@@ -521,7 +522,7 @@ export const createDashboardStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   cardCancelBtnText: {
     fontSize: 13,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#EF4444',
   },
 });

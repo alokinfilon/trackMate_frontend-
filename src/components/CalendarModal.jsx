@@ -11,6 +11,7 @@ import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useTheme } from '../context';
 import { AppModal } from './modal';
 import ArrowLeftIcon from './svg/arrow';
+import { Tokens } from '../theme/theme';
 
 const { width } = Dimensions.get('window');
 const maxCardWidth = 364;
@@ -123,7 +124,7 @@ export default function CalendarModal({ visible, onClose, onSelectDate, initialD
     },
     headerTitle: {
       fontSize: 16,
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
       color: colors.textPrimary,
     },
     navBtn: {
@@ -143,7 +144,7 @@ export default function CalendarModal({ visible, onClose, onSelectDate, initialD
       width: cellWidth,
       textAlign: 'center',
       fontSize: 12,
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
       color: '#9CA3AF',
     },
     gridContent: {
@@ -158,7 +159,7 @@ export default function CalendarModal({ visible, onClose, onSelectDate, initialD
     },
     dayText: {
       fontSize: 13,
-      fontFamily: 'Outfit-Medium',
+      fontFamily: Tokens.typography.families.medium,
       color: colors.textPrimary,
     },
     selectedDayCell: {
@@ -167,7 +168,7 @@ export default function CalendarModal({ visible, onClose, onSelectDate, initialD
     },
     selectedDayText: {
       color: '#FFFFFF',
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
     },
     emptyCell: {
       width: cellWidth,
@@ -181,7 +182,7 @@ export default function CalendarModal({ visible, onClose, onSelectDate, initialD
       alignItems: 'center',
     },
     closeBtnText: {
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
       fontSize: 14,
       color: colors.textPrimary,
     }

@@ -39,7 +39,7 @@ export default function PaymentMethodsScreen({ navigation }) {
                 <Ionicons
                   name={card.id === 'visa' ? 'card' : 'card-outline'}
                   size={24}
-                  color={card.default ? colors.primary : colors.textSecondary}
+                  color={card.default ? '#FF6B35' : colors.textSecondary}
                 />
                 <Text style={[styles.cardName, { color: colors.textPrimary }]}>{card.label}</Text>
               </View>
@@ -59,9 +59,9 @@ export default function PaymentMethodsScreen({ navigation }) {
           </View>
         ))}
 
-        <TouchableOpacity style={[styles.addButton, { borderColor: colors.primary }]}>
-          <Ionicons name="add" size={20} color={colors.primary} />
-          <Text style={[styles.addButtonText, { color: colors.primary }]}>{strings.addBtn}</Text>
+        <TouchableOpacity style={[styles.addButton, { borderColor: '#FF6B35' }]}>
+          <Ionicons name="add" size={20} color={'#FF6B35'} />
+          <Text style={[styles.addButtonText, { color: '#FF6B35' }]}>{strings.addBtn}</Text>
         </TouchableOpacity>
       </ScrollView>
     </SafeAreaView>

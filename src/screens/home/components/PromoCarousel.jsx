@@ -6,6 +6,7 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
+  Alert,
 } from 'react-native';
 import { useTheme } from '../../../context';
 import { Tokens } from '../../../theme';
@@ -43,6 +44,27 @@ const PromoCarousel = () => {
     }
   };
 
+  const handleBannerPress = (id) => {
+    let title = '';
+    let message = '';
+    
+    if (id === '1') {
+      title = '☀️ Summer Getaway Discount!';
+      message = 'Enjoy 20% off on all resort and hotel bookings this summer.\n\nUse promo code: SUMMER20';
+    } else if (id === '2') {
+      title = '🏨 Luxury Staycation Deal!';
+      message = 'Get up to 15% cashback on premium staycations and boutique hotel bookings.\n\nUse promo code: STAY15';
+    } else if (id === '3') {
+      title = '⛰️ Adventure Awaits!';
+      message = 'Unlock a flat ₹1,000 discount on your first outdoor tour or safari booking.\n\nUse promo code: WILDTOUR';
+    } else {
+      title = 'Special Offer';
+      message = 'Use promo code: TRACKMATE to get discounts on your next trip!';
+    }
+
+    Alert.alert(title, message, [{ text: 'Great, Thanks!' }]);
+  };
+
   return (
     <View style={styles.wrapper}>
       <FlatList
@@ -56,9 +78,13 @@ const PromoCarousel = () => {
         keyExtractor={(item) => item.id}
         onScrollToIndexFailed={() => {}}
         renderItem={({ item }) => (
-          <View style={styles.bannerContainer}>
+          <TouchableOpacity
+            style={styles.bannerContainer}
+            activeOpacity={0.9}
+            onPress={() => handleBannerPress(item.id)}
+          >
             <Image source={item.image} style={styles.bannerImage} resizeMode="cover" />
-          </View>
+          </TouchableOpacity>
         )}
       />
       {/* Dot indicators */}

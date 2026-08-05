@@ -16,6 +16,7 @@ import {
 import Ionicons from 'react-native-vector-icons/Ionicons';
 import { useIsFocused } from '@react-navigation/native';
 import { useTheme } from '../../context';
+import { Tokens } from '../../theme';
 import { createStyles } from './ImageUploadPage.styles';
 import { useImageUpload } from './ImageUploadPage.hooks';
 
@@ -278,7 +279,7 @@ export default function ImageUploadPage({ route }) {
             </Text>
           )}
           {viewMode === 'gallery' && (
-            <Text style={[styles.tripSelectorText, { fontSize: 18, fontFamily: 'Outfit-Bold' }]}>
+            <Text style={[styles.tripSelectorText, { fontSize: 18, fontFamily: Tokens.typography.families.semiBold }]}>
               Memories
             </Text>
           )}
@@ -511,7 +512,7 @@ export default function ImageUploadPage({ route }) {
         onClose={() => setShareModalVisible(false)}
       >
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-          <Text style={[styles.subtitleText, { marginBottom: 20, fontSize: 13, fontFamily: 'Outfit-Regular' }]}>
+          <Text style={[styles.subtitleText, { marginBottom: 20, fontSize: 13, fontFamily: Tokens.typography.families.regular }]}>
             Invite others by entering their email or mobile number.
           </Text>
 
@@ -619,7 +620,7 @@ export default function ImageUploadPage({ route }) {
               style={[styles.textInput, { backgroundColor: colors.surface, justifyContent: 'center' }]}
               onPress={() => setCollectionTripPickerVisible(true)}
             >
-              <Text style={{ color: selectedTripForCollection ? colors.textPrimary : colors.textTertiary, fontFamily: 'Outfit-Medium' }}>
+              <Text style={{ color: selectedTripForCollection ? colors.textPrimary : colors.textTertiary, fontFamily: Tokens.typography.families.medium }}>
                 {selectedTripForCollection ? getTripTitle(selectedTripForCollection) : 'None (No specific trip)'}
               </Text>
             </TouchableOpacity>
@@ -693,7 +694,7 @@ export default function ImageUploadPage({ route }) {
                   setTripPickerVisible(false);
                 }}
               >
-                <Text style={[styles.sheetRowText, isActive && { color: '#FF6B35', fontFamily: 'Outfit-Bold' }]}>
+                <Text style={[styles.sheetRowText, isActive && { color: '#FF6B35', fontFamily: Tokens.typography.families.semiBold }]}>
                   {getTripTitle(trip)}
                 </Text>
                 {isActive && <Ionicons name="checkmark" size={20} color="#FF6B35" />}
@@ -717,7 +718,7 @@ export default function ImageUploadPage({ route }) {
               setCollectionTripPickerVisible(false);
             }}
           >
-            <Text style={[styles.sheetRowText, !collectionTripId && { color: '#FF6B35', fontFamily: 'Outfit-Bold' }]}>
+            <Text style={[styles.sheetRowText, !collectionTripId && { color: '#FF6B35', fontFamily: Tokens.typography.families.semiBold }]}>
               None (No specific trip)
             </Text>
             {!collectionTripId && <Ionicons name="checkmark" size={20} color="#FF6B35" />}
@@ -734,7 +735,7 @@ export default function ImageUploadPage({ route }) {
                   setCollectionTripPickerVisible(false);
                 }}
               >
-                <Text style={[styles.sheetRowText, isActive && { color: '#FF6B35', fontFamily: 'Outfit-Bold' }]}>
+                <Text style={[styles.sheetRowText, isActive && { color: '#FF6B35', fontFamily: Tokens.typography.families.semiBold }]}>
                   {getTripTitle(trip)}
                 </Text>
                 {isActive && <Ionicons name="checkmark" size={20} color="#FF6B35" />}
@@ -769,7 +770,7 @@ export default function ImageUploadPage({ route }) {
                   );
                 }}
               >
-                <Text style={[styles.sheetRowText, isSelected && { color: '#FF6B35', fontFamily: 'Outfit-Bold' }]}>
+                <Text style={[styles.sheetRowText, isSelected && { color: '#FF6B35', fontFamily: Tokens.typography.families.semiBold }]}>
                   {getTripTitle(trip)}
                 </Text>
                 <Ionicons

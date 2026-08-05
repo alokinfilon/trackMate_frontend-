@@ -1,4 +1,5 @@
 import { StyleSheet, Platform } from 'react-native';
+import { Tokens } from '../../../../theme';
 
 export const createStyles = () =>
   StyleSheet.create({
@@ -44,7 +45,7 @@ export const createStyles = () =>
     },
     viewerCaptionText: {
       color: '#FFFFFF',
-      fontFamily: 'Outfit-Medium',
+      fontFamily: Tokens.typography.families.medium,
       fontSize: 15,
       lineHeight: 22,
     },
@@ -54,7 +55,7 @@ export const createStyles = () =>
     },
     viewerBadge: {
       color: '#FF6B35',
-      fontFamily: 'Outfit-Bold',
+      fontFamily: Tokens.typography.families.semiBold,
       fontSize: 12,
     },
   });

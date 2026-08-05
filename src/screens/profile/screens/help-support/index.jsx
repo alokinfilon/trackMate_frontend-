@@ -37,7 +37,7 @@ export default function HelpSupportScreen({ navigation }) {
       activeOpacity={0.7}
     >
       <View style={styles.rowLeft}>
-        <Ionicons name={icon} size={20} color={colors.primary} />
+        <Ionicons name={icon} size={20} color={'#FF6B35'} />
         <Text style={[styles.label, { color: colors.textPrimary }]}>{label}</Text>
       </View>
       <Ionicons name="chevron-forward" size={16} color={colors.textTertiary} />
@@ -83,7 +83,7 @@ export default function HelpSupportScreen({ navigation }) {
             activeOpacity={0.7}
           >
             <View style={styles.rowLeft}>
-              <Ionicons name="mail-outline" size={20} color={colors.primary} />
+              <Ionicons name="mail-outline" size={20} color={'#FF6B35'} />
               <Text style={[styles.label, { color: colors.textPrimary }]}>{strings.optContact}</Text>
             </View>
             <Ionicons
@@ -108,7 +108,7 @@ export default function HelpSupportScreen({ navigation }) {
                 placeholderTextColor={colors.textTertiary}
               />
               <TouchableOpacity
-                style={[styles.sendButton, { backgroundColor: colors.primary }]}
+                style={[styles.sendButton, { backgroundColor: '#FF6B35' }]}
                 onPress={handleSendMessage}
                 disabled={sending}
               >

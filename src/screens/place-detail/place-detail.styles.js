@@ -1,4 +1,5 @@
 import { StyleSheet, Dimensions, Platform } from 'react-native';
+import { Tokens } from '../../theme';
 
 const { width, height } = Dimensions.get('window');
 const HERO_HEIGHT = height * 0.48; // Hero height spans ~48% of screen height
@@ -84,7 +85,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   placeTitle: {
     fontSize: 28,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#FFFFFF',
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 0, height: 2 },
@@ -99,7 +100,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   locationText: {
     fontSize: 13,
-    fontFamily: 'Outfit-Medium',
+    fontFamily: Tokens.typography.families.medium,
     color: 'rgba(255, 255, 255, 0.85)',
     textShadowColor: 'rgba(0, 0, 0, 0.4)',
     textShadowOffset: { width: 0, height: 1 },
@@ -166,13 +167,13 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   specLabel: {
     fontSize: 12,
-    fontFamily: 'Outfit-Medium',
+    fontFamily: Tokens.typography.families.medium,
     color: '#9CA3AF',
     marginBottom: 4,
   },
   specValue: {
     fontSize: 15,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#FF6B35', // Accent theme color
   },
 
@@ -183,13 +184,13 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   sectionTitle: {
     fontSize: 18,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
     marginBottom: 8,
   },
   descriptionText: {
     fontSize: 14,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: colors.textSecondary,
     lineHeight: 22,
   },
@@ -198,7 +199,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   readMoreText: {
     fontSize: 14,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#FF6B35',
   },
 
@@ -226,7 +227,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   tabButtonText: {
     fontSize: 14,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
   },
   tabActiveText: {
     color: colors.textPrimary,
@@ -262,20 +263,20 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   gemTitle: {
     fontSize: 14,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
     marginBottom: 4,
   },
   gemText: {
     fontSize: 13,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: colors.textSecondary,
     lineHeight: 18,
     flex: 1,
   },
   factsHeader: {
     fontSize: 15,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
     marginBottom: 12,
     marginTop: 4,
@@ -293,7 +294,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   factText: {
     flex: 1,
     fontSize: 13,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: colors.textSecondary,
     lineHeight: 18,
   },
@@ -302,7 +303,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   tabInfoLabel: {
     fontSize: 12,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#9CA3AF',
     textTransform: 'uppercase',
     letterSpacing: 0.5,
@@ -310,7 +311,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   tabInfoValue: {
     fontSize: 14,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: colors.textPrimary,
     lineHeight: 20,
   },
@@ -343,12 +344,12 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   subLocationTitle: {
     fontSize: 14,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
   },
   subLocationDesc: {
     fontSize: 12,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     color: colors.textSecondary,
     lineHeight: 16,
   },
@@ -375,33 +376,40 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   priceLabel: {
     fontSize: 12,
-    fontFamily: 'Outfit-Medium',
+    fontFamily: Tokens.typography.families.medium,
     color: '#9CA3AF',
     marginBottom: 2,
   },
   priceAmount: {
     fontSize: 22,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: colors.textPrimary,
   },
   actionChevronButton: {
-    width: 52,
-    height: 52,
-    borderRadius: 26,
-    backgroundColor: isDarkMode ? '#FFFFFF' : '#111827',
+    paddingHorizontal: 22,
+    height: 48,
+    borderRadius: 24,
+    backgroundColor: '#FF6B35',
+    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
+    gap: 8,
     ...Platform.select({
       ios: {
-        shadowColor: '#000000',
+        shadowColor: '#FF6B35',
         shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.2,
+        shadowOpacity: 0.35,
         shadowRadius: 6,
       },
       android: {
-        elevation: 5,
+        elevation: 4,
       },
     }),
+  },
+  actionButtonText: {
+    color: '#FFFFFF',
+    fontSize: 15,
+    fontFamily: Tokens.typography.families.semiBold,
   },
 
   // ── Modal Styles ───────────────────────────────────────────────────────────
@@ -430,7 +438,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
     }),
   },
   modalTitle: {
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     fontSize: 20,
     color: colors.textPrimary,
     marginBottom: 20,
@@ -443,7 +451,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
     paddingVertical: 12,
     marginBottom: 14,
     color: colors.textPrimary,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     borderWidth: 1.5,
     borderColor: isDarkMode ? '#3E4E68' : '#E2E8F0',
   },
@@ -468,12 +476,12 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   cancelBtnText: {
     color: colors.textPrimary,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     fontSize: 14,
   },
   confirmBtnText: {
     color: '#FFFFFF',
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     fontSize: 14,
   },
   checkboxRow: {
@@ -505,13 +513,13 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
     borderRadius: 3,
   },
   checkboxLabel: {
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     fontSize: 14,
     color: colors.textPrimary,
     flex: 1,
   },
   labelText: {
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     fontSize: 14,
     color: colors.textPrimary,
   },
@@ -580,7 +588,7 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   mapBannerText: {
     fontSize: 12,
-    fontFamily: 'Outfit-Bold',
+    fontFamily: Tokens.typography.families.semiBold,
     color: '#FF6B35',
   },
   alignSelfCenter: {
@@ -633,12 +641,12 @@ export const createStyles = (colors, isDarkMode) => StyleSheet.create({
   },
   modalInputText: {
     color: colors.textPrimary,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     fontSize: 14,
   },
   modalInputPlaceholder: {
     color: colors.textTertiary,
-    fontFamily: 'Outfit-Regular',
+    fontFamily: Tokens.typography.families.regular,
     fontSize: 14,
   },
   modalInputTouchable: {

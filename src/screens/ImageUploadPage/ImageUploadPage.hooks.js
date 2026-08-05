@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Alert, Platform, PermissionsAndroid } from 'react-native';
 import { launchCamera, launchImageLibrary } from 'react-native-image-picker';
 import { useIsFocused } from '@react-navigation/native';
-import { authService, apiClient } from '../../services';
+import { authService, apiClient, httpService } from '../../services';
 
 export const useImageUpload = (passedTripId) => {
   const [viewMode, setViewMode] = useState('gallery');
@@ -62,17 +62,7 @@ export const useImageUpload = (passedTripId) => {
       const token = await authService.getAccessToken();
       if (!token) return;
 
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections/${selectedCollectionId}/share`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          identifier: shareIdentifier.trim(),
-          role: shareRole
-        })
-      });
+      const response = await httpService.gallery.shareCollection(selectedCollectionId, shareIdentifier.trim(), shareRole);
 
       const json = await response.json();
       if (response.ok && json.success) {
@@ -163,13 +153,7 @@ export const useImageUpload = (passedTripId) => {
       const token = await authService.getAccessToken();
       if (!token) return;
 
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/trips`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await httpService.trips.getTrips();
 
       const rawText = await response.text();
       let json;
@@ -204,13 +188,7 @@ export const useImageUpload = (passedTripId) => {
       if (!token) return;
 
       const promises = targetTripIds.map(async (id) => {
-        const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections?tripId=${id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const response = await httpService.gallery.getCollections(id);
         const json = await response.json();
         if (response.ok && json.success) {
           return Array.isArray(json.data) ? json.data : (json.collections || json.data?.collections || []);
@@ -247,13 +225,7 @@ export const useImageUpload = (passedTripId) => {
       }
 
       const promises = targetTripIds.map(async (id) => {
-        const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/${id}`, {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          }
-        });
+        const response = await httpService.gallery.getImages(id);
         const rawText = await response.text();
         let json;
         try {
@@ -306,13 +278,7 @@ export const useImageUpload = (passedTripId) => {
       const token = await authService.getAccessToken();
       if (!token) return;
 
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections/${colId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await httpService.gallery.getCollection(colId);
 
       const json = await response.json();
       if (response.ok && json.success) {
@@ -356,18 +322,11 @@ export const useImageUpload = (passedTripId) => {
       const token = await authService.getAccessToken();
       if (!token) return;
 
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          tripId: collectionTripId,
-          name: collectionName,
-          description: collectionDescription,
-          accessibility: collectionAccessibility
-        })
+      const response = await httpService.gallery.createCollection({
+        tripId: collectionTripId,
+        name: collectionName,
+        description: collectionDescription,
+        accessibility: collectionAccessibility
       });
 
       const rawText = await response.text();
@@ -408,18 +367,11 @@ export const useImageUpload = (passedTripId) => {
       const token = await authService.getAccessToken();
       if (!token) return;
 
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections/${editingCollection._id}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          tripId: collectionTripId,
-          name: collectionName,
-          description: collectionDescription,
-          accessibility: collectionAccessibility
-        })
+      const response = await httpService.gallery.patchCollection(editingCollection._id, {
+        tripId: collectionTripId,
+        name: collectionName,
+        description: collectionDescription,
+        accessibility: collectionAccessibility
       });
 
       const json = await response.json();
@@ -458,18 +410,11 @@ export const useImageUpload = (passedTripId) => {
       const targetCol = collections.find(c => c._id === colId);
       if (!targetCol) return;
 
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections/${colId}`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          tripId: targetCol.tripId || null,
-          name: targetCol.name,
-          description: targetCol.description || '',
-          accessibility: nextAccessibility
-        })
+      const response = await httpService.gallery.patchCollection(colId, {
+        tripId: targetCol.tripId || null,
+        name: targetCol.name,
+        description: targetCol.description || '',
+        accessibility: nextAccessibility
       });
 
       const json = await response.json();
@@ -491,12 +436,7 @@ export const useImageUpload = (passedTripId) => {
       const token = await authService.getAccessToken();
       if (!token) return;
 
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/collections/${colId}`, {
-        method: 'DELETE',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await httpService.gallery.deleteCollection(colId);
 
       const json = await response.json();
       if (response.ok && json.success) {
@@ -517,16 +457,7 @@ export const useImageUpload = (passedTripId) => {
       const token = await authService.getAccessToken();
       if (!token) return;
 
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/images/${imageId}/collection`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify({
-          collectionId: null
-        })
-      });
+      const response = await httpService.gallery.removeImageFromCollection(imageId);
 
       const json = await response.json();
       if (response.ok && json.success) {
@@ -546,13 +477,7 @@ export const useImageUpload = (passedTripId) => {
       const token = await authService.getAccessToken();
       if (!token) return;
 
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/images/${imageId}`, {
-        method: 'DELETE',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
-      });
+      const response = await httpService.gallery.deleteImage(imageId);
 
       const json = await response.json();
       if (response.ok && json.success) {
@@ -695,13 +620,7 @@ export const useImageUpload = (passedTripId) => {
           formData.append('collectionId', selectedCollectionId);
         }
 
-        const response = await fetch(`https://trackmate-x7ue.onrender.com/api/gallery/${activeTripId}`, {
-          method: 'POST',
-          body: formData,
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-        });
+        const response = await httpService.gallery.uploadImage(activeTripId, formData);
 
         const rawText = await response.text();
         let json;

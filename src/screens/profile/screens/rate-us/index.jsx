@@ -76,7 +76,7 @@ export default function RateUsScreen({ navigation }) {
         </View>
 
         <TouchableOpacity
-          style={[styles.submitButton, { backgroundColor: colors.primary }]}
+          style={[styles.submitButton, { backgroundColor: '#FF6B35' }]}
           onPress={submitRating}
         >
           <Text style={styles.submitButtonText}>{strings.submitBtn}</Text>

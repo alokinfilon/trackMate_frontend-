@@ -2,6 +2,7 @@
 import { useState, useEffect } from 'react';
 import { CAROUSEL_WIDTH } from './place-detail.styles';
 import { useAlertModal } from '../../components';
+import { httpService } from '../../services';
 
 export function useProductDetails(route, navigation) {
   const { locationId, id } = route.params || {};
@@ -25,7 +26,7 @@ export function useProductDetails(route, navigation) {
   const fetchLocationDetails = async (id) => {
     try {
       setLoading(true);
-      const response = await fetch(`https://trackmate-x7ue.onrender.com/locations?page=1&limit=10`);
+      const response = await httpService.locations.getLocations(1, 10);
       const json = await response.json();
 
       const sites = json.historicalSites || [];
